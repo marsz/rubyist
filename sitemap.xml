@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://marsz.github.com/rubyist/blog/archives/</loc>
+        <loc>http://rubyist.marsz.tw/blog/archives/</loc>
         <lastmod>2011-12-21T17:07:16+08:00</lastmod>
     </url>
     <url>
-        <loc>http://marsz.github.com/rubyist/</loc>
+        <loc>http://rubyist.marsz.tw/</loc>
         <lastmod>2011-12-21T17:07:16+08:00</lastmod>
     </url>
 </urlset>
