@@ -2,10 +2,10 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://marsz.github.com/rubyist
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://rubyist.marsz.tw
+title: Ruby on Rails
+subtitle: my ruby on rails sharing
+author: MarsZ
 simple_search: http://google.com/search
 description:
 
@@ -19,7 +19,7 @@ date_format: "ordinal"
 subscribe_rss: /rubyist/atom.xml
 subscribe_email:
 # RSS feeds can list your email address if you like
-email:
+email: marsz330@gmail.com
 
 # ----------------------- #
 #    Jekyll & Plugins     #
