@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ruby on Rails</title>
+  <title>巢狀 (nested) to_json / to_xml 應用 - Ruby on Rails</title>
   <meta name="author" content="MarsZ">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -62,15 +62,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011-12-23/nested-to_json-and-to_xml/">巢狀 (Nested) To_json / To_xml 應用</a></h1>
+      <h1 class="entry-title">巢狀 (Nested) To_json / To_xml 應用</h1>
     
     
       <p class="meta">
@@ -93,7 +90,7 @@
   </header>
 
 
-  <div class="entry-content"><h2>參考</h2>
+<div class="entry-content"><h2>參考</h2>
 
 <ul>
 <li>ApiDock</li>
@@ -134,22 +131,16 @@
 </span></code></pre></td></tr></table></div></figure>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/">Encoding::CompatibilityError: Incompatible Character Encodings: ASCII-8BIT and UTF-8</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
 
 
 
@@ -161,38 +152,38 @@
   
 
 
-<time datetime="2011-12-23T21:01:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2011</time>
-        
-      </p>
+<time datetime="2011-12-23T21:40:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/activerecord/'>ActiveRecord</a>, <a class='category' href='/blog/categories/json/'>JSON</a>, <a class='category' href='/blog/categories/xml/'>XML</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><h6>來源</h6>
-
-<p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
-
-<h6>解決</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mystring</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>總之就是把所有的字串都 force_encoding :p</p>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/" data-via="" data-counturl="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/" title="Previous Post: Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8">&laquo; Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -217,6 +208,7 @@
 
   
 </aside>
+
 
     </div>
   </div>

@@ -4,7 +4,7 @@
   <title><![CDATA[Ruby on Rails]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2011-12-23T20:54:06+08:00</updated>
+  <updated>2011-12-23T21:53:05+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,5 +12,73 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[巢狀 (nested) to_json / to_xml 應用]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/"/>
+    <updated>2011-12-23T21:40:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml</id>
+    <content type="html"><![CDATA[<h2>參考</h2>
+
+<ul>
+<li>ApiDock</li>
+</ul>
+
+
+<p><a href="http://apidock.com/rails/ActiveRecord/Serialization/to_json" target="_blank">http://apidock.com/rails/ActiveRecord/Serialization/to_json</a></p>
+
+<ul>
+<li>Stackoverflow</li>
+</ul>
+
+
+<p><a href="http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json" target="_blank">http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json</a></p>
+
+<h2>說明</h2>
+
+<ul>
+<li>參數為 include</li>
+<li>可以搭配 only, methods 做部分 attribute 或 method 的輸出</li>
+</ul>
+
+
+<h2>範例</h2>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">foo</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="ss">:include</span> <span class="o">=&gt;</span>
+</span><span class='line'>               <span class="p">{</span> <span class="ss">:emails</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:address</span> <span class="p">},</span>
+</span><span class='line'>               <span class="ss">:friends</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span>
+</span><span class='line'>                 <span class="ss">:include</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:emails</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:address</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>               <span class="p">}</span>
+</span><span class='line'>             <span class="p">})</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/"/>
+    <updated>2011-12-23T21:01:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit</id>
+    <content type="html"><![CDATA[<h6>來源</h6>
+
+<p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
+
+<h6>解決</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mystring</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>總之就是把所有的字串都 force_encoding :p</p>
+]]></content>
+  </entry>
   
 </feed>

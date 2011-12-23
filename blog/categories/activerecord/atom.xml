@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ActiveRecord | Ruby on Rails]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/activerecord/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2011-12-23T21:53:05+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[巢狀 (nested) to_json / to_xml 應用]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/"/>
+    <updated>2011-12-23T21:40:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml</id>
+    <content type="html"><![CDATA[<h2>參考</h2>
+
+<ul>
+<li>ApiDock</li>
+</ul>
+
+
+<p><a href="http://apidock.com/rails/ActiveRecord/Serialization/to_json" target="_blank">http://apidock.com/rails/ActiveRecord/Serialization/to_json</a></p>
+
+<ul>
+<li>Stackoverflow</li>
+</ul>
+
+
+<p><a href="http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json" target="_blank">http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json</a></p>
+
+<h2>說明</h2>
+
+<ul>
+<li>參數為 include</li>
+<li>可以搭配 only, methods 做部分 attribute 或 method 的輸出</li>
+</ul>
+
+
+<h2>範例</h2>
+
+<p>```ruby
+foo.to_json(:include =></p>
+
+<pre><code>           { :emails =&gt; { :only =&gt; :address }, 
+             :friends =&gt; { :only =&gt; :name, 
+               :include =&gt; { :emails =&gt; { :only =&gt; :address } } 
+             }
+           })
+</code></pre>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>
