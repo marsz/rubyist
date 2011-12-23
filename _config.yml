@@ -26,7 +26,7 @@ email: marsz330@gmail.com
 # ----------------------- #
 
 # If publishing to a subdirectory as in http://site.com/project set 'root: /project'
-root: /rubyist
+root: /
 permalink: /blog/:year/:month/:day/:title/
 source: source
 destination: public/rubyist
