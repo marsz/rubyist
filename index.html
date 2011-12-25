@@ -9,7 +9,9 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="參考 ApiDock http://apidock.com/rails/ActiveRecord/Serialization/to_json Stackoverflow http://stackoverflow.com/questions/4443218/ror-nested-include-to &hellip;">
+  <meta name="description" content="當我們在專案目錄中執行 &#8220;capify .&#8221; 時, 會產生 Capfile 檔
+在該檔案加上 Capfile1
+load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 shared/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -64,6 +66,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 Deploy 時能夠自動執行 Rake Assets:precompile</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-25T15:14:00+08:00" pubdate data-updated="true">Dec 25<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>當我們在專案目錄中執行 &#8220;capify .&#8221; 時, 會產生 Capfile 檔
+在該檔案加上</p>
+
+<figure class='code'><figcaption><span>Capfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="s1">&#39;deploy/assets&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>capistrano 會將 current/public/assets 連結到 shared/assets 中
+若 shared 下無此目錄, 記得要 mkdir 一下</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -198,6 +245,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2011-12-23/nested-to_json-and-to_xml/">巢狀 (nested) to_json / to_xml 應用</a>

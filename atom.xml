@@ -4,7 +4,7 @@
   <title><![CDATA[Ruby on Rails]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2011-12-23T21:53:05+08:00</updated>
+  <updated>2011-12-25T15:21:39+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/"/>
+    <updated>2011-12-25T15:14:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy</id>
+    <content type="html"><![CDATA[<p>當我們在專案目錄中執行 &#8220;capify .&#8221; 時, 會產生 Capfile 檔
+在該檔案加上</p>
+
+<figure class='code'><figcaption><span>Capfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="s1">&#39;deploy/assets&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>capistrano 會將 current/public/assets 連結到 shared/assets 中
+若 shared 下無此目錄, 記得要 mkdir 一下</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[巢狀 (nested) to_json / to_xml 應用]]></title>
