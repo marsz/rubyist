@@ -9,9 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="當我們在專案目錄中執行 &#8220;capify .&#8221; 時, 會產生 Capfile 檔
-在該檔案加上 Capfile1
-load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 shared/ &hellip;">
+  <meta name="description" content="在備份資料的過程中常用到的一個 gem
+可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入 yaml_db github: https://github.com/ludicast/yaml_db ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +83,52 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">Databse 資料以 Yaml 格式匯入/匯出</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
+可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
+
+<h2>yaml_db</h2>
+
+<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 Deploy 時能夠自動執行 Rake Assets:precompile</a></h1>
     
     
@@ -115,10 +160,12 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>capistrano 會將 current/public/assets 連結到 shared/assets 中
-若 shared 下無此目錄, 記得要 mkdir 一下</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -152,48 +199,14 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
   </header>
 
 
-  <div class="entry-content"><h2>參考</h2>
-
-<ul>
-<li>ApiDock</li>
-</ul>
-
-
-<p><a href="http://apidock.com/rails/ActiveRecord/Serialization/to_json" target="_blank">http://apidock.com/rails/ActiveRecord/Serialization/to_json</a></p>
-
-<ul>
-<li>Stackoverflow</li>
-</ul>
-
-
-<p><a href="http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json" target="_blank">http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json</a></p>
-
-<h2>說明</h2>
-
-<ul>
-<li>參數為 include</li>
-<li>可以搭配 only, methods 做部分 attribute 或 method 的輸出</li>
-</ul>
-
-
-<h2>範例</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">foo</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="ss">:include</span> <span class="o">=&gt;</span>
-</span><span class='line'>               <span class="p">{</span> <span class="ss">:emails</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:address</span> <span class="p">},</span>
-</span><span class='line'>               <span class="ss">:friends</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span>
-</span><span class='line'>                 <span class="ss">:include</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:emails</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:address</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>               <span class="p">}</span>
-</span><span class='line'>             <span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
+  <div class="entry-content"><p>在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出!</p>
 
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-23/nested-to_json-and-to_xml/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -227,20 +240,20 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
   </header>
 
 
-  <div class="entry-content"><h6>來源</h6>
+  <div class="entry-content"><p>在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息</p>
 
-<p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
-
-<h6>解決</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mystring</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</span></code></pre></td></tr></table></div></figure>
 
 
-<p>總之就是把所有的字串都 force_encoding :p</p>
+
+
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -257,6 +270,10 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">databse 資料以 yaml 格式匯入/匯出</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>

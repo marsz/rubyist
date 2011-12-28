@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Encoding | Ruby on Rails]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/encoding/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2011-12-28T14:01:37+08:00</updated>
+  <updated>2011-12-28T14:40:28+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -18,7 +18,16 @@
     <link href="http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/"/>
     <updated>2011-12-23T21:01:00+08:00</updated>
     <id>http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit</id>
-    <content type="html"><![CDATA[<h6>來源</h6>
+    <content type="html"><![CDATA[<p>在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息</p>
+
+<p><code>
+Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8
+</code></p>
+
+<!-- more -->
+
+
+<h6>來源</h6>
 
 <p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
 

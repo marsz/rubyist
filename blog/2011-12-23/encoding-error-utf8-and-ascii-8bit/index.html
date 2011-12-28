@@ -9,7 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="來源 https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors &hellip;">
+  <meta name="description" content="在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息 1
+Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8 來源 https://rails. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -102,7 +103,18 @@
   </header>
 
 
-<div class="entry-content"><h6>來源</h6>
+<div class="entry-content"><p>在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<h6>來源</h6>
 
 <p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
 
@@ -173,6 +185,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">databse 資料以 yaml 格式匯入/匯出</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>

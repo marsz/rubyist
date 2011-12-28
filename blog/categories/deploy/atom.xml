@@ -4,7 +4,7 @@
   <title><![CDATA[Category: deploy | Ruby on Rails]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/deploy/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2011-12-28T14:01:37+08:00</updated>
+  <updated>2011-12-28T14:40:28+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -24,6 +24,9 @@
 <p><code>ruby Capfile
 load 'deploy/assets'
 </code></p>
+
+<!-- more -->
+
 
 <p>capistrano 會將 current/public/assets 連結到 shared/assets 中
 若 shared 下無此目錄, 記得要 mkdir 一下</p>

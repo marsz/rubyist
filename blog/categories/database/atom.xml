@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: database | Ruby on Rails]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/database/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2011-12-28T14:40:28+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[databse 資料以 yaml 格式匯入/匯出]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/"/>
+    <updated>2011-12-28T14:07:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml</id>
+    <content type="html"><![CDATA[<p>在備份資料的過程中常用到的一個 gem
+可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
+
+<h2>yaml_db</h2>
+
+<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
+
+<!-- more -->
+
+
+<h2>安裝 (rails 3)</h2>
+
+<p><code>ruby
+gem 'yaml_db'
+</code></p>
+
+<p><code>
+bundle install
+</code></p>
+
+<h2>匯出</h2>
+
+<p>把資料匯出到 db/data.yml</p>
+
+<p><code>
+bundle exec rake db:data:dump
+</code></p>
+
+<p>匯出不同環境的 database (設定在 config/database.yml, 預設是 development)
+<code>
+bundle exec rake db:data:dump RAILS_ENV=production
+</code></p>
+
+<p>若要依照一個 table 一個檔案匯出..
+(2011/12/28 notice: 目前此方法在 1.9.2 + 3.1.0 的環境下測試會有一些問題)
+<code>
+cd path/to/dump_dir  # cd 到欲匯出的 dir 下, 理論上依然是在專案目錄內
+db:data:dump_dir
+</code></p>
+
+<h2>匯入</h2>
+
+<p>把資料從 db/data.yml 匯入
+<code>
+bundle exec rake db:data:load
+</code></p>
+
+<p>匯入不同環境的 database
+<code>
+bundle exec rake db:data:load RAILS_ENV=production
+</code></p>
+
+<p>匯入某個目錄下的所有的 yaml (原理同 rake db:data:dump_dir)
+(2011/12/28 notice: 此方法在 1.9.2 + 3.1.0 下仍有問題)
+<code>
+cd path/to/yamls_dir # cd 到 yaml 檔存放的 dir
+bundle exec rake db:data:load_dir
+</code></p>
+
+<h2>其他</h2>
+
+<ul>
+<li>配合 whenever 可做定期備份, 並且將 yml 檔上傳至其他處存放</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

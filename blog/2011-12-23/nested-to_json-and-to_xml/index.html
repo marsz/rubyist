@@ -9,7 +9,7 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="參考 ApiDock http://apidock.com/rails/ActiveRecord/Serialization/to_json Stackoverflow http://stackoverflow.com/questions/4443218/ror-nested-include-to &hellip;">
+  <meta name="description" content="在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出! 參考 ApiDock http://apidock.com/rails/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -102,7 +102,12 @@
   </header>
 
 
-<div class="entry-content"><h2>參考</h2>
+<div class="entry-content"><p>在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出!</p>
+
+<!-- more -->
+
+
+<h2>參考</h2>
 
 <ul>
 <li>ApiDock</li>
@@ -203,6 +208,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">databse 資料以 yaml 格式匯入/匯出</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
