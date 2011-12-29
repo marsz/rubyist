@@ -81,7 +81,7 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
   
   <header>
     
-      <h1 class="entry-title">在 Capistrano 中 Deploy 時能夠自動執行 Rake Assets:precompile</h1>
+      <h1 class="entry-title">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</h1>
     
     
       <p class="meta">
@@ -98,6 +98,8 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
 
 
 <time datetime="2011-12-25T15:14:00+08:00" pubdate data-updated="true">Dec 25<span>th</span>, 2011</time>
+        
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
@@ -157,6 +159,8 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
   
   
   
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
 
     
@@ -170,6 +174,12 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
     </p>
   </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -217,7 +227,32 @@ load &#39;deploy/assets&#39; capistrano 會將 current/public/assets 連結到 s
 </footer>
   
 
+<script type="text/javascript">
+      var disqus_shortname = 'rubyist-marsz';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 
 
