@@ -5,12 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8 - Ruby on Rails</title>
+  <title>new-post - Ruby on Rails</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息 1
-Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8 來源 https://rails. &hellip;">
+  <meta name="description" content="針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
+即想在 sql 中實作出 1
+UPDATE users SET score = score + 1 WHERE id = 1 rails 在實作 counter cache 中有 api 可用 1
+User. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +21,7 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,7 +82,7 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
   
   <header>
     
-      <h1 class="entry-title">Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</h1>
+      <h1 class="entry-title">new-post</h1>
     
     
       <p class="meta">
@@ -96,7 +98,7 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
   
 
 
-<time datetime="2011-12-23T21:01:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2011</time>
+<time datetime="2011-12-30T17:07:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2011</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -105,29 +107,61 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
   </header>
 
 
-<div class="entry-content"><p>在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息</p>
+<div class="entry-content"><p>針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
+即想在 sql 中實作出</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</span></code></pre></td></tr></table></div></figure>
-
-
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <!-- more -->
 
 
-<h6>來源</h6>
-
-<p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
-
-<h6>解決</h6>
+<p>rails 在實作 counter cache 中有 api 可用</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mystring</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">increment_counter</span> <span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>總之就是把所有的字串都 force_encoding :p</p>
+<p>對應 sql:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>參考</h6>
+
+<p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/increment_counter" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/increment_counter</a></p>
+
+<p>當然, 遞減的 method 相對是 decrement_counter</p>
+
+<p>若增減值大於 1 的話, 則可用 update_counters 來實作</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">update_counters</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="ss">:score</span> <span class="o">=&gt;</span> <span class="mi">3</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>輸出 sql</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">+</span> <span class="mi">3</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>update_counters 可以一次對多個欄位做增減</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">update_counters</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="ss">:score</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="ss">:karma</span> <span class="o">=&gt;</span> <span class="mi">6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>參考</h6>
+
+<p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/update_counters" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/update_counters</a></p>
 </div>
 
 
@@ -150,12 +184,12 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
   
 
 
-<time datetime="2011-12-23T21:01:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2011</time>
+<time datetime="2011-12-30T17:07:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2011</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/encoding/'>Encoding</a>
+    <a class='category' href='/blog/categories/activerecord/'>ActiveRecord</a>, <a class='category' href='/blog/categories/counter/'>Counter</a>, <a class='category' href='/blog/categories/sql/'>sql</a>
   
 </span>
 
@@ -164,7 +198,7 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/" data-via="" data-counturl="http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/" data-via="" data-counturl="http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/" >Tweet</a>
   
   
   
@@ -175,8 +209,8 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" title="Previous Post: databse 資料以 yaml 格式匯入/匯出">&laquo; databse 資料以 yaml 格式匯入/匯出</a>
       
-        <a class="basic-alignment right" href="/blog/2011-12-23/nested-to_json-and-to_xml/" title="next Post: 巢狀 (nested) to_json / to_xml 應用">巢狀 (nested) to_json / to_xml 應用 &raquo;</a>
       
     </p>
   </footer>
@@ -243,8 +277,8 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/';
         var disqus_script = 'embed.js';
       
     (function () {
