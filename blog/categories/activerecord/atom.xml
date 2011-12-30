@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ActiveRecord | Ruby on Rails]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/activerecord/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2011-12-30T17:20:33+08:00</updated>
+  <updated>2011-12-30T17:23:59+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[new-post]]></title>
+    <title type="html"><![CDATA[實作 sql 中的數值欄位的遞增(counter increment)]]></title>
     <link href="http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/"/>
     <updated>2011-12-30T17:07:00+08:00</updated>
     <id>http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value</id>
