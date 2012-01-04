@@ -9,8 +9,7 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
-因此若我們直接下 sql 時, 必須將時區考量進去 ">
+  <meta name="description" content="在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確 因此小弟不疑有他, 於是&#8230; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +76,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-04/new-post/">在 validates_format_of 中使用正規表示法(Regular Expression)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-04T17:43:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-04/new-post/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
+
+<p>因此小弟不疑有他, 於是&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-04/new-post/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -373,6 +417,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-01-04/new-post/">在 validates_format_of 中使用正規表示法(Regular Expression)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-01-04/query-datetime-by-date/">如何在 datetime 的欄位中做日期的搜尋</a>
       </li>
     
@@ -386,10 +434,6 @@
     
       <li class="post">
         <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011-12-23/nested-to_json-and-to_xml/">巢狀 (nested) to_json / to_xml 應用</a>
       </li>
     
   </ul>
