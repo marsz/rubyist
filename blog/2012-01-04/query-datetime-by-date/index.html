@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: deploy - Ruby on Rails</title>
+  <title>如何在 datetime 的欄位中做日期的搜尋 - Ruby on Rails</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="Category: deploy">
+  <meta name="description" content="rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
+因此若我們直接下 sql 時, 必須將時區考量進去 例如我們想要找欄位 created_at 在 2012-01-01 00:00:00 到 2012-01-03 23:59:59 的資料
+以台灣 +8 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/deploy">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,36 +77,122 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: deploy</h1>
+    
+      <h1 class="entry-title">如何在 datetime 的欄位中做日期的搜尋</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-04T16:54:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
+因此若我們直接下 sql 時, 必須將時區考量進去</p>
 
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a></h1>
-<time datetime="2011-12-25T15:14:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>25</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/assets/'>assets</a>, <a class='category' href='/blog/categories/capisytrano/'>capisytrano</a>, <a class='category' href='/blog/categories/deploy/'>deploy</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<p>例如我們想要找欄位 created_at 在 2012-01-01 00:00:00 到 2012-01-03 23:59:59 的資料
+以台灣 +8 時區為例, 我們應該找資料庫中 2011-12-31 16:00:00 到 2012-01-03 15:59:59 的資料
+以下範例可直接達到所想要的 sql</p>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">date_start</span> <span class="o">=</span> <span class="s2">&quot;2012-01-01&quot;</span>
+</span><span class='line'><span class="n">date_end</span> <span class="o">=</span> <span class="s2">&quot;2012-01-03&quot;</span>
+</span><span class='line'><span class="n">range</span> <span class="o">=</span> <span class="n">date_start</span><span class="o">.</span><span class="n">to_date</span><span class="o">.</span><span class="n">beginning_of_day</span><span class="o">.</span><span class="n">.date_end</span><span class="o">.</span><span class="n">to_date</span><span class="o">.</span><span class="n">end_of_day</span>
+</span><span class='line'><span class="no">User</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:created_at</span> <span class="o">=&gt;</span> <span class="n">range</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://api.rubyonrails.org/classes/Date.html" target="_blank">Date</a>中有 &#8220;beginning_of_day&#8221; 和 &#8220;end_of_day&#8221; 兩個 method 將 Date 轉換為 Datetime 並且使時間落在當天的開始與結束, 透過 ActiveRecord 以 hash 方式作為 query interface, 時區才會自動轉換</p>
+
+<p>同樣在 Date 中還有 beginning_of_month, beginning_of_quarter, beginning_of_week, beginning_of_year 可用</p>
+
+<h6>補充</h6>
+
+<p>有關時區設定可參考 config/application.rb</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-04T16:54:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/activerecord/'>ActiveRecord</a>, <a class='category' href='/blog/categories/sql/'>Sql</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/" data-via="" data-counturl="http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011-12-30/counter-increment-with-custom-value/" title="Previous Post: 實作 sql 中的數值欄位的遞增(counter increment)">&laquo; 實作 sql 中的數值欄位的遞增(counter increment)</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -160,7 +248,10 @@
       var disqus_shortname = 'rubyist-marsz';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
