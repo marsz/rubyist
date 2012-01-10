@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: rmagick | Ruby on Rails]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/rmagick/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-01-10T23:44:55+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用 Carrierwave 處理檔案上傳 (整合 imagemagick 與 Amazon S3)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration/"/>
+    <updated>2012-01-10T23:38:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration</id>
+    <content type="html"><![CDATA[<h2>參考來源</h2>
+
+<ul>
+<li>Github <a href="https://github.com/jnicklas/carrierwave">https://github.com/jnicklas/carrierwave</a></li>
+</ul>
+
+
+<h2>安裝</h2>
+
+<p>```ruby Gemfile</p>
+
+<pre><code>gem 'carrierwave'
+</code></pre>
+
+<p>```</p>
+
+<h2>建立 uploader</h2>
+
+<pre><code>rails generate uploader user_avatar
+</code></pre>
+
+<p>檔案產生於</p>
+
+<pre><code>app/uploader/user_avatar_uploader.rb
+</code></pre>
+
+<h2>簡易範例</h2>
+
+<h4>直接使用</h4>
+
+<p>```ruby</p>
+
+<pre><code>uploader = UserAvatarUploader.new
+uploader.store!(my_file)
+</code></pre>
+
+<p>```</p>
+
+<h4>掛在 model 裡使用</h4>
+
+<p>在 model 裡
+```ruby app/models/user.rb</p>
+
+<pre><code>class User
+  mount_uploader :picture, UserAvatarUploader
+end
+</code></pre>
+
+<p>```</p>
+
+<p>新增 migration, 因欄位名稱是 picture, 所以新增一個 picture 的 string 欄位在 users table 裡</p>
+
+<pre><code>rails g migration add_column_picture_to_users
+</code></pre>
+
+<p>```ruby db/migrate/201101011213_add_column_picture_to_users.rb</p>
+
+<pre><code>add_column :users, :picture, :string
+</code></pre>
+
+<p>```</p>
+
+<p>```html _form.html.erb</p>
+
+<pre><code>&lt;input type="file" name="picture" /&gt;
+</code></pre>
+
+<p>```</p>
+
+<p>```ruby users_controller.rb</p>
+
+<pre><code>u = User.new
+u.picture = params[:picture]
+u.save!
+u.picture.url # =&gt; /url/to/file.png
+</code></pre>
+
+<p>```</p>
+
+<p>在 _form.html.erb 送出 post 後, 便會按照在 user_avatar_uploader.rb 中的設定進行儲存並且回傳檔案>網址</p>
+
+<h2>uploader 設定</h2>
+
+<h4>儲存</h4>
+
+<p>存成檔案, fog  為將檔案上傳至 cdn 用, 稍後會介紹
+```ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>storage :file
+# storage :fog
+</code></pre>
+
+<p><code>
+可覆寫 store_dir, 以指定儲存路徑, 以 public/ 為基礎
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>def store_dir
+   "uploader/user_avatar"
+end
+</code></pre>
+
+<p><code>
+限定檔案附檔名
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>def extension_white_list
+  %w(jpg jpeg gif png)
+end
+</code></pre>
+
+<p><code>
+指定檔名, 包含附檔名 (model.id 稍後介紹)
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>def filename
+  # @filename
+  "#{model.id}.png"
+end
+</code></pre>
+
+<p><code>
+指定預設的 url (e.g.沒有圖的時候)
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>def default_url
+  "/images/fallback/" + [version_name, "default.png"].compact.join('_')
+end
+</code></pre>
+
+<p>```</p>
+
+<h4>使用 Imagemagick 壓縮</h4>
+
+<p>Gemfile
+```ruby Gemfile</p>
+
+<pre><code>gem 'rmagick'
+</code></pre>
+
+<p><code>
+uploader 加上
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>include CarrierWave::RMagick
+</code></pre>
+
+<p><code>
+在 user_avatar_uploader.rb 中可以自行定義要用哪些 Imagemagick 的 method 處理圖片
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code># 轉換成 png
+process :convert =&gt; 'png'
+# 按比例縮成指定大小並且補白
+process :resize_and_pad =&gt; [160, 160]
+</code></pre>
+
+<p>```
+所有可用的 api 見 <a href="https://github.com/jnicklas/carrierwave/blob/master/lib/carrierwave/processing/rmagick.rb">https://github.com/jnicklas/carrierwave/blob/master/lib/carrierwave/processing/rmagick.rb</a></p>
+
+<p>若希望可以另做縮圖, 可以透過 version 同時建立與原圖不同的版本
+```ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code># 版本名稱為 thumb
+version :thumb do
+   process :resize_and_pad =&gt; [100, 100]
+   process :convert =&gt; 'png'
+end
+# 版本名稱為 small
+version :small do
+   process :resize_and_pad =&gt; [160, 160]
+   process :convert =&gt; 'png'
+end
+</code></pre>
+
+<p>```</p>
+
+<p>mixin 類似 CarrierWave::RMagick 的 module 可以將更多 RMagick 的 api 應用在 process 中</p>
+
+<p>RMagick api 可參考</p>
+
+<blockquote><ul>
+<li>doc: <a href="http://studio.imagemagick.org/RMagick/doc/">http://studio.imagemagick.org/RMagick/doc/</a></li>
+<li>source: <a href="https://github.com/rmagick/rmagick/blob/master/lib/RMagick.rb">https://github.com/rmagick/rmagick/blob/master/lib/RMagick.rb</a></li>
+</ul>
+</blockquote>
+
+<p>取得 version :
+```ruby</p>
+
+<pre><code>u = User.find(1)
+u.picture.url # 原圖 url
+u.picture.thumb.url # thumb 版本的 url
+u.picture.small.url # small 版本的 url
+</code></pre>
+
+<p>```</p>
+
+<h4>上傳至 CDN (以 Amazon S3 為例)</h4>
+
+<p>```ruby Gemfile</p>
+
+<pre><code>gem 'fog'
+</code></pre>
+
+<p><code>
+在 storage 改為 fog
+</code>ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>storage :fog
+</code></pre>
+
+<p><code>
+新增 config/initializer/carrierwave.rb, 內容如下
+</code>ruby config/initializer/carrierwave.rb</p>
+
+<pre><code>CarrierWave.configure do |config|
+  config.fog_credentials = {
+    :provider               =&gt; 'AWS',       # required
+    :aws_access_key_id      =&gt; 'XXXXX',       # your aws access key id
+    :aws_secret_access_key  =&gt; 'xxxxxxxxxx',       # your aws secret access key
+    :region                 =&gt; 'ap-southeast-1'  # your bucket's region in S3, defaults to 'us-east-1'
+  }
+  # your S3 bucket name
+  config.fog_directory  = 'my_bucket'
+  # custome your domain on aws S3, defaults to nil
+  config.fog_host       = 'http://myapp.com'
+  config.fog_public     = true                                   # optional, defaults to true
+  config.fog_attributes = {'Cache-Control'=&gt;'max-age=315576000'}  # optional, defaults to {}
+end
+</code></pre>
+
+<p>```
+依上述範例, 要在 S3 開一個 public bucket 名為 "my_bucket", 地區為新加坡</p>
+
+<p>access key 可至 <a href="https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key">https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key</a> 搜尋</p>
+
+<p>bucket 中儲存的路徑可在 user_avatar_uploader.rb 中的 store_dir 定義
+```ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>def store_dir
+    "user_avatar/#{model.id}"
+end
+</code></pre>
+
+<p>```</p>
+
+<h4>uploader 的 methods</h4>
+
+<p>當你將 uploader mount 進 model, 就可以在 uploader 中直接取得該 model 的 instance
+```ruby app/uploader/user_avatar_uploader.rb</p>
+
+<pre><code>def filename
+   "#{model.id}.png"
+end
+# and mounted_as
+def store_dir
+   "uploader/user_avatar/#{mounted_as}"
+end
+</code></pre>
+
+<p>```
+uploader 有哪些 medthods 可參考 <a href="https://github.com/jnicklas/carrierwave/tree/master/lib/carrierwave/uploader">https://github.com/jnicklas/carrierwave/tree/master/lib/carrierwave/uploader</a></p>
+
+<h4>處理 local file 或 remote file</h4>
+
+<p>remote file, 參考 <a href="http://stackoverflow.com/questions/5007575/how-to-assign-a-remote-file-to-carrierwave">http://stackoverflow.com/questions/5007575/how-to-assign-a-remote-file-to-carrierwave</a>
+```ruby</p>
+
+<pre><code>u = User.find(1)
+url = "http://www.google.com/logo.png"
+u.remote_picture_url = url
+u.save
+</code></pre>
+
+<p><code>
+local file
+</code>ruby</p>
+
+<pre><code>u =  User.find(1)
+file_path = "#{Rails.root}/public/images/exmaples/foo.png"
+u.picture = File.open(file_path)
+</code></pre>
+
+<p>```</p>
+
+<p>Carrierwave 的特色在於細節定義都在 uploader 中, 而 model 只要 mount 以及加上 string 欄位即可</p>
+]]></content>
+  </entry>
+  
+</feed>

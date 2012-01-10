@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Devise | Ruby on Rails]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/devise/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-01-10T23:44:55+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Devise 在登入或登出之後執行回乎]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/"/>
+    <updated>2012-01-10T23:11:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out</id>
+    <content type="html"><![CDATA[<h4>需求</h4>
+
+<p>想要在登入或登出後執行指定的行為</p>
+
+<!-- more -->
+
+
+<h4>官方 wiki</h4>
+
+<p><a href="https://github.com/plataformatec/devise/wiki/How-To:-Change-the-redirect-path-after-destroying-a-session-i.e.-signing-out" target="_blank">How To: Change the redirect path after destroying a session i.e. signing out</a></p>
+
+<h4>說明</h4>
+
+<ul>
+<li>從 <a href="https://github.com/plataformatec/devise/blob/master/app/controllers/devise/sessions_controller.rb" target="_blank">SessionsController</a> 可得知每次登入後會 redirect 到 after_sign_in_path_for 這個 helper method 所回傳的路徑, 登出則是 after_sign_out_path_for</li>
+<li>找到 <a href="https://github.com/plataformatec/devise/blob/master/lib/devise/controllers/helpers.rb#L207" target="_blank">Controller::Helper</a> 定義了  after_sign_in_path_for 和 after_sign_out_path_for</li>
+<li>針對這兩個 method 進行覆寫</li>
+</ul>
+
+
+<h4>範例</h4>
+
+<p>注意要用 private, 並且傳進一參數為 model instance
+```ruby app/controllers/application_controller.rb
+class ApplicationController &lt; ActionController::Base
+  private</p>
+
+<p>  # Overwriting the sign_in redirect path method
+  def after_sign_in_path_for(resource_or_scope)</p>
+
+<pre><code>root_path
+</code></pre>
+
+<p>  end
+end
+```</p>
+]]></content>
+  </entry>
+  
+</feed>
