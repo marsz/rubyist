@@ -6,6 +6,10 @@ comments: true
 categories: [JSON,XML,ActiveRecord]
 ---
 
+在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出!
+
+<!-- more -->
+
 ## 參考
 
 * ApiDock
