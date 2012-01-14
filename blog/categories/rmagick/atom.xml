@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rmagick | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rmagick/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-14T18:00:04+08:00</updated>
+  <updated>2012-01-14T18:15:06+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -23,6 +23,9 @@
 <ul>
 <li>Github <a href="https://github.com/jnicklas/carrierwave">https://github.com/jnicklas/carrierwave</a></li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>安裝</h2>

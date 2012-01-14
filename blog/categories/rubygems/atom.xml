@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-14T18:00:04+08:00</updated>
+  <updated>2012-01-14T18:15:06+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -176,6 +176,9 @@ cap production deploy:migrations # 進行佈署並且跑 migration
 <ul>
 <li>Github <a href="https://github.com/jnicklas/carrierwave">https://github.com/jnicklas/carrierwave</a></li>
 </ul>
+
+
+<!-- more -->
 
 
 <h2>安裝</h2>
