@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-14T17:52:45+08:00</updated>
+  <updated>2012-01-14T18:00:04+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -46,6 +46,13 @@
 </span><span class='line'><span class="k">rescue</span> <span class="no">LoadError</span>
 </span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;`gem install capistrano_colors` to get output more userfriendly.&quot;</span>
 </span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;whenever/capistrano&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 

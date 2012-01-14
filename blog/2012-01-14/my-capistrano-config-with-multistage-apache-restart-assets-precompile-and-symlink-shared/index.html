@@ -141,6 +141,13 @@ $:.unshift(File.expand_path(&#39;./lib&#39;, ENV[&#39;rvm_path&#39 &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
+<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;whenever/capistrano&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <p>multistages 設定, 讓 server 端的設定和佈署工作各自獨立管理, 同時資源佈署多個 server</p>
 
 <figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>

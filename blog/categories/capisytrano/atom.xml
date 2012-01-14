@@ -4,7 +4,7 @@
   <title><![CDATA[Category: capisytrano | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/capisytrano/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-14T17:52:50+08:00</updated>
+  <updated>2012-01-14T18:00:04+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -39,6 +39,12 @@ begin
 rescue LoadError
   puts "`gem install capistrano_colors` to get output more userfriendly."
 end
+</code></p>
+
+<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron</p>
+
+<p><code>ruby config/deploy.rb
+require "whenever/capistrano"
 </code></p>
 
 <p>multistages 設定, 讓 server 端的設定和佈署工作各自獨立管理, 同時資源佈署多個 server</p>
