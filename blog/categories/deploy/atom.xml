@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: deploy | Ruby on Rails]]></title>
+  <title><![CDATA[Category: deploy | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/deploy/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-10T23:44:55+08:00</updated>
+  <updated>2012-01-14T17:52:50+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,153 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我的 capistrano 完整設定檔說明]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/"/>
+    <updated>2012-01-14T16:09:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared</id>
+    <content type="html"><![CDATA[<p>capistrano 是一套強大的佈署工具, 今天提供小弟的設定檔內容給大家參考</p>
+
+<!-- more -->
+
+
+<p>rvm 和 bundler</p>
+
+<p><code>ruby config/deploy.rb
+$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
+require "rvm/capistrano" # Load RVM's capistrano plugin.
+require 'bundler/capistrano'
+</code></p>
+
+<p>capistrano color, 讓佈署過程中的訊息內容上色</p>
+
+<p><code>ruby config/deploy.rb
+begin
+  require 'capistrano_colors'
+rescue LoadError
+  puts "`gem install capistrano_colors` to get output more userfriendly."
+end
+</code></p>
+
+<p>multistages 設定, 讓 server 端的設定和佈署工作各自獨立管理, 同時資源佈署多個 server</p>
+
+<p><code>ruby config/deploy.rb
+require 'capistrano/ext/multistage'
+set :stages,        %w(staging production)
+set :default_stage, "staging"
+</code></p>
+
+<p>基本設定, 包含 git</p>
+
+<p>```ruby config/deploy.rb
+set :application, "foo"
+set :repository,  "git@github.com:marsz/foo.git"</p>
+
+<p>set :scm, :git</p>
+
+<p>set :use_sudo, false
+```</p>
+
+<p>設定 deploy:restart, capistrano 預設是空的, 所以重起 rack 的部份一定要自己寫, 以下範例以 <a href="http://www.modrails.com/documentation/Users%20guide%20Apache.html#_redeploying_restarting_the_ruby_on_rails_application" target="_blank">passenger + apache</a> 的重啟方式做為參考</p>
+
+<p>```ruby config/deploy.rb</p>
+
+<h1>namespace :deploy 內</h1>
+
+<p>namespace :deploy do
+  # .....
+  task :restart, :roles => :app, :except => { :no_release => true } do</p>
+
+<pre><code>run "touch #{current_path}/tmp/restart.txt"
+</code></pre>
+
+<p>  end
+  # .....
+end
+```</p>
+
+<p>設定 symlink_shared, 有一些沒進 version control 的 config 檔案, 要在佈署時, link 過去, 例如 config/database.yml, 以下僅供參考, 實際 link 內容須自己寫</p>
+
+<p>```ruby config/deploy.rb</p>
+
+<h1>namespace :deploy 內</h1>
+
+<p>namespace :deploy
+  # ....
+  task :symlink_shared, :roles => [:app] do</p>
+
+<pre><code>config_files = [:database, :redis]
+symlink_hash = {}
+config_files.each do |fname|
+  from = "#{shared_path}/config/#{fname}.yml"
+  to = "#{release_path}/config/#{fname}.yml"
+  run "ln -s #{from} #{to}"
+end
+</code></pre>
+
+<p>  end
+  # ....
+end</p>
+
+<h1>把 symlink_shared 內容掛進去 deploy 中</h1>
+
+<p>before "deploy:assets:symlink", "deploy:symlink_shared"
+```</p>
+
+<p>tail log, 要線上 debug 時可用</p>
+
+<p>```ruby config/deploy.rb
+task :tail_log, :roles => :app do
+  run "tail -f -n 100 #{shared_path}/log/#{rails_env}.log"
+end</p>
+
+<h1>執行 cap production tail_log 即可</h1>
+
+<p>```</p>
+
+<p>使用了 multistage 後, 各個 server 的設定檔必須放在 config/deploy/ 下, 檔名對應 stage 名稱<br/>
+例如 config/deploy/production.rb
+以下為 stage 設定檔內容</p>
+
+<p>預設 rails env</p>
+
+<p><code>ruby config/deploy/production.rb
+set :rails_env, "production"
+</code></p>
+
+<p>github 分支</p>
+
+<p><code>ruby config/deploy/production.rb
+set :branch, 'master'
+</code></p>
+
+<p>ssh 登入相關, 建議多利用 <a href="http://www.eng.cam.ac.uk/help/jpmg/ssh/authorized_keys_howto.html" target="_blank"> SSH 免密碼登入 </a></p>
+
+<p><code>ruby config/deploy/production.rb
+set :user, 'marsz'
+set :domain, 'xxx.com'
+server "#{domain}", :web, :app, :db, :primary =&gt; true
+</code></p>
+
+<p>佈署的 dir path</p>
+
+<p><code>ruby config/deploy/production.rb
+set :deploy_to, "/path/to/app"
+</code></p>
+
+<p>佈署指令</p>
+
+<p><code>
+cap production setup # 第一次佈署環境建立
+cap production deploy # 進行佈署
+cap production deploy:migrations # 進行佈署並且跑 migration
+</code></p>
+
+<p>若想要在 cap deploy 時也執行 rake assets:precompile<br/>
+可以參考 <a href="http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" target="_blank">這篇</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile]]></title>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Ruby on Rails]]></title>
+  <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-10T23:44:55+08:00</updated>
+  <updated>2012-01-14T17:52:45+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,197 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我的 capistrano 完整設定檔說明]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/"/>
+    <updated>2012-01-14T16:09:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared</id>
+    <content type="html"><![CDATA[<p>capistrano 是一套強大的佈署工具, 今天提供小弟的設定檔內容給大家參考</p>
+
+<!-- more -->
+
+
+<p>rvm 和 bundler</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;./lib&#39;</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;rvm_path&#39;</span><span class="o">]</span><span class="p">))</span> <span class="c1"># Add RVM&#39;s lib directory to the load path.</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;rvm/capistrano&quot;</span> <span class="c1"># Load RVM&#39;s capistrano plugin.</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;bundler/capistrano&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>capistrano color, 讓佈署過程中的訊息內容上色</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">begin</span>
+</span><span class='line'>  <span class="nb">require</span> <span class="s1">&#39;capistrano_colors&#39;</span>
+</span><span class='line'><span class="k">rescue</span> <span class="no">LoadError</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;`gem install capistrano_colors` to get output more userfriendly.&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>multistages 設定, 讓 server 端的設定和佈署工作各自獨立管理, 同時資源佈署多個 server</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;capistrano/ext/multistage&#39;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:stages</span><span class="p">,</span>        <span class="sx">%w(staging production)</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:default_stage</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>基本設定, 包含 git</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:application</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:repository</span><span class="p">,</span>  <span class="s2">&quot;git@github.com:marsz/foo.git&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:scm</span><span class="p">,</span> <span class="ss">:git</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">set</span> <span class="ss">:use_sudo</span><span class="p">,</span> <span class="kp">false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 deploy:restart, capistrano 預設是空的, 所以重起 rack 的部份一定要自己寫, 以下範例以 <a href="http://www.modrails.com/documentation/Users%20guide%20Apache.html#_redeploying_restarting_the_ruby_on_rails_application" target="_blank">passenger + apache</a> 的重啟方式做為參考</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># namespace :deploy 內</span>
+</span><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># .....</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">run</span> <span class="s2">&quot;touch </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">/tmp/restart.txt&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1"># .....</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 symlink_shared, 有一些沒進 version control 的 config 檔案, 要在佈署時, link 過去, 例如 config/database.yml, 以下僅供參考, 實際 link 內容須自己寫</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># namespace :deploy 內</span>
+</span><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span>
+</span><span class='line'>  <span class="c1"># ....</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:symlink_shared</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:app</span><span class="o">]</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">config_files</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:database</span><span class="p">,</span> <span class="ss">:redis</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">symlink_hash</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>    <span class="n">config_files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">fname</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">from</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">shared_path</span><span class="si">}</span><span class="s2">/config/</span><span class="si">#{</span><span class="n">fname</span><span class="si">}</span><span class="s2">.yml&quot;</span>
+</span><span class='line'>      <span class="n">to</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">release_path</span><span class="si">}</span><span class="s2">/config/</span><span class="si">#{</span><span class="n">fname</span><span class="si">}</span><span class="s2">.yml&quot;</span>
+</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;ln -s </span><span class="si">#{</span><span class="n">from</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">to</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1"># ....</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># 把 symlink_shared 內容掛進去 deploy 中</span>
+</span><span class='line'><span class="n">before</span> <span class="s2">&quot;deploy:assets:symlink&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:symlink_shared&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>tail log, 要線上 debug 時可用</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:tail_log</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">run</span> <span class="s2">&quot;tail -f -n 100 </span><span class="si">#{</span><span class="n">shared_path</span><span class="si">}</span><span class="s2">/log/</span><span class="si">#{</span><span class="n">rails_env</span><span class="si">}</span><span class="s2">.log&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># 執行 cap production tail_log 即可</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用了 multistage 後, 各個 server 的設定檔必須放在 config/deploy/ 下, 檔名對應 stage 名稱<br/>
+例如 config/deploy/production.rb
+以下為 stage 設定檔內容</p>
+
+<p>預設 rails env</p>
+
+<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:rails_env</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>github 分支</p>
+
+<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:branch</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ssh 登入相關, 建議多利用 <a href="http://www.eng.cam.ac.uk/help/jpmg/ssh/authorized_keys_howto.html" target="_blank"> SSH 免密碼登入 </a></p>
+
+<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:user</span><span class="p">,</span> <span class="s1">&#39;marsz&#39;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:domain</span><span class="p">,</span> <span class="s1">&#39;xxx.com&#39;</span>
+</span><span class='line'><span class="n">server</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ss">:web</span><span class="p">,</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:db</span><span class="p">,</span> <span class="ss">:primary</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>佈署的 dir path</p>
+
+<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:deploy_to</span><span class="p">,</span> <span class="s2">&quot;/path/to/app&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>佈署指令</p>
+
+<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cap</span> <span class="n">production</span> <span class="n">setup</span> <span class="c1"># 第一次佈署環境建立</span>
+</span><span class='line'><span class="n">cap</span> <span class="n">production</span> <span class="n">deploy</span> <span class="c1"># 進行佈署</span>
+</span><span class='line'><span class="n">cap</span> <span class="n">production</span> <span class="n">deploy</span><span class="ss">:migrations</span> <span class="c1"># 進行佈署並且跑 migration</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若想要在 cap deploy 時也執行 rake assets:precompile<br/>
+可以參考 <a href="http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" target="_blank">這篇</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用 Carrierwave 處理檔案上傳 (整合 imagemagick 與 Amazon S3)]]></title>

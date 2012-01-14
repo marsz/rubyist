@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>在 validates_format_of 中使用正規表示法(Regular Expression) - 黃金俠</title>
+  <title>new-page - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確 因此小弟不疑有他, 於是&#8230; 1
-validates_format_of :name, :with &hellip;">
+  <meta name="description" content="new-page Jan 14th, 2012 Jan 14th, 2012 Tweet Comments Please enable JavaScript to view the comments powered by Disqus. 黃金俠 關注 @marsz330
+!function(d, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ validates_format_of :name, :with &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-01-04/new-post">
+  <link rel="canonical" href="http://rubyist.marsz.tw/about">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,15 +79,32 @@ validates_format_of :name, :with &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">在 validates_format_of 中使用正規表示法(Regular Expression)</h1>
-    
-    
+    <h1 class="entry-title">new-page</h1>
+    <p class="meta">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-14T17:50:00+08:00" pubdate data-updated="true">Jan 14<span>th</span>, 2012</time></p>
+  </header>
+  
+  
+
+  
+    <footer>
       <p class="meta">
         
+        
 
 
 
@@ -99,100 +116,13 @@ validates_format_of :name, :with &hellip;">
   
 
 
-<time datetime="2012-01-04T17:43:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
+<time datetime="2012-01-14T17:50:00+08:00" pubdate data-updated="true">Jan 14<span>th</span>, 2012</time>
         
       </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
-
-<p>因此小弟不疑有他, 於是&#8230;</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">validates_format_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="sr">/[a-z\-]+/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>讓 name 只能存小寫英文以及 dash(-) 值</p>
-
-<p>結果&#8230;
-name = &#8220;ab-ac $@#&#8221; # 可存
-name = &#8220;@#$%^ &#8221; # 不可存
-預期應兩者皆不可存</p>
-
-<p>後來去找了 <a href="http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each" target="_blank">api source</a> 發現是透過 string =~ regexp 做驗證</p>
-
-<p>但小弟很不用功, 不知道 =~ 和 !~ 是什麼, 所以又再回去找<a href="http://guides.ruby.tw/ruby/regexp.html" target="_blank">以前學習的資料</a>&#8230;</p>
-
-<p>於是終於明白&#8230;<br />
-=~ 用在正規表示法的意思是回傳字串中符合此表示法的位置<br />
-而上述的範例中, 因為正規表示法是 /[a-z-]+/<br />
-&#8220;ab-ac $@#&#8221; 有 ab-ac 所以匹配<br />
-&#8221;@#$%^ &#8221; 沒有任何字串匹配<br />
-若希望正規表示法可以比對整個字串, 讓 &#8220;ab-ac $@#&#8221; 也不匹配<br />
-則必須善用正規表示法中的<a href="http://www.regular-expressions.info/reference.html" target="_blank">特殊語法</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">validates_format_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="sr">/\A[a-z\-]+\Z/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中 \A 是字串開頭 \Z 是字串結尾, 也可以用 ^ 和 $ 分別表示單行開頭與結尾<br />
-這樣就可以啦!!!</p>
-
-<h5>參考</h5>
-
-<p>api source: <a href="http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each" target="_blank">http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each</a></p>
-
-<p>regular expression: <a href="http://www.regular-expressions.info/reference.html" target="_blank">http://www.regular-expressions.info/reference.html</a></p>
-
-<p>ruby: <a href="http://guides.ruby.tw/ruby/regexp.html" target="_blank">http://guides.ruby.tw/ruby/regexp.html</a></p>
-</div>
-
-
-  <footer>
-    <p class="meta">
       
+        <div class="sharing">
   
-
-<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-04T17:43:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/activerecord/'>ActiveRecord</a>, <a class='category' href='/blog/categories/model-validations/'>Model Validations</a>, <a class='category' href='/blog/categories/regular-expression/'>Regular Expression</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-01-04/new-post/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-01-04/new-post/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/about/index.html" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/about/index.html" >Tweet</a>
   
   
   
@@ -200,16 +130,9 @@ name = &#8220;@#$%^ &#8221; # 不可存
   
 </div>
 
-    
-    <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012-01-04/query-datetime-by-date/" title="Previous Post: 如何在 datetime 的欄位中做日期的搜尋">&laquo; 如何在 datetime 的欄位中做日期的搜尋</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012-01-10/date_format_without_zero/" title="next Post: 輸出除去0的日期格式">輸出除去0的日期格式 &raquo;</a>
-      
-    </p>
-  </footer>
+    </footer>
+  
 </article>
 
   <section>
@@ -305,8 +228,8 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-01-04/new-post/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-01-04/new-post/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/about/index.html';
+        var disqus_url = 'http://rubyist.marsz.tw/about/index.html';
         var disqus_script = 'embed.js';
       
     (function () {
