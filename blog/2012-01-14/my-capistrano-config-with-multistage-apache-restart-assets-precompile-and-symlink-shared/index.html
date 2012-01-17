@@ -126,7 +126,8 @@ $:.unshift(File.expand_path(&#39;./lib&#39;, ENV[&#39;rvm_path&#39 &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>capistrano color, 讓佈署過程中的訊息內容上色</p>
+<p>capistrano color, 讓佈署過程中的訊息內容上色<br/>
+Gemfile 必須先加上 gem &#8216;capistrano_colors&#8217;</p>
 
 <figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -141,7 +142,8 @@ $:.unshift(File.expand_path(&#39;./lib&#39;, ENV[&#39;rvm_path&#39 &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron</p>
+<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron<br/>
+Gemfile 要有 gem &#8216;whenever&#8217;</p>
 
 <figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;whenever/capistrano&quot;</span>
@@ -232,7 +234,7 @@ $:.unshift(File.expand_path(&#39;./lib&#39;, ENV[&#39;rvm_path&#39 &hellip;">
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1"># 把 symlink_shared 內容掛進去 deploy 中</span>
-</span><span class='line'><span class="n">before</span> <span class="s2">&quot;deploy:assets:symlink&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:symlink_shared&quot;</span>
+</span><span class='line'><span class="n">before</span> <span class="s2">&quot;bundle:install&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:symlink_shared&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -373,6 +375,8 @@ $:.unshift(File.expand_path(&#39;./lib&#39;, ENV[&#39;rvm_path&#39 &hellip;">
 <a href="https://twitter.com/marsz330" class="twitter-follow-button" data-show-count="false" data-lang="zh-tw">關注 @marsz330</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefor
 e(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+<p><a href="http://feeds.feedburner.com/marsz/ZKPk"><img src="http://feeds.feedburner.com/~fc/marsz/ZKPk?bg=CCCCCC&amp;fg=000000&amp;anim=1&amp;label=listeners" height="26" width="88" style="border:0" alt="" /></a></p>
 </section>
 <section>
   <h1>最新文章</h1>

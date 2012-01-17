@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-14T18:15:06+08:00</updated>
+  <updated>2012-01-17T23:22:42+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -34,7 +34,8 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>capistrano color, 讓佈署過程中的訊息內容上色</p>
+<p>capistrano color, 讓佈署過程中的訊息內容上色<br/>
+Gemfile 必須先加上 gem &#8216;capistrano_colors&#8217;</p>
 
 <figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -49,7 +50,8 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron</p>
+<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron<br/>
+Gemfile 要有 gem &#8216;whenever&#8217;</p>
 
 <figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;whenever/capistrano&quot;</span>
@@ -140,7 +142,7 @@
 </span><span class='line'><span class="k">end</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1"># 把 symlink_shared 內容掛進去 deploy 中</span>
-</span><span class='line'><span class="n">before</span> <span class="s2">&quot;deploy:assets:symlink&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:symlink_shared&quot;</span>
+</span><span class='line'><span class="n">before</span> <span class="s2">&quot;bundle:install&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:symlink_shared&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
