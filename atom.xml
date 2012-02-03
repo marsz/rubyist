@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-01-17T23:22:42+08:00</updated>
+  <updated>2012-02-03T20:01:42+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,201 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[rake assets:precompile 時出現 stack level too deep 的訊息]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/"/>
+    <updated>2012-01-24T19:53:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep</id>
+    <content type="html"><![CDATA[<p>上禮拜終於要把服務佈署上去了<br/>
+結果在執行 precompile 時遇到錯誤訊息如下:</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake aborted!
+</span><span class='line'>stack level too deep</span></code></pre></td></tr></table></div></figure>
+
+
+<p>經過一陣搜索後發現, assets 檔案在同層目錄中, 不能有檔名和目錄名相同的情形<br/>
+例如</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>app/assets/admin/foo.scss
+</span><span class='line'>app/assets/admin.scss</span></code></pre></td></tr></table></div></figure>
+
+
+<p>主要是因為我的 admin.scss 是用來作 layout file 的
+其內容</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/*</span>
+</span><span class='line'><span class="c"> *= require_tree ./admin</span>
+</span><span class='line'><span class="c">*/</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>於是在 precompile 時就發生了悲劇 :p<br/>
+後來將檔名更換後就沒問題了</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[git pull 時請愛用 rebase]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase/"/>
+    <updated>2012-01-20T19:44:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase</id>
+    <content type="html"><![CDATA[<p>因為
+git pull = git fetch + git merge (remote branch merge to local branch)
+而 merge 往往會造成線圖上產生無謂的分支 (可參考 <a href="http://ihower.tw/blog/archives/3843" target="_blank">ihower 大大的 rebase 文章</a> )</p>
+
+<!-- more -->
+
+
+<p>因此除了一般的 feture branch merge 時透過 rebase 外<br/>
+我們對內也會要求 pull 時用 rebase</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git pull --rebase</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若覺得每次加都很麻煩可以在專案的 .git/config 加上</p>
+
+<figure class='code'><figcaption><span>.git/config</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="n">branch</span> <span class="s2">&quot;master&quot;</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">remote</span> <span class="o">=</span> <span class="n">origin</span>
+</span><span class='line'>  <span class="n">merge</span> <span class="o">=</span> <span class="n">refs</span><span class="o">/</span><span class="n">heads</span><span class="o">/</span><span class="n">master</span>
+</span><span class='line'>  <span class="n">rebase</span> <span class="o">=</span> <span class="kp">true</span> <span class="c1"># 這行</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若覺得每個專案都要加很麻煩, 可以在 ~/.gitconfig 加上</p>
+
+<figure class='code'><figcaption><span>~/.gitconfig</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="n">branch</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">autosetuprebase</span> <span class="o">=</span> <span class="n">always</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[透過rebase -i, reset, revert還原某個commit的方法]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/"/>
+    <updated>2012-01-17T18:56:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit</id>
+    <content type="html"><![CDATA[<p>個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法</p>
+
+<p>commit 如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E</span></code></pre></td></tr></table></div></figure>
+
+
+<p>想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback)</p>
+
+<!-- more -->
+
+
+<h5>用 git revert</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git revert E
+</span><span class='line'>git revert D</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G</span></code></pre></td></tr></table></div></figure>
+
+
+<p>F 是還原 commit E 修改結果的 commit<br/>
+G 是還原 commit D 修改結果的 commit<br/>
+因此 revert 只會讓 commit 繼續往前<br/>
+優點是可以針對某個 commit 進行還原 並且留下還原記錄</p>
+
+<h5>用 rebase -i</h5>
+
+<p>有關 rebase -i 的詳細使用方式可以參考<a href="http://blog.yorkxin.org/2011/07/29/git-rebase/" target="_blank">這篇</a></p>
+
+<p>假如想要抽掉某個 commit 又不想留下記錄, rebase -i 就很好用了</p>
+
+<p>假如只想要還原 D 變成 A -> B -> C -> E</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git rebase -i C</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這時候會出現文字編輯</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pick D xxx
+</span><span class='line'>pick E ooo</span></code></pre></td></tr></table></div></figure>
+
+
+<p>把 pick D xxx 整列移除後儲存就可以了
+若中間有遇到衝突則必須自行修正後再</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git add .
+</span><span class='line'>git rebase --continue</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>用 reset</h5>
+
+<p>用於做整段 commits 的還原<br/>
+例如希望還原到 B commit  以後的狀態變成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B  </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git reset B</span></code></pre></td></tr></table></div></figure>
+
+
+<p>則 git 會將 log 中的 C, D, E 都清除<br/>
+但檔案內容沒有任何變動, 因此會看到 C, D, E 修改的檔案處在 unstaged 階段<br/>
+若針對部分檔案還原可以用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout [file path]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若要全部還原可用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout -f</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>結論</h4>
+
+<p>還沒 push 前, 個人傾向不產生太多 commit<br/>
+因次我都會用 rebase -i 進行編修, 順便合併或reword 一些 commit</p>
+
+<p>某個特殊情況, 例如發現某個 commit 裡面包含了不相干的檔案, 欲重新 commit 時<br/>
+就會先用 rebase -i 把欲修改的 commit 換到後面(較新), 然後再用 reset 重新 stage + commit</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的 capistrano 完整設定檔說明]]></title>

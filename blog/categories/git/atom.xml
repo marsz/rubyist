@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-02-03T20:01:42+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git pull 時請愛用 rebase]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase/"/>
+    <updated>2012-01-20T19:44:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase</id>
+    <content type="html"><![CDATA[<p>因為
+git pull = git fetch + git merge (remote branch merge to local branch)
+而 merge 往往會造成線圖上產生無謂的分支 (可參考 <a href="http://ihower.tw/blog/archives/3843" target="_blank">ihower 大大的 rebase 文章</a> )</p>
+
+<!-- more -->
+
+
+<p>因此除了一般的 feture branch merge 時透過 rebase 外<br/>
+我們對內也會要求 pull 時用 rebase</p>
+
+<p><code>
+git pull --rebase
+</code></p>
+
+<p>若覺得每次加都很麻煩可以在專案的 .git/config 加上</p>
+
+<p><code>ruby .git/config
+[branch "master"]
+  remote = origin
+  merge = refs/heads/master
+  rebase = true # 這行
+</code></p>
+
+<p>若覺得每個專案都要加很麻煩, 可以在 ~/.gitconfig 加上</p>
+
+<p><code>ruby  ~/.gitconfig
+[branch]
+  autosetuprebase = always
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[透過rebase -i, reset, revert還原某個commit的方法]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/"/>
+    <updated>2012-01-17T18:56:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit</id>
+    <content type="html"><![CDATA[<p>個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法</p>
+
+<p>commit 如下</p>
+
+<p><code>
+A -&gt; B -&gt; C -&gt; D -&gt; E
+</code></p>
+
+<p>想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback)</p>
+
+<!-- more -->
+
+
+<h5>用 git revert</h5>
+
+<p><code>
+git revert E
+git revert D
+</code></p>
+
+<p>結果:</p>
+
+<p><code>
+A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G
+</code></p>
+
+<p>F 是還原 commit E 修改結果的 commit<br/>
+G 是還原 commit D 修改結果的 commit<br/>
+因此 revert 只會讓 commit 繼續往前<br/>
+優點是可以針對某個 commit 進行還原 並且留下還原記錄</p>
+
+<h5>用 rebase -i</h5>
+
+<p>有關 rebase -i 的詳細使用方式可以參考<a href="http://blog.yorkxin.org/2011/07/29/git-rebase/" target="_blank">這篇</a></p>
+
+<p>假如想要抽掉某個 commit 又不想留下記錄, rebase -i 就很好用了</p>
+
+<p>假如只想要還原 D 變成 A -> B -> C -> E</p>
+
+<p><code>
+git rebase -i C
+</code></p>
+
+<p>這時候會出現文字編輯</p>
+
+<p><code>
+pick D xxx
+pick E ooo
+</code></p>
+
+<p>把 pick D xxx 整列移除後儲存就可以了
+若中間有遇到衝突則必須自行修正後再</p>
+
+<p><code>
+git add .
+git rebase --continue
+</code></p>
+
+<h5>用 reset</h5>
+
+<p>用於做整段 commits 的還原<br/>
+例如希望還原到 B commit  以後的狀態變成</p>
+
+<p><code>
+A -&gt; B  
+</code></p>
+
+<p><code>
+git reset B
+</code></p>
+
+<p>則 git 會將 log 中的 C, D, E 都清除<br/>
+但檔案內容沒有任何變動, 因此會看到 C, D, E 修改的檔案處在 unstaged 階段<br/>
+若針對部分檔案還原可以用</p>
+
+<p><code>
+git checkout [file path]
+</code></p>
+
+<p>若要全部還原可用</p>
+
+<p><code>
+git checkout -f
+</code></p>
+
+<h4>結論</h4>
+
+<p>還沒 push 前, 個人傾向不產生太多 commit<br/>
+因次我都會用 rebase -i 進行編修, 順便合併或reword 一些 commit</p>
+
+<p>某個特殊情況, 例如發現某個 commit 裡面包含了不相干的檔案, 欲重新 commit 時<br/>
+就會先用 rebase -i 把欲修改的 commit 換到後面(較新), 然後再用 reset 重新 stage + commit</p>
+]]></content>
+  </entry>
+  
+</feed>
