@@ -5,13 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>databse 資料以 yaml 格式匯入/匯出 - 黃金俠</title>
+  <title>Rails Rspec (3) pending 的使用 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入 yaml_db github: https://github.com/ludicast/yaml_db 安裝 (rails 3) 1
-gem &#39;yaml_db&#39; 1 &hellip;">
+  <meta name="description" content="pending 的使用可先參考 官方文件
+一般 generator 產生的 spec 檔都會先幫你把 pending 加好 1
+2
+3
+describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +22,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -84,7 +86,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">databse 資料以 yaml 格式匯入/匯出</h1>
+      <h1 class="entry-title">Rails Rspec (3) pending 的使用</h1>
     
     
       <p class="meta">
@@ -100,7 +102,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+<time datetime="2012-02-03T16:06:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -109,88 +111,107 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   </header>
 
 
-<div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
-
-<h2>yaml_db</h2>
-
-<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
+<div class="entry-content"><p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
+一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
 
 <!-- more -->
 
 
-<h2>安裝 (rails 3)</h2>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;yaml_db&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯出</h2>
-
-<p>把資料匯出到 db/data.yml</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯出不同環境的 database (設定在 config/database.yml, 預設是 development)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要依照一個 table 一個檔案匯出..
-(2011/12/28 notice: 目前此方法在 1.9.2 + 3.1.0 的環境下測試會有一些問題)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">dump_dir</span>  <span class="c1"># cd 到欲匯出的 dir 下, 理論上依然是在專案目錄內</span>
-</span><span class='line'><span class="n">db</span><span class="ss">:data:dump_dir</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;add some examples to (or delete) </span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>匯入</h2>
-
-<p>把資料從 db/data.yml 匯入</p>
+<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">1</span> <span class="n">example</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span><span class="p">,</span> <span class="mi">1</span> <span class="n">pending</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>匯入不同環境的 database</p>
+<p>因為不是每個專案都會讓你有時間寫 spec<br/>
+等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
+所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
 
+<p>pending 可分幾個層次如下&#8230;</p>
 
-<p>匯入某個目錄下的所有的 yaml (原理同 rake db:data:dump_dir)
-(2011/12/28 notice: 此方法在 1.9.2 + 3.1.0 下仍有問題)</p>
+<h4>整個 class 的 pending</h4>
+
+<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">yamls_dir</span> <span class="c1"># cd 到 yaml 檔存放的 dir</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load_dir</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">FoosController</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">pending</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>其他</h2>
+<h4>某個 method 的 pending</h4>
 
-<ul>
-<li>配合 whenever 可做定期備份, 並且將 yml 檔上傳至其他處存放</li>
-</ul>
+<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">pending</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;#bar&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一般都是後者的寫法</p>
+
+<h4>method/action 內的某個 case</h4>
+
+<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be a kind of Bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">pending</span> <span class="s2">&quot;should raise error if bar_id is nil&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外 method 只針對 public methods 寫<br/>
+嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
+此外我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
 </div>
 
 
@@ -213,12 +234,12 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+<time datetime="2012-02-03T16:06:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/backup/'>backup</a>, <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/yaml/'>yaml</a>
+    <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/testing/'>testing</a>
   
 </span>
 
@@ -227,7 +248,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/" >Tweet</a>
   
   
   
@@ -238,10 +259,8 @@ gem &#39;yaml_db&#39; 1 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" title="Previous Post: 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile">&laquo; 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
+        <a class="basic-alignment left" href="/blog/2012-02-02/rails-rspec-basic-syntax/" title="Previous Post: Rails Rspec (2) 基本語法與執行">&laquo; Rails Rspec (2) 基本語法與執行</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011-12-30/counter-increment-with-custom-value/" title="next Post: 實作 sql 中的數值欄位的遞增(counter increment)">實作 sql 中的數值欄位的遞增(counter increment) &raquo;</a>
       
     </p>
   </footer>
@@ -368,8 +387,8 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/';
         var disqus_script = 'embed.js';
       
     (function () {

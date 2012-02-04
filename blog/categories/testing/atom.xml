@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: rspec | 黃金俠]]></title>
-  <link href="http://rubyist.marsz.tw/blog/categories/rspec/atom.xml" rel="self"/>
+  <title><![CDATA[Category: testing | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/testing/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
   <updated>2012-02-04T16:40:34+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>

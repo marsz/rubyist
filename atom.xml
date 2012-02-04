@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-04T16:01:52+08:00</updated>
+  <updated>2012-02-04T16:40:34+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Rspec (3) pending 的使用]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/"/>
+    <updated>2012-02-03T16:06:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending</id>
+    <content type="html"><![CDATA[<p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
+一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;add some examples to (or delete) </span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">1</span> <span class="n">example</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span><span class="p">,</span> <span class="mi">1</span> <span class="n">pending</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因為不是每個專案都會讓你有時間寫 spec<br/>
+等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
+所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
+
+<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
+
+<p>pending 可分幾個層次如下&#8230;</p>
+
+<h4>整個 class 的 pending</h4>
+
+<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">FoosController</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">pending</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>某個 method 的 pending</h4>
+
+<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">pending</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;#bar&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一般都是後者的寫法</p>
+
+<h4>method/action 內的某個 case</h4>
+
+<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be a kind of Bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">pending</span> <span class="s2">&quot;should raise error if bar_id is nil&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外 method 只針對 public methods 寫<br/>
+嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
+此外我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Rspec (2) 基本語法與執行]]></title>
@@ -1741,59 +1850,6 @@ name = &#8220;@#$%^ &#8221; # 不可存
 
 <p>capistrano 會將 current/public/assets 連結到 shared/assets 中
 若 shared 下無此目錄, 記得要 mkdir 一下</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[巢狀 (nested) to_json / to_xml 應用]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/"/>
-    <updated>2011-12-23T21:40:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml</id>
-    <content type="html"><![CDATA[<p>在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出!</p>
-
-<!-- more -->
-
-
-<h2>參考</h2>
-
-<ul>
-<li>ApiDock</li>
-</ul>
-
-
-<p><a href="http://apidock.com/rails/ActiveRecord/Serialization/to_json" target="_blank">http://apidock.com/rails/ActiveRecord/Serialization/to_json</a></p>
-
-<ul>
-<li>Stackoverflow</li>
-</ul>
-
-
-<p><a href="http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json" target="_blank">http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json</a></p>
-
-<h2>說明</h2>
-
-<ul>
-<li>參數為 include</li>
-<li>可以搭配 only, methods 做部分 attribute 或 method 的輸出</li>
-</ul>
-
-
-<h2>範例</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">foo</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="ss">:include</span> <span class="o">=&gt;</span>
-</span><span class='line'>               <span class="p">{</span> <span class="ss">:emails</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:address</span> <span class="p">},</span>
-</span><span class='line'>               <span class="ss">:friends</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:name</span><span class="p">,</span>
-</span><span class='line'>                 <span class="ss">:include</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:emails</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="ss">:address</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'>               <span class="p">}</span>
-</span><span class='line'>             <span class="p">})</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   

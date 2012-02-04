@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>databse 資料以 yaml 格式匯入/匯出 - 黃金俠</title>
+  <title>Category: testing - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入 yaml_db github: https://github.com/ludicast/yaml_db 安裝 (rails 3) 1
-gem &#39;yaml_db&#39; 1 &hellip;">
+  <meta name="description" content="Category: testing">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml">
+  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/testing">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,178 +78,64 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">databse 資料以 yaml 格式匯入/匯出</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
+    <h1 class="entry-title">Category: testing</h1>
     
   </header>
-
-
-<div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
-
-<h2>yaml_db</h2>
-
-<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
-
-<!-- more -->
-
-
-<h2>安裝 (rails 3)</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;yaml_db&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯出</h2>
-
-<p>把資料匯出到 db/data.yml</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯出不同環境的 database (設定在 config/database.yml, 預設是 development)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要依照一個 table 一個檔案匯出..
-(2011/12/28 notice: 目前此方法在 1.9.2 + 3.1.0 的環境下測試會有一些問題)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">dump_dir</span>  <span class="c1"># cd 到欲匯出的 dir 下, 理論上依然是在專案目錄內</span>
-</span><span class='line'><span class="n">db</span><span class="ss">:data:dump_dir</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯入</h2>
-
-<p>把資料從 db/data.yml 匯入</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入不同環境的 database</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入某個目錄下的所有的 yaml (原理同 rake db:data:dump_dir)
-(2011/12/28 notice: 此方法在 1.9.2 + 3.1.0 下仍有問題)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">yamls_dir</span> <span class="c1"># cd 到 yaml 檔存放的 dir</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load_dir</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>其他</h2>
-
-<ul>
-<li>配合 whenever 可做定期備份, 並且將 yml 檔上傳至其他處存放</li>
-</ul>
-
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012-02-03/rails-rspec-pending/">Rails Rspec (3) pending 的使用</a></h1>
+<time datetime="2012-02-03T16:06:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>03</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/testing/'>testing</a></span>
+</footer>
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/backup/'>backup</a>, <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/yaml/'>yaml</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" title="Previous Post: 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile">&laquo; 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2011-12-30/counter-increment-with-custom-value/" title="next Post: 實作 sql 中的數值欄位的遞增(counter increment)">實作 sql 中的數值欄位的遞增(counter increment) &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+<article>
+  
+<h1><a href="/blog/2012-02-02/rails-rspec-basic-syntax/">Rails Rspec (2) 基本語法與執行</a></h1>
+<time datetime="2012-02-02T14:35:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>02</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/testing/'>testing</a></span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-02-01/rails-rspec-intro-and-setup/">Rails Rspec (1) 介紹與設定</a></h1>
+<time datetime="2012-02-01T14:00:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>01</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/testing/'>testing</a></span>
+</footer>
+
+
+</article>
+
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -367,10 +251,7 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       var disqus_shortname = 'rubyist-marsz';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

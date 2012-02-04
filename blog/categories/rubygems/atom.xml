@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-04T16:01:52+08:00</updated>
+  <updated>2012-02-04T16:40:34+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Rspec (3) pending 的使用]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/"/>
+    <updated>2012-02-03T16:06:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending</id>
+    <content type="html"><![CDATA[<p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
+一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
+
+<!-- more -->
+
+
+<p><code>ruby
+describe Foo do
+  pending "add some examples to (or delete) #{__FILE__}"
+end
+</code></p>
+
+<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
+
+<p><code>
+1 example, 0 failures, 1 pending
+</code></p>
+
+<p>因為不是每個專案都會讓你有時間寫 spec<br/>
+等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
+所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
+
+<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
+
+<p>pending 可分幾個層次如下...</p>
+
+<h4>整個 class 的 pending</h4>
+
+<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
+
+<p><code>ruby
+describe FoosController do
+  pending
+end
+</code></p>
+
+<h4>某個 method 的 pending</h4>
+
+<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
+
+<p>```ruby
+describe Foo do
+  describe "#bar" do</p>
+
+<pre><code>pending
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>或</p>
+
+<p><code>ruby
+describe Foo do
+  pending "#bar"
+end
+</code></p>
+
+<p>一般都是後者的寫法</p>
+
+<h4>method/action 內的某個 case</h4>
+
+<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
+
+<p>```ruby
+describe Foo do
+  describe "#bar" do</p>
+
+<pre><code>it "should be a kind of Bar" do
+  ....
+end
+pending "should raise error if bar_id is nil"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>此外 method 只針對 public methods 寫<br/>
+嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
+此外我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Rspec (2) 基本語法與執行]]></title>
@@ -677,50 +767,6 @@ u.picture = File.open(file_path)
 <p>```</p>
 
 <p>Carrierwave 的特色在於細節定義都在 uploader 中, 而 model 只要 mount 以及加上 string 欄位即可</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Devise 在登入或登出之後執行回乎]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/"/>
-    <updated>2012-01-10T23:11:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out</id>
-    <content type="html"><![CDATA[<h4>需求</h4>
-
-<p>想要在登入或登出後執行指定的行為</p>
-
-<!-- more -->
-
-
-<h4>官方 wiki</h4>
-
-<p><a href="https://github.com/plataformatec/devise/wiki/How-To:-Change-the-redirect-path-after-destroying-a-session-i.e.-signing-out" target="_blank">How To: Change the redirect path after destroying a session i.e. signing out</a></p>
-
-<h4>說明</h4>
-
-<ul>
-<li>從 <a href="https://github.com/plataformatec/devise/blob/master/app/controllers/devise/sessions_controller.rb" target="_blank">SessionsController</a> 可得知每次登入後會 redirect 到 after_sign_in_path_for 這個 helper method 所回傳的路徑, 登出則是 after_sign_out_path_for</li>
-<li>找到 <a href="https://github.com/plataformatec/devise/blob/master/lib/devise/controllers/helpers.rb#L207" target="_blank">Controller::Helper</a> 定義了  after_sign_in_path_for 和 after_sign_out_path_for</li>
-<li>針對這兩個 method 進行覆寫</li>
-</ul>
-
-
-<h4>範例</h4>
-
-<p>注意要用 private, 並且傳進一參數為 model instance
-```ruby app/controllers/application_controller.rb
-class ApplicationController &lt; ActionController::Base
-  private</p>
-
-<p>  # Overwriting the sign_in redirect path method
-  def after_sign_in_path_for(resource_or_scope)</p>
-
-<pre><code>root_path
-</code></pre>
-
-<p>  end
-end
-```</p>
 ]]></content>
   </entry>
   

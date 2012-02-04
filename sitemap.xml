@@ -92,11 +92,15 @@
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-01/rails-rspec-intro-and-setup/</loc>
-        <lastmod>2012-02-04T16:01:43+08:00</lastmod>
+        <lastmod>2012-02-04T16:31:38+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax/</loc>
-        <lastmod>2012-02-04T16:00:43+08:00</lastmod>
+        <lastmod>2012-02-04T16:31:28+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/</loc>
+        <lastmod>2012-02-04T16:34:30+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/about/</loc>
@@ -104,10 +108,10 @@
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/archives/</loc>
-        <lastmod>2012-02-04T16:01:43+08:00</lastmod>
+        <lastmod>2012-02-04T16:34:30+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/</loc>
-        <lastmod>2012-02-04T16:01:43+08:00</lastmod>
+        <lastmod>2012-02-04T16:34:30+08:00</lastmod>
     </url>
 </urlset>
