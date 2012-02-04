@@ -5,13 +5,19 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>databse 資料以 yaml 格式匯入/匯出 - 黃金俠</title>
+  <title>Rails Spec (4) model validations 的 spec - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入 yaml_db github: https://github.com/ludicast/yaml_db 安裝 (rails 3) 1
-gem &#39;yaml_db&#39; 1 &hellip;">
+  <meta name="description" content="本篇將介紹以最原始, 沒有用任何外掛下的 model validation spec 寫法
+若覺得小弟有更好的寫法, 也歡迎不吝指教 :) 範例中所使用的 matchers: be_valid
+be_true
+be_false model檔: User 1
+2
+3
+4
+5
+class User & &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +26,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -84,7 +90,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">databse 資料以 yaml 格式匯入/匯出</h1>
+      <h1 class="entry-title">Rails Spec (4) model validations 的 spec</h1>
     
     
       <p class="meta">
@@ -100,7 +106,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+<time datetime="2012-02-04T16:45:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -109,88 +115,106 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   </header>
 
 
-<div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
-
-<h2>yaml_db</h2>
-
-<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
+<div class="entry-content"><p>本篇將介紹以最原始, 沒有用任何外掛下的 model validation spec 寫法<br/>
+若覺得小弟有更好的寫法, 也歡迎不吝指教 :)</p>
 
 <!-- more -->
 
 
-<h2>安裝 (rails 3)</h2>
+<p>範例中所使用的 matchers:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;yaml_db&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
+<p>be_valid<br/>
+be_true<br/>
+be_false</p>
 
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯出</h2>
-
-<p>把資料匯出到 db/data.yml</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯出不同環境的 database (設定在 config/database.yml, 預設是 development)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要依照一個 table 一個檔案匯出..
-(2011/12/28 notice: 目前此方法在 1.9.2 + 3.1.0 的環境下測試會有一些問題)</p>
+<p>model檔: User</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">dump_dir</span>  <span class="c1"># cd 到欲匯出的 dir 下, 理論上依然是在專案目錄內</span>
-</span><span class='line'><span class="n">db</span><span class="ss">:data:dump_dir</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:name</span>
+</span><span class='line'>  <span class="n">validates_length_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:in</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">20</span>
+</span><span class='line'>  <span class="n">validates_uniqueness_of</span> <span class="ss">:email</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>匯入</h2>
-
-<p>把資料從 db/data.yml 匯入</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入不同環境的 database</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入某個目錄下的所有的 yaml (原理同 rake db:data:dump_dir)
-(2011/12/28 notice: 此方法在 1.9.2 + 3.1.0 下仍有問題)</p>
+<p>spec 寫法 (spec/models/user_spec.rb)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">yamls_dir</span> <span class="c1"># cd 到 yaml 檔存放的 dir</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load_dir</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;validations&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;bar@foo.com&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be valid&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@user</span><span class="o">.</span><span class="n">should</span> <span class="n">be_valid</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should not validate presence of :name&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kp">nil</span>
+</span><span class='line'>      <span class="vi">@user</span><span class="o">.</span><span class="n">should_not</span> <span class="n">be_valid</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should not validate length of :name&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span> <span class="o">*</span> <span class="mi">20</span>
+</span><span class='line'>      <span class="vi">@user</span><span class="o">.</span><span class="n">should_not</span> <span class="n">be_valid</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should not validate uniqueness of :email&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@user</span><span class="o">.</span><span class="n">save</span>
+</span><span class='line'>      <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@user</span><span class="o">.</span><span class="n">attributes</span><span class="p">)</span><span class="o">.</span><span class="n">should_not</span> <span class="n">be_valid</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>其他</h2>
+<p>be_valid 可以讓 @user 先把 save 以前的 validation 都跑過, 並且預期 return true<br/>
+當然若要直接 save 以預期結果的話, 可以改寫成</p>
 
-<ul>
-<li>配合 whenever 可做定期備份, 並且將 yml 檔上傳至其他處存放</li>
-</ul>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@user</span><span class="o">.</span><span class="n">save</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="kp">true</span>
+</span><span class='line'><span class="vi">@user</span><span class="o">.</span><span class="n">save</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="kp">false</span>
+</span></code></pre></td></tr></table></div></figure>
 
+
+<p>或(可讀性較佳的寫法)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@user</span><span class="o">.</span><span class="n">save</span><span class="o">.</span><span class="n">should</span> <span class="n">be_true</span>
+</span><span class='line'><span class="vi">@user</span><span class="o">.</span><span class="n">save</span><span class="o">.</span><span class="n">should</span> <span class="n">be_false</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>謎之聲: 每個 validation 都要這樣寫好累 XD</p>
+
+<p>當然上述的範例中除了麻煩之外, 當然 User 有追加了新的 validation 時, before 的 User.new 也要跟著對應, 倘若有很多需要 create user model 的 spec 時, 改起來就會很痛苦</p>
+
+<p>因此上述的兩個 issue, 將會在下兩篇將會介紹透過 factory_girl_rails 和 shoulda-matchers 這兩個 gem 解決</p>
 </div>
 
 
@@ -213,12 +237,12 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+<time datetime="2012-02-04T16:45:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/backup/'>backup</a>, <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/yaml/'>yaml</a>
+    <a class='category' href='/blog/categories/model/'>model</a>, <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/testing/'>testing</a>
   
 </span>
 
@@ -227,7 +251,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/" >Tweet</a>
   
   
   
@@ -238,10 +262,8 @@ gem &#39;yaml_db&#39; 1 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" title="Previous Post: 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile">&laquo; 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
+        <a class="basic-alignment left" href="/blog/2012-02-03/rails-rspec-pending/" title="Previous Post: Rails Rspec (3) pending 的使用">&laquo; Rails Rspec (3) pending 的使用</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011-12-30/counter-increment-with-custom-value/" title="next Post: 實作 sql 中的數值欄位的遞增(counter increment)">實作 sql 中的數值欄位的遞增(counter increment) &raquo;</a>
       
     </p>
   </footer>
@@ -368,8 +390,8 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/';
         var disqus_script = 'embed.js';
       
     (function () {
