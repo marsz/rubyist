@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Bigtuna | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/bigtuna/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-02-04T13:27:48+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna (進階設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/"/>
+    <updated>2012-01-29T12:50:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email</id>
+    <content type="html"><![CDATA[<p>上次提到專案在 bigtuna 上的設定<br/>
+這次要示範:</p>
+
+<ul>
+<li>和 github 整合</li>
+<li>將 build 結果寄送 email</li>
+<li>安全性設定</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h4>一般的 github hook</h4>
+
+<p>專案的編輯頁面中, 有一個欄位叫 "Hook Name"<br/>
+用於做 http post request trigger (其實後來發現get也可以)</p>
+
+<p><img src="https://img.skitch.com/20120204-gtdidekib9pitb4yjmyc8rwhjb.png" alt="" /></p>
+
+<p>舉例來說, bigtuna server 的 domain 假設是 bigtina.marsz.tw 的話
+若專案的 hookname 設定為 "myapp"<br/>
+則 trigger project build 的 url 則是</p>
+
+<p><code>
+http://bigtuna.marsz.tw/hooks/build/myapp
+</code></p>
+
+<p>因此只要到 github.com 的專案頁面裡 "Admin" -> "Service Hooks" -> "Post-Receive URLs" 填入該網址即可</p>
+
+<p><img src="https://img.skitch.com/20120204-tc8jni267711r4yi1d7qs3frfw.png" alt="" /></p>
+
+<p>github 會在每次該專案有 push code 上來時, 送 post 到該 url</p>
+
+<p>但常見的情況是, 在 github 上的專案裡有多條分支, 而我們只想針對某條分支有 push 時才進行 trigger</p>
+
+<h4>針對不同分支的 github hook</h4>
+
+<p>參考: <a href="http://bigtuna.appelier.com/configuration.html" target="_blank">http://bigtuna.appelier.com/configuration.html</a> 最下方區塊</p>
+
+<p>到 bigtuna 的專案目錄下, 打開 config/bugtuna.yml 加入</p>
+
+<p><code>yml config/bugtuna.yml
+production:
+  :github_secure: "abcabc"
+</code></p>
+
+<p>重起 bigtuna 後, hook 在 github 上的 url 則改為</p>
+
+<p><code>
+http://bigtuna.marsz.tw/hooks/build/github/abcabc
+</code></p>
+
+<p>"abcabc" 是你在 github_secure 填的值<br/>
+因為 github 在送 post 到 url 時, 會帶上 push 的專案以及分支名稱<br/>
+因此 bigtuna 會依據傳送過來的資訊找到對應的 github uri 和 branch 而啟動 build<br/>
+而原先設定的 hook name 在這裡就沒有用到了<br/>
+github_secure 的設定則是多一層簡單的安全性措施</p>
+
+<h4>email config</h4>
+
+<p>首先到 bigtuna 專案中設定 email smtp (以下為 gmail smtp 範例)</p>
+
+<p><code>yml config/email.yml
+production:
+  :address: "smtp.gmail.com"
+  :port: 587
+  :domain: 'your domain'
+  :user_name: 'your email'
+  :password: 'ur password'
+  :authentication: 'plain'
+  :enable_starttls_auto: true
+</code></p>
+
+<p>設定 email 內容中的 url host</p>
+
+<p><code>yml config/bigtuna.yml
+production:
+  :url_host: "bigtuna.marsz.tw"
+</code></p>
+
+<p>重起 delayed job</p>
+
+<p><code>ruby
+RAILS_ENV=production ./script/delayed_job stop
+RAILS_ENV=production ./script/delayed_job start
+</code></p>
+
+<p>在 project 中的 hook => mailer 打勾, 然後儲存</p>
+
+<p><img src="https://img.skitch.com/20120204-7tb6yfh51qek718t7ewk4uxkh.png" alt="" /></p>
+
+<p>儲存後會發現原先打勾的地方多了 Configure</p>
+
+<p><img src="https://img.skitch.com/20120204-qjtnx8xgh66rmd95u87yfcnjqt.png" alt="" /></p>
+
+<p>設定 email 時機與對象</p>
+
+<p><img src="https://img.skitch.com/20120204-mcnpxca3ad5r18kb6799m711fk.png" alt="" /></p>
+
+<p>注意: 若要寄給多人, 必須以半型逗號隔開, 不能用換行</p>
+
+<p><code>ruby
+foo@marsz.tw,bar@marsz.tw
+</code></p>
+
+<h4>其他安全性設定</h4>
+
+<p>最簡單的方式可以利用 htpasswd<br/>
+相關設定請參考 <a href="http://doc.norang.ca/apache-basic-auth.html" target="_blank">htpasswd</a><br/>
+設定完成後, github 的 hook url 也必須一同加上帳號密碼</p>
+
+<p><code>ruby
+http://user:pssword@bigtuna.marsz.tw/hooks/build/github/abcabc
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna (專案設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/"/>
+    <updated>2012-01-28T12:06:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project</id>
+    <content type="html"><![CDATA[<p>上回提到 Bigtuna 的安裝<br/>
+這次示範如何針對一個專案的自動化測試進行設定</p>
+
+<!-- more -->
+
+
+<p>首先點選右上角的 "new project"</p>
+
+<p><img src="https://img.skitch.com/20120204-gxm36jskatwejffbr9emf3h13.png" alt="" /></p>
+
+<p>填好重點資訊, 儲存</p>
+
+<p><img src="https://img.skitch.com/20120204-nkft6nwwm4323bd4grrix5xxdr.png" alt="" /></p>
+
+<p>儲存後仍會停留在同一頁, 拉到下面會看到</p>
+
+<p><img src="https://img.skitch.com/20120204-bh4iib8dj31ac9wsymi4nc44m7.png" alt="" /></p>
+
+<p>到目前為止,bigtuna可自動將專案從 github clone 下來(並且針對設定的分支)<br/>
+因此這裡的 configuration 則是在 clone 下來後要做的動作(一般就是跑測試啦)</p>
+
+<p>以下提供小弟的 steps 範例</p>
+
+<p>```</p>
+
+<h1>用 rvm 切換到專案所使用的 ruby 版本</h1>
+
+<p>rvm 1.9.2-p290</p>
+
+<h1>將專案的設定檔 copy 到 clone 下來的專案目錄中</h1>
+
+<p>cp /home/marsz/projects/myapp/config/database.yml %build_dir%/config/database.yml</p>
+
+<h1>bundle install for test 環境</h1>
+
+<p>bundle install RAILS_ENV=test</p>
+
+<h1>將資料庫schema load 到 mysql 中</h1>
+
+<p>bundle exec rake db:setup RAILS_ENV=test</p>
+
+<h1>進行 rspec 測試</h1>
+
+<p>bundle exec rake spec RAILS_ENV=test
+```</p>
+
+<p>設定檔的部份, 因為我們不會將 db user/password 和 email smtp config 等設定 commit 到版本管理中, 因此每個專案在 bigtuna server 上的設定檔都要先手動建立, 以上述範例, 我將 myapp 這個專案的設定檔固定放在 /home/marsz/projects/myspp/config 下</p>
+
+<p>而 %build_dir% 則是 bigtuna 提供的變數, 指向到每次 clone myapp 下來的臨時目錄</p>
+
+<p>此外, 所有指令的環境都是在 test 下, 因此 config 設定也都必須針對 test</p>
+
+<p>"rake spec" 設針對 gem Rspec 所跑的自動化測試, 也是測試的重點所在, 前面的步驟都是為了讓 Rspec 能順利跑起來</p>
+
+<p>儲存後回到 "Home" 會看到專案列表, 在 bigtuna 中, 顏色的含意如下:<br/>
+藍色 - 尚未執行<br/>
+黃色 - 執行中
+綠色 - 執行完畢 (沒error)<br/>
+紅色 - 執行完畢 (有error)</p>
+
+<p><img src="https://img.skitch.com/20120204-rxha851d97n1bi7kjjjhtt5hef.png" alt="" /></p>
+
+<p>點進去 project 後, 右上角有一個 "BUILD NOW", 可進行手動 build</p>
+
+<p><img src="https://img.skitch.com/20120204-mi4mgi3fwswdwg5xchaa3gss9c.png" alt="" /></p>
+
+<p>點了 "BUILD NOW" 我們就會看到專案開始進行 build</p>
+
+<p><img src="https://img.skitch.com/20120204-pkhykjqc63thr3rkduqnymbus.png" alt="" /></p>
+
+<p>若 build 結果有問題, 會看到"紅燈", 點進去可以看到該 build 出現的錯誤訊息</p>
+
+<p><img src="https://img.skitch.com/20120204-fi6b2tte3qs7x19fgjyu8h9wpa.png" alt="" /><br/>
+<img src="https://img.skitch.com/20120204-ks36ja1g5i4wydaiq8qxjdrke4.png" alt="" /></p>
+
+<p>如此一個專案的 CI 設定算是完成了<br/>
+下一篇將介紹如何自動化進行 build, 整合 github 與 email 通知</p>
+
+<h5>補充說明</h5>
+
+<p>若你在 github 上的專案是 private 的話<br/>
+必須讓 ci server 能夠 ssh github<br/>
+相關設定可參考<a href="http://help.github.com/mac-set-up-git/" target="_blank">官網說明</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna (安裝篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install/"/>
+    <updated>2012-01-27T11:17:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install</id>
+    <content type="html"><![CDATA[<p>CI 全名 "Continuous Interation"<br/>
+用於開發流程中的一種管理技巧<br/>
+在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中<br/>
+相關介紹可參考 ihower 的 <a href="http://ihower.tw/rails3/testing.html" target="_blank">測試 Testing</a><br/>
+今天要介紹的則是用於 CI system 的 Bigtuna</p>
+
+<!-- more -->
+
+
+<h5>參考官方文件</h5>
+
+<p><a href="http://bigtuna.appelier.com/" target="_blank">http://bigtuna.appelier.com/</a></p>
+
+<h5>安裝步驟</h5>
+
+<p>從 github clone</p>
+
+<p><code>
+git clone git://github.com/appelier/bigtuna.git
+cd bigtuna
+</code></p>
+
+<p>設定 Gemfile</p>
+
+<p><code>
+vim Gemfile
+</code></p>
+
+<p>2012.1.27 筆記: 因為 bigtuna 目前採用 rails 3.0.3, 而現行 rails 最新版為 3.1.2, 有許多 gem 因應更新, 而導致 3.0.3 無法使用最新版的 gem, 因此下列設定是針對 3.0.3 而做的版本修正, 若 bigtuna 有更新 rails 版本, 則下列的範例可能會不適用</p>
+
+<p><code>ruby
+gem "mysql2", "0.2.6"
+gem "delayed_job", "~&gt; 2.1.4"
+</code></p>
+
+<p>設定 config/database.yml 以 mysql 為例, 僅供參考</p>
+
+<p><code>ruby config/database.yml
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: bigtuna_production
+  pool: 5
+  username: "db_user"
+  password: "db_password"
+  host: "db_host"
+</code></p>
+
+<p>安裝</p>
+
+<p><code>
+bundle install
+bundle exec rake db:create RAILS_ENV=production
+bundle exec rake db:schema:load RAILS_ENV=production
+</code></p>
+
+<p>啟動 delayed job</p>
+
+<p><code>
+RAILS_ENV=production ./script/delayed_job start
+</code></p>
+
+<p>完成!!!<br/>
+透過 web server 連線後, 看到以下畫面就表示 ok 啦!!<br/>
+<img src="https://img.skitch.com/20120204-dayqp1qsffq3cnei1fgcpi3e2d.png" width="700" /><br/>
+下一篇將介紹如何設定專案</p>
+]]></content>
+  </entry>
+  
+</feed>

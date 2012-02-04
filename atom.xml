@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-03T20:01:42+08:00</updated>
+  <updated>2012-02-04T13:27:48+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,329 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna (進階設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/"/>
+    <updated>2012-01-29T12:50:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email</id>
+    <content type="html"><![CDATA[<p>上次提到專案在 bigtuna 上的設定<br/>
+這次要示範:</p>
+
+<ul>
+<li>和 github 整合</li>
+<li>將 build 結果寄送 email</li>
+<li>安全性設定</li>
+</ul>
+
+
+<!-- more -->
+
+
+<h4>一般的 github hook</h4>
+
+<p>專案的編輯頁面中, 有一個欄位叫 &#8220;Hook Name&#8221;<br/>
+用於做 http post request trigger (其實後來發現get也可以)</p>
+
+<p><img src="https://img.skitch.com/20120204-gtdidekib9pitb4yjmyc8rwhjb.png" alt="" /></p>
+
+<p>舉例來說, bigtuna server 的 domain 假設是 bigtina.marsz.tw 的話
+若專案的 hookname 設定為 &#8220;myapp&#8221;<br/>
+則 trigger project build 的 url 則是</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>http://bigtuna.marsz.tw/hooks/build/myapp</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因此只要到 github.com 的專案頁面裡 &#8220;Admin&#8221; -> &#8220;Service Hooks&#8221; -> &#8220;Post-Receive URLs&#8221; 填入該網址即可</p>
+
+<p><img src="https://img.skitch.com/20120204-tc8jni267711r4yi1d7qs3frfw.png" alt="" /></p>
+
+<p>github 會在每次該專案有 push code 上來時, 送 post 到該 url</p>
+
+<p>但常見的情況是, 在 github 上的專案裡有多條分支, 而我們只想針對某條分支有 push 時才進行 trigger</p>
+
+<h4>針對不同分支的 github hook</h4>
+
+<p>參考: <a href="http://bigtuna.appelier.com/configuration.html" target="_blank">http://bigtuna.appelier.com/configuration.html</a> 最下方區塊</p>
+
+<p>到 bigtuna 的專案目錄下, 打開 config/bugtuna.yml 加入</p>
+
+<figure class='code'><figcaption><span>config/bugtuna.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:github_secure</span><span class="p-Indicator">:</span> <span class="s">&quot;abcabc&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重起 bigtuna 後, hook 在 github 上的 url 則改為</p>
+
+<figure class='code'><figcaption><span>config/bugtuna.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">http://bigtuna.marsz.tw/hooks/build/github/abcabc</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8220;abcabc&#8221; 是你在 github_secure 填的值<br/>
+因為 github 在送 post 到 url 時, 會帶上 push 的專案以及分支名稱<br/>
+因此 bigtuna 會依據傳送過來的資訊找到對應的 github uri 和 branch 而啟動 build<br/>
+而原先設定的 hook name 在這裡就沒有用到了<br/>
+github_secure 的設定則是多一層簡單的安全性措施</p>
+
+<h4>email config</h4>
+
+<p>首先到 bigtuna 專案中設定 email smtp (以下為 gmail smtp 範例)</p>
+
+<figure class='code'><figcaption><span>config/email.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:address</span><span class="p-Indicator">:</span> <span class="s">&quot;smtp.gmail.com&quot;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">587</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&#39;your</span><span class="nv"> </span><span class="s">domain&#39;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:user_name</span><span class="p-Indicator">:</span> <span class="s">&#39;your</span><span class="nv"> </span><span class="s">email&#39;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:password</span><span class="p-Indicator">:</span> <span class="s">&#39;ur</span><span class="nv"> </span><span class="s">password&#39;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:authentication</span><span class="p-Indicator">:</span> <span class="s">&#39;plain&#39;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:enable_starttls_auto</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 email 內容中的 url host</p>
+
+<figure class='code'><figcaption><span>config/bigtuna.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:url_host</span><span class="p-Indicator">:</span> <span class="s">&quot;bigtuna.marsz.tw&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重起 delayed job</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span> <span class="o">.</span><span class="n">/script</span><span class="o">/</span><span class="n">delayed_job</span> <span class="n">stop</span>
+</span><span class='line'><span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span> <span class="o">.</span><span class="n">/script</span><span class="o">/</span><span class="n">delayed_job</span> <span class="n">start</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 project 中的 hook => mailer 打勾, 然後儲存</p>
+
+<p><img src="https://img.skitch.com/20120204-7tb6yfh51qek718t7ewk4uxkh.png" alt="" /></p>
+
+<p>儲存後會發現原先打勾的地方多了 Configure</p>
+
+<p><img src="https://img.skitch.com/20120204-qjtnx8xgh66rmd95u87yfcnjqt.png" alt="" /></p>
+
+<p>設定 email 時機與對象</p>
+
+<p><img src="https://img.skitch.com/20120204-mcnpxca3ad5r18kb6799m711fk.png" alt="" /></p>
+
+<p>注意: 若要寄給多人, 必須以半型逗號隔開, 不能用換行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">foo</span><span class="vi">@marsz</span><span class="o">.</span><span class="n">tw</span><span class="p">,</span><span class="n">bar</span><span class="vi">@marsz</span><span class="o">.</span><span class="n">tw</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>其他安全性設定</h4>
+
+<p>最簡單的方式可以利用 htpasswd<br/>
+相關設定請參考 <a href="http://doc.norang.ca/apache-basic-auth.html" target="_blank">htpasswd</a><br/>
+設定完成後, github 的 hook url 也必須一同加上帳號密碼</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">user</span><span class="ss">:pssword</span><span class="vi">@bigtuna</span><span class="o">.</span><span class="n">marsz</span><span class="o">.</span><span class="n">tw</span><span class="o">/</span><span class="n">hooks</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">github</span><span class="o">/</span><span class="n">abcabc</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna (專案設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/"/>
+    <updated>2012-01-28T12:06:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project</id>
+    <content type="html"><![CDATA[<p>上回提到 Bigtuna 的安裝<br/>
+這次示範如何針對一個專案的自動化測試進行設定</p>
+
+<!-- more -->
+
+
+<p>首先點選右上角的 &#8220;new project&#8221;</p>
+
+<p><img src="https://img.skitch.com/20120204-gxm36jskatwejffbr9emf3h13.png" alt="" /></p>
+
+<p>填好重點資訊, 儲存</p>
+
+<p><img src="https://img.skitch.com/20120204-nkft6nwwm4323bd4grrix5xxdr.png" alt="" /></p>
+
+<p>儲存後仍會停留在同一頁, 拉到下面會看到</p>
+
+<p><img src="https://img.skitch.com/20120204-bh4iib8dj31ac9wsymi4nc44m7.png" alt="" /></p>
+
+<p>到目前為止,bigtuna可自動將專案從 github clone 下來(並且針對設定的分支)<br/>
+因此這裡的 configuration 則是在 clone 下來後要做的動作(一般就是跑測試啦)</p>
+
+<p>以下提供小弟的 steps 範例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># 用 rvm 切換到專案所使用的 ruby 版本
+</span><span class='line'>rvm 1.9.2-p290
+</span><span class='line'># 將專案的設定檔 copy 到 clone 下來的專案目錄中
+</span><span class='line'>cp /home/marsz/projects/myapp/config/database.yml %build_dir%/config/database.yml
+</span><span class='line'># bundle install for test 環境
+</span><span class='line'>bundle install RAILS_ENV=test
+</span><span class='line'># 將資料庫schema load 到 mysql 中
+</span><span class='line'>bundle exec rake db:setup RAILS_ENV=test
+</span><span class='line'># 進行 rspec 測試
+</span><span class='line'>bundle exec rake spec RAILS_ENV=test</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定檔的部份, 因為我們不會將 db user/password 和 email smtp config 等設定 commit 到版本管理中, 因此每個專案在 bigtuna server 上的設定檔都要先手動建立, 以上述範例, 我將 myapp 這個專案的設定檔固定放在 /home/marsz/projects/myspp/config 下</p>
+
+<p>而 %build_dir% 則是 bigtuna 提供的變數, 指向到每次 clone myapp 下來的臨時目錄</p>
+
+<p>此外, 所有指令的環境都是在 test 下, 因此 config 設定也都必須針對 test</p>
+
+<p>&#8220;rake spec&#8221; 設針對 gem Rspec 所跑的自動化測試, 也是測試的重點所在, 前面的步驟都是為了讓 Rspec 能順利跑起來</p>
+
+<p>儲存後回到 &#8220;Home&#8221; 會看到專案列表, 在 bigtuna 中, 顏色的含意如下:<br/>
+藍色 - 尚未執行<br/>
+黃色 - 執行中
+綠色 - 執行完畢 (沒error)<br/>
+紅色 - 執行完畢 (有error)</p>
+
+<p><img src="https://img.skitch.com/20120204-rxha851d97n1bi7kjjjhtt5hef.png" alt="" /></p>
+
+<p>點進去 project 後, 右上角有一個 &#8220;BUILD NOW&#8221;, 可進行手動 build</p>
+
+<p><img src="https://img.skitch.com/20120204-mi4mgi3fwswdwg5xchaa3gss9c.png" alt="" /></p>
+
+<p>點了 &#8220;BUILD NOW&#8221; 我們就會看到專案開始進行 build</p>
+
+<p><img src="https://img.skitch.com/20120204-pkhykjqc63thr3rkduqnymbus.png" alt="" /></p>
+
+<p>若 build 結果有問題, 會看到&#8221;紅燈&#8221;, 點進去可以看到該 build 出現的錯誤訊息</p>
+
+<p><img src="https://img.skitch.com/20120204-fi6b2tte3qs7x19fgjyu8h9wpa.png" alt="" /><br/>
+<img src="https://img.skitch.com/20120204-ks36ja1g5i4wydaiq8qxjdrke4.png" alt="" /></p>
+
+<p>如此一個專案的 CI 設定算是完成了<br/>
+下一篇將介紹如何自動化進行 build, 整合 github 與 email 通知</p>
+
+<h5>補充說明</h5>
+
+<p>若你在 github 上的專案是 private 的話<br/>
+必須讓 ci server 能夠 ssh github<br/>
+相關設定可參考<a href="http://help.github.com/mac-set-up-git/" target="_blank">官網說明</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna (安裝篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install/"/>
+    <updated>2012-01-27T11:17:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install</id>
+    <content type="html"><![CDATA[<p>CI 全名 &#8220;Continuous Interation&#8221;<br/>
+用於開發流程中的一種管理技巧<br/>
+在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中<br/>
+相關介紹可參考 ihower 的 <a href="http://ihower.tw/rails3/testing.html" target="_blank">測試 Testing</a><br/>
+今天要介紹的則是用於 CI system 的 Bigtuna</p>
+
+<!-- more -->
+
+
+<h5>參考官方文件</h5>
+
+<p><a href="http://bigtuna.appelier.com/" target="_blank">http://bigtuna.appelier.com/</a></p>
+
+<h5>安裝步驟</h5>
+
+<p>從 github clone</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/appelier/bigtuna.git
+</span><span class='line'>cd bigtuna</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 Gemfile</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vim Gemfile</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2012.1.27 筆記: 因為 bigtuna 目前採用 rails 3.0.3, 而現行 rails 最新版為 3.1.2, 有許多 gem 因應更新, 而導致 3.0.3 無法使用最新版的 gem, 因此下列設定是針對 3.0.3 而做的版本修正, 若 bigtuna 有更新 rails 版本, 則下列的範例可能會不適用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s2">&quot;mysql2&quot;</span><span class="p">,</span> <span class="s2">&quot;0.2.6&quot;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;delayed_job&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 2.1.4&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 config/database.yml 以 mysql 為例, 僅供參考</p>
+
+<figure class='code'><figcaption><span>config/database.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">production</span><span class="p">:</span>
+</span><span class='line'>  <span class="n">adapter</span><span class="p">:</span> <span class="n">mysql2</span>
+</span><span class='line'>  <span class="n">encoding</span><span class="p">:</span> <span class="n">utf8</span>
+</span><span class='line'>  <span class="n">reconnect</span><span class="p">:</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="n">database</span><span class="p">:</span> <span class="n">bigtuna_production</span>
+</span><span class='line'>  <span class="n">pool</span><span class="p">:</span> <span class="mi">5</span>
+</span><span class='line'>  <span class="n">username</span><span class="p">:</span> <span class="s2">&quot;db_user&quot;</span>
+</span><span class='line'>  <span class="n">password</span><span class="p">:</span> <span class="s2">&quot;db_password&quot;</span>
+</span><span class='line'>  <span class="n">host</span><span class="p">:</span> <span class="s2">&quot;db_host&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>安裝</p>
+
+<figure class='code'><figcaption><span>config/database.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
+</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:create</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
+</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:schema:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>啟動 delayed job</p>
+
+<figure class='code'><figcaption><span>config/database.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span> <span class="o">.</span><span class="n">/script</span><span class="o">/</span><span class="n">delayed_job</span> <span class="n">start</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>完成!!!<br/>
+透過 web server 連線後, 看到以下畫面就表示 ok 啦!!<br/>
+<img src="https://img.skitch.com/20120204-dayqp1qsffq3cnei1fgcpi3e2d.png" width="700" /><br/>
+下一篇將介紹如何設定專案</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[rake assets:precompile 時出現 stack level too deep 的訊息]]></title>

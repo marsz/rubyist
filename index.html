@@ -9,8 +9,10 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="上禮拜終於要把服務佈署上去了
-結果在執行 precompile 時遇到錯誤訊息如下: ">
+  <meta name="description" content="上次提到專案在 bigtuna 上的設定
+這次要示範: 和 github 整合
+將 build 結果寄送 email
+安全性設定 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -50,7 +52,7 @@
   <header role="banner"><hgroup>
   <h1><a href="/">黃金俠</a></h1>
   
-    <h2>Ruby on Rails / Rubygems</h2>
+    <h2>Ruby on Rails / Rubygems / Git</h2>
   
 </hgroup>
 
@@ -80,6 +82,148 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/">CI server - Bigtuna (進階設定篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-29T12:50:00+08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上次提到專案在 bigtuna 上的設定<br/>
+這次要示範:</p>
+
+<ul>
+<li>和 github 整合</li>
+<li>將 build 結果寄送 email</li>
+<li>安全性設定</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-28/ci-system-bigtuna-setup-project/">CI server - Bigtuna (專案設定篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-28T12:06:00+08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-28/ci-system-bigtuna-setup-project/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上回提到 Bigtuna 的安裝<br/>
+這次示範如何針對一個專案的自動化測試進行設定</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-28/ci-system-bigtuna-setup-project/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-27/ci-system-bigtuna-install/">CI server - Bigtuna (安裝篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-27T11:17:00+08:00" pubdate data-updated="true">Jan 27<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-27/ci-system-bigtuna-install/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CI 全名 &#8220;Continuous Interation&#8221;<br/>
+用於開發流程中的一種管理技巧<br/>
+在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中<br/>
+相關介紹可參考 ihower 的 <a href="http://ihower.tw/rails3/testing.html" target="_blank">測試 Testing</a><br/>
+今天要介紹的則是用於 CI system 的 Bigtuna</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-27/ci-system-bigtuna-install/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -400,140 +544,6 @@ git pull = git fetch + git merge (remote branch merge to local branch)
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-01-10/date_format_without_zero/">輸出除去0的日期格式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-10T22:34:00+08:00" pubdate data-updated="true">Jan 10<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-01-10/date_format_without_zero/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ruby 中 Date 或 Datetime 都有 <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" taget="_blank">#srtftime</a> 可以用來作自定格式的日期輸出<br/>
-若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫<br/>
-以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-01-10/date_format_without_zero/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-01-04/new-post/">在 validates_format_of 中使用正規表示法(Regular Expression)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-04T17:43:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-01-04/new-post/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
-
-<p>因此小弟不疑有他, 於是&#8230;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-01-04/new-post/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-01-04/query-datetime-by-date/">如何在 datetime 的欄位中做日期的搜尋</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-04T16:54:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-01-04/query-datetime-by-date/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
-因此若我們直接下 sql 時, 必須將時區考量進去</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-01-04/query-datetime-by-date/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -561,6 +571,18 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/">CI server - Bigtuna (進階設定篇)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-01-28/ci-system-bigtuna-setup-project/">CI server - Bigtuna (專案設定篇)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-01-27/ci-system-bigtuna-install/">CI server - Bigtuna (安裝篇)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/">rake assets:precompile 時出現 stack level too deep 的訊息</a>
       </li>
     
@@ -568,24 +590,12 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
         <a href="/blog/2012-01-20/git-pull-with-rebase/">git pull 時請愛用 rebase</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/">透過rebase -i, reset, revert還原某個commit的方法</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/">我的 capistrano 完整設定檔說明</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration/">使用 Carrierwave 處理檔案上傳 (整合 imagemagick 與 Amazon S3)</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 148.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 112.0%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 124.0%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 112.0%'>Assets-precompile(1)</a>  <a href='/blog/categories/backup' style='font-size: 112.0%'>Backup(1)</a>  <a href='/blog/categories/capisytrano' style='font-size: 124.0%'>Capisytrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 112.0%'>Carrierwave(1)</a>  <a href='/blog/categories/counter' style='font-size: 112.0%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 112.0%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 112.0%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 124.0%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 112.0%'>Devise(1)</a>  <a href='/blog/categories/encoding' style='font-size: 112.0%'>Encoding(1)</a>  <a href='/blog/categories/fog' style='font-size: 112.0%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 124.0%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 112.0%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 112.0%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 112.0%'>Json(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 112.0%'>Model validations(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 112.0%'>Regular expression(1)</a>  <a href='/blog/categories/rmagick' style='font-size: 112.0%'>Rmagick(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(5)</a>  <a href='/blog/categories/sql' style='font-size: 112.0%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 112.0%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 112.0%'>String(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 112.0%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 112.0%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 112.0%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 148.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 112.0%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 124.0%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 112.0%'>Assets-precompile(1)</a>  <a href='/blog/categories/backup' style='font-size: 112.0%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 136.0%'>Bigtuna(3)</a>  <a href='/blog/categories/capisytrano' style='font-size: 124.0%'>Capisytrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 112.0%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-interation' style='font-size: 136.0%'>Continuous interation(3)</a>  <a href='/blog/categories/counter' style='font-size: 112.0%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 112.0%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 112.0%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 124.0%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 112.0%'>Devise(1)</a>  <a href='/blog/categories/encoding' style='font-size: 112.0%'>Encoding(1)</a>  <a href='/blog/categories/fog' style='font-size: 112.0%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 124.0%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 112.0%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 112.0%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 112.0%'>Json(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 112.0%'>Model validations(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 112.0%'>Regular expression(1)</a>  <a href='/blog/categories/rmagick' style='font-size: 112.0%'>Rmagick(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(5)</a>  <a href='/blog/categories/sql' style='font-size: 112.0%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 112.0%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 112.0%'>String(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 112.0%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 112.0%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 112.0%'>Yaml(1)</a> </span>
 </section>
 
 
