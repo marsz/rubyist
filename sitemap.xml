@@ -10,7 +10,7 @@
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/</loc>
-        <lastmod>2012-01-14T16:55:57+08:00</lastmod>
+        <lastmod>2012-02-04T13:58:52+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/</loc>
@@ -54,7 +54,7 @@
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/
         </loc>
-        <lastmod>2012-01-17T17:37:33+08:00</lastmod>
+        <lastmod>2012-02-04T13:58:26+08:00</lastmod>
     </url>
     <url>
         <loc>
@@ -96,10 +96,10 @@
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/archives/</loc>
-        <lastmod>2012-02-04T13:32:46+08:00</lastmod>
+        <lastmod>2012-02-04T13:58:52+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/</loc>
-        <lastmod>2012-02-04T13:32:46+08:00</lastmod>
+        <lastmod>2012-02-04T13:58:52+08:00</lastmod>
     </url>
 </urlset>
