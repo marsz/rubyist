@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-04T17:18:09+08:00</updated>
+  <updated>2012-02-05T01:30:23+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Facebook 辦公室的駭客精神標語]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters/"/>
+    <updated>2012-02-05T01:04:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters</id>
+    <content type="html"><![CDATA[<p>海報原文在<a href="http://designforfun.com/facebookposters/" target="_blank">這裡</a><br/>
+每一句看了都令人非常的振奮<br/>
+於是就來給它翻譯一下, 網路公司的辦公室都應該貼滿這些標語 XD</p>
+
+<!-- more -->
+
+
+<h4>Done is better than perfect</h4>
+
+<p>比完美更重要的是完成</p>
+
+<h4>Fortune favors the bold</h4>
+
+<p>命運之神眷顧勇者</p>
+
+<h4>Move faster and break things</h4>
+
+<p>快速前進, 打破陳規</p>
+
+<h4>Proceed and be bold</h4>
+
+<p>大膽得向前推進 (翻得不是很好T_T)</p>
+
+<h4>Stay focused &amp; Keep shipping</h4>
+
+<p>保持專注, 持續推出產品</p>
+
+<h4>What would you do if you weren&#8217;t afraid</h4>
+
+<p>假如什麼都不用怕, 你會做什麼</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Spec (4) model validations 的 spec]]></title>
@@ -1847,96 +1885,6 @@ name = &#8220;@#$%^ &#8221; # 不可存
 <h6>參考</h6>
 
 <p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/update_counters" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/update_counters</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[databse 資料以 yaml 格式匯入/匯出]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/"/>
-    <updated>2011-12-28T14:07:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml</id>
-    <content type="html"><![CDATA[<p>在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
-
-<h2>yaml_db</h2>
-
-<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
-
-<!-- more -->
-
-
-<h2>安裝 (rails 3)</h2>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;yaml_db&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯出</h2>
-
-<p>把資料匯出到 db/data.yml</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯出不同環境的 database (設定在 config/database.yml, 預設是 development)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要依照一個 table 一個檔案匯出..
-(2011/12/28 notice: 目前此方法在 1.9.2 + 3.1.0 的環境下測試會有一些問題)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">dump_dir</span>  <span class="c1"># cd 到欲匯出的 dir 下, 理論上依然是在專案目錄內</span>
-</span><span class='line'><span class="n">db</span><span class="ss">:data:dump_dir</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯入</h2>
-
-<p>把資料從 db/data.yml 匯入</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入不同環境的 database</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入某個目錄下的所有的 yaml (原理同 rake db:data:dump_dir)
-(2011/12/28 notice: 此方法在 1.9.2 + 3.1.0 下仍有問題)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">yamls_dir</span> <span class="c1"># cd 到 yaml 檔存放的 dir</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load_dir</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>其他</h2>
-
-<ul>
-<li>配合 whenever 可做定期備份, 並且將 yml 檔上傳至其他處存放</li>
-</ul>
-
 ]]></content>
   </entry>
   

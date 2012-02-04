@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>透過rebase -i, reset, revert還原某個commit的方法 - 黃金俠</title>
+  <title>Category: facebook - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法 commit 如下 1
-A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback) 用 git &hellip;">
+  <meta name="description" content="Category: facebook">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也�
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit">
+  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/facebook">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,193 +78,36 @@ A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也�
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">透過rebase -i, reset, revert還原某個commit的方法</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-17T18:56:00+08:00" pubdate data-updated="true">Jan 17<span>th</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
+    <h1 class="entry-title">Category: facebook</h1>
     
   </header>
-
-
-<div class="entry-content"><p>個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法</p>
-
-<p>commit 如下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E</span></code></pre></td></tr></table></div></figure>
-
-
-<p>想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback)</p>
-
-<!-- more -->
-
-
-<h5>用 git revert</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git revert E
-</span><span class='line'>git revert D</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G</span></code></pre></td></tr></table></div></figure>
-
-
-<p>F 是還原 commit E 修改結果的 commit<br/>
-G 是還原 commit D 修改結果的 commit<br/>
-因此 revert 只會讓 commit 繼續往前<br/>
-優點是可以針對某個 commit 進行還原 並且留下還原記錄</p>
-
-<h5>用 rebase -i</h5>
-
-<p>有關 rebase -i 的詳細使用方式可以參考<a href="http://blog.yorkxin.org/2011/07/29/git-rebase/" target="_blank">這篇</a></p>
-
-<p>假如想要抽掉某個 commit 又不想留下記錄, rebase -i 就很好用了</p>
-
-<p>假如只想要還原 D 變成 A -> B -> C -> E</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git rebase -i C</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這時候會出現文字編輯</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>pick D xxx
-</span><span class='line'>pick E ooo</span></code></pre></td></tr></table></div></figure>
-
-
-<p>把 pick D xxx 整列移除後儲存就可以了
-若中間有遇到衝突則必須自行修正後再</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git add .
-</span><span class='line'>git rebase --continue</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>用 reset</h5>
-
-<p>用於做整段 commits 的還原<br/>
-例如希望還原到 B commit  以後的狀態變成</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B  </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git reset B</span></code></pre></td></tr></table></div></figure>
-
-
-<p>則 git 會將 log 中的 C, D, E 都清除<br/>
-但檔案內容沒有任何變動, 因此會看到 C, D, E 修改的檔案處在 unstaged 階段<br/>
-若針對部分檔案還原可以用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout [file path]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要全部還原可用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout -f</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>結論</h4>
-
-<p>還沒 push 前, 個人傾向不產生太多 commit<br/>
-因次我都會用 rebase -i 進行編修, 順便合併或reword 一些 commit</p>
-
-<p>某個特殊情況, 例如發現某個 commit 裡面包含了不相干的檔案, 欲重新 commit 時<br/>
-就會先用 rebase -i 把欲修改的 commit 換到後面(較新), 然後再用 reset 重新 stage + commit</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012-02-05/facebook-posters/">Facebook 辦公室的駭客精神標語</a></h1>
+<time datetime="2012-02-05T01:04:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>05</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/facebook/'>facebook</a></span>
+</footer>
 
 
-<time datetime="2012-01-17T18:56:00+08:00" pubdate data-updated="true">Jan 17<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/git/'>git</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/" title="Previous Post: 我的 capistrano 完整設定檔說明">&laquo; 我的 capistrano 完整設定檔說明</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012-01-20/git-pull-with-rebase/" title="next Post: git pull 時請愛用 rebase">git pull 時請愛用 rebase &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -381,10 +223,7 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       var disqus_shortname = 'rubyist-marsz';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

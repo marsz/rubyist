@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: facebook | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/facebook/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-02-05T01:30:30+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Facebook 辦公室的駭客精神標語]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters/"/>
+    <updated>2012-02-05T01:04:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters</id>
+    <content type="html"><![CDATA[<p>海報原文在<a href="http://designforfun.com/facebookposters/" target="_blank">這裡</a><br/>
+每一句看了都令人非常的振奮<br/>
+於是就來給它翻譯一下, 網路公司的辦公室都應該貼滿這些標語 XD</p>
+
+<!-- more -->
+
+
+<h4>Done is better than perfect</h4>
+
+<p>比完美更重要的是完成</p>
+
+<h4>Fortune favors the bold</h4>
+
+<p>命運之神眷顧勇者</p>
+
+<h4>Move faster and break things</h4>
+
+<p>快速前進, 打破陳規</p>
+
+<h4>Proceed and be bold</h4>
+
+<p>大膽得向前推進 (翻得不是很好T_T)</p>
+
+<h4>Stay focused &amp; Keep shipping</h4>
+
+<p>保持專注, 持續推出產品</p>
+
+<h4>What would you do if you weren't afraid</h4>
+
+<p>假如什麼都不用怕, 你會做什麼</p>
+]]></content>
+  </entry>
+  
+</feed>
