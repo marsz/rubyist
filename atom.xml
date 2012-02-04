@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-04T13:27:48+08:00</updated>
+  <updated>2012-02-04T13:33:02+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CI server - Bigtuna 系列文]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-30/ci-system-bigtuna-index/"/>
+    <updated>2012-01-30T12:06:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-30/ci-system-bigtuna-index</id>
+    <content type="html"><![CDATA[<p>呼呼~終於完成了 Bigtuna 的系列文<br/>
+這裡索引連結如下</p>
+
+<!-- more -->
+
+
+<p><a href="http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install/">安裝篇</a> - 基本bigtuna安裝<br/>
+<a href="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/">專案設定篇</a> - 設定第一個專案<br/>
+<a href="http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/">進階設定篇</a> - github 整合, email 通知與安全性</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CI server - Bigtuna (進階設定篇)]]></title>
