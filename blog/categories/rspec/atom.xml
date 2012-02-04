@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rspec | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rspec/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-04T15:58:55+08:00</updated>
+  <updated>2012-02-04T16:01:52+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rails Rspec (2) 基本語法與執行]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax/"/>
-    <updated>2012-02-04T14:35:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax</id>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax/"/>
+    <updated>2012-02-02T14:35:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax</id>
     <content type="html"><![CDATA[<p>建議在開始本系列文以前先讀過, 以下參考文件與資源</p>
 
 <!-- more -->
@@ -158,9 +158,9 @@ bundle exec rspec -h
   
   <entry>
     <title type="html"><![CDATA[Rails Rspec (1) 介紹與設定]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup/"/>
-    <updated>2012-02-04T14:00:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup</id>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-01/rails-rspec-intro-and-setup/"/>
+    <updated>2012-02-01T14:00:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-01/rails-rspec-intro-and-setup</id>
     <content type="html"><![CDATA[<p>有關寫測試的重要性, 本文不再贅述<br/>
 觀念性文章可參考以下大大們的見解...</p>
 
