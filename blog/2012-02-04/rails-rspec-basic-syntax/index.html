@@ -5,13 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>databse 資料以 yaml 格式匯入/匯出 - 黃金俠</title>
+  <title>Rails Rspec (2) 基本語法與執行 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入 yaml_db github: https://github.com/ludicast/yaml_db 安裝 (rails 3) 1
-gem &#39;yaml_db&#39; 1 &hellip;">
+  <meta name="description" content="建議在開始本系列文以前先讀過, 以下參考文件與資源 ihower 投影片 - 必看!!!!!
+Rspec-core Rdoc - 架構必看!!!
+Rspec Rails - 官方提供的簡單範例 for models, controllers, routes, helpers 等 describe &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +20,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -84,7 +84,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">databse 資料以 yaml 格式匯入/匯出</h1>
+      <h1 class="entry-title">Rails Rspec (2) 基本語法與執行</h1>
     
     
       <p class="meta">
@@ -100,7 +100,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+<time datetime="2012-02-04T14:35:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -109,87 +109,166 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   </header>
 
 
-<div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
-
-<h2>yaml_db</h2>
-
-<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
+<div class="entry-content"><p>建議在開始本系列文以前先讀過, 以下參考文件與資源</p>
 
 <!-- more -->
 
 
-<h2>安裝 (rails 3)</h2>
+<p><a href="http://www.slideshare.net/ihower/rspec-7394497" target="_blank">ihower 投影片</a> - 必看!!!!!<br/>
+<a href="http://rubydoc.info/gems/rspec-core/2.8.0/file/README.md#" target="_blank">Rspec-core Rdoc</a> - 架構必看!!!<br/>
+<a href="https://github.com/rspec/rspec-rails" target="_blank">Rspec Rails</a> - 官方提供的簡單範例 for models, controllers, routes, helpers 等</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;yaml_db&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
+<h4>describe 與 it + should</h4>
 
+<p>最簡單的 rspec 可由 describe 和 it 組成<br/>
+it 裡面必須有 should (或其他 match 語法) 才會構成測試</p>
 
+<p>小弟在初學 rspec 的時候, 大多透過 should == 和 should_not == 就吃遍天下了 :p<br/>
+一般在初學 rspec 時, 需要多注意 describe 和 it 的階層關係, 才會讓你的 spec 可讀性較高</p>
 
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>匯出</h2>
-
-<p>把資料匯出到 db/data.yml</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯出不同環境的 database (設定在 config/database.yml, 預設是 development)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:dump</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要依照一個 table 一個檔案匯出..
-(2011/12/28 notice: 目前此方法在 1.9.2 + 3.1.0 的環境下測試會有一些問題)</p>
+<p>有規劃的 spec</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">dump_dir</span>  <span class="c1"># cd 到欲匯出的 dir 下, 理論上依然是在專案目錄內</span>
-</span><span class='line'><span class="n">db</span><span class="ss">:data:dump_dir</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#get_bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be nil&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="no">Foo</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">get_bar</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="kp">nil</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be Bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="no">Foo</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">get_bar</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="no">Bar</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>匯入</h2>
-
-<p>把資料從 db/data.yml 匯入</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入不同環境的 database</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>匯入某個目錄下的所有的 yaml (原理同 rake db:data:dump_dir)
-(2011/12/28 notice: 此方法在 1.9.2 + 3.1.0 下仍有問題)</p>
+<p>沒有規劃的 spec</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cd</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">yamls_dir</span> <span class="c1"># cd 到 yaml 檔存放的 dir</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:data:load_dir</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;#get_bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">Foo</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">get_bar</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="kp">nil</span> <span class="c1"># 當這行的測試沒過時, 下面的測試便不會再執行</span>
+</span><span class='line'>    <span class="no">Foo</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">get_bar</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="no">Bar</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>其他</h2>
+<p>盡可能讓每個 it 都是針對一種結果進行測試<br/>
+描述中用 # 開頭的就表示是 method name</p>
 
-<ul>
-<li>配合 whenever 可做定期備份, 並且將 yml 檔上傳至其他處存放</li>
-</ul>
+<p>當漸漸學會其他的 match 語法時, 可讀性就去更高了
+例如 <a href="http://apidock.com/rspec/Spec/Matchers/be_a_kind_of" target="_blank">be_a_kind_of</a> 可用於做 is_a_kind_of 的 match</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Foo</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">get_bar</span><span class="o">.</span><span class="n">should</span> <span class="n">be_a_kind_of</span><span class="p">(</span><span class="no">Bar</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相當於</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Foo</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">get_bar</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="no">Bar</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>前者的可讀性是比較高的</p>
+
+<h4>before 與 it</h4>
+
+<p>before 必定是在某個 describe 下, 而 before 內的行為會在每個 it 以前執行<br/>
+而善用 instance 變數, 可以將 before 產生的變數傳遞給底下每個 it 用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@foo</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">create!</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>      <span class="vi">@bar</span> <span class="o">=</span> <span class="no">Bar</span><span class="o">.</span><span class="n">create!</span>
+</span><span class='line'>      <span class="vi">@foo</span><span class="o">.</span><span class="n">bar</span> <span class="o">=</span> <span class="vi">@bar</span>
+</span><span class='line'>      <span class="vi">@foo</span><span class="o">.</span><span class="n">save</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be Bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>       <span class="vi">@foo</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">should</span> <span class="n">be_a_kind_of</span><span class="p">(</span><span class="no">Bar</span><span class="p">)</span> <span class="c1"># 可以拿到 @foo</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be equeal to @bar&quot;</span> <span class="k">do</span>
+</span><span class='line'>       <span class="vi">@foo</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="vi">@bar</span><span class="o">.</span><span class="n">id</span> <span class="c1"># 也可以拿到 @bar</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;be a kind of Foo&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@foo</span><span class="o">.</span><span class="n">should</span> <span class="n">be_a_kind_of</span><span class="p">(</span><span class="no">Foo</span><span class="p">)</span> <span class="c1"># 只能拿到 @foo</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此外每個 it 結束後, 都會將此 it (含 before) 內對 test db 的修改通通 rollback, 因此我們可視為每個 it 執行前 (before 前), test db 都會是空的</p>
+
+<h4>執行測試</h4>
+
+<p>必須注意:</p>
+
+<ol>
+<li>config/database.yml 必須要有 test env 的設定, 且 database 不能和 migrate 一樣</li>
+<li>執行前若 development 有 migrations 沒跑的話, 必須先跑完</li>
+</ol>
+
+
+<p>跑 spec/ 下的所有測試</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">spec</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>跑單一檔案的 spec</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rspec</span> <span class="n">spec</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">foo_spec</span><span class="o">.</span><span class="n">rb</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>跑單一檔案時, 不會先重新 load db schema, 因此若有新的 migrations 在 development 跑過後, 必須先 rake spec 後才能跑單一檔案的 rspec</p>
+
+<p>更多 rspec 指令的應用</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rspec</span> <span class="o">-</span><span class="n">h</span>
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -213,12 +292,12 @@ gem &#39;yaml_db&#39; 1 &hellip;">
   
 
 
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+<time datetime="2012-02-04T14:35:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/backup/'>backup</a>, <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/yaml/'>yaml</a>
+    <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>
   
 </span>
 
@@ -227,7 +306,7 @@ gem &#39;yaml_db&#39; 1 &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax/" >Tweet</a>
   
   
   
@@ -238,10 +317,8 @@ gem &#39;yaml_db&#39; 1 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" title="Previous Post: 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile">&laquo; 在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a>
+        <a class="basic-alignment left" href="/blog/2012-02-04/rails-rspec-intro-and-setup/" title="Previous Post: Rails Rspec (1) 介紹與設定">&laquo; Rails Rspec (1) 介紹與設定</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011-12-30/counter-increment-with-custom-value/" title="next Post: 實作 sql 中的數值欄位的遞增(counter increment)">實作 sql 中的數值欄位的遞增(counter increment) &raquo;</a>
       
     </p>
   </footer>
@@ -368,8 +445,8 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-basic-syntax/';
         var disqus_script = 'embed.js';
       
     (function () {

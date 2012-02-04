@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: rubygems - 黃金俠</title>
+  <title>Rails Rspec (1) 介紹與設定 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="Category: rubygems">
+  <meta name="description" content="有關寫測試的重要性, 本文不再贅述
+觀念性文章可參考以下大大們的見解&#8230; Coding: 寫 Test 還是不寫 Test? - Mr. Jamie
+Rails 3 實戰聖經: 測試 Testing - ihower
+Rspec 讓你愛上寫測試 - ihower 安裝 參考官方文件: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/rubygems">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -78,123 +81,175 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: rubygems</h1>
+    
+      <h1 class="entry-title">Rails Rspec (1) 介紹與設定</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-04T14:00:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
+
+
+<div class="entry-content"><p>有關寫測試的重要性, 本文不再贅述<br/>
+觀念性文章可參考以下大大們的見解&#8230;</p>
+
+<!-- more -->
+
+
+<p><a href="http://mrjamie.cc/2011/09/01/test-code/" target="_blank">Coding: 寫 Test 還是不寫 Test?</a> - Mr. Jamie<br/>
+<a href="http://ihower.tw/rails3/testing.html" target="_blank">Rails 3 實戰聖經: 測試 Testing</a> - ihower<br/>
+<a href="http://www.slideshare.net/ihower/rspec-7394497?from=ss_embed">Rspec 讓你愛上寫測試</a> - ihower</p>
+
+<h5>安裝</h5>
+
+<p>參考官方文件: <a href="https://github.com/rspec/rspec-rails" target="_blank">https://github.com/rspec/rspec-rails</a></p>
+
+<p>Gemfile</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span><span class="p">,</span> <span class="ss">:development</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rspec&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;rspec-rails&quot;</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;factory_girl_rails&quot;</span> <span class="c1"># 用於產生資料, 後面的文章將會介紹</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;shoulda-matchers&quot;</span> <span class="c1"># 用於簡化寫 rspec 的工具, 後面的文章將會介紹</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
-  
-  <h2>2012</h2>
 
-<article>
-  
-<h1><a href="/blog/2012-02-04/rails-rspec-basic-syntax/">Rails Rspec (2) 基本語法與執行</a></h1>
-<time datetime="2012-02-04T14:35:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>04</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>產生檔案</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">generate</span> <span class="n">rspec</span><span class="ss">:install</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
+<p>移除舊的 test, 可視需求執行, 一般有了 rspec 就不會想再用舊的 test 框架啦 XD</p>
 
-<article>
-  
-<h1><a href="/blog/2012-02-04/rails-rspec-intro-and-setup/">Rails Rspec (1) 介紹與設定</a></h1>
-<time datetime="2012-02-04T14:00:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>04</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="nb">test</span><span class="o">/</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>此時專案下會多了 spec 目錄, 以及 spec/spec_helper.rb<br/>
+另外透過 rails g 產生 model 或 controller 時, spec 目錄下也會產生對應的 spec 檔<br/>
+如</p>
 
-
-
-<article>
-  
-<h1><a href="/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/">我的 capistrano 完整設定檔說明</a></h1>
-<time datetime="2012-01-14T16:09:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>14</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/capistrano/'>capistrano</a>, <a class='category' href='/blog/categories/deploy/'>deploy</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
-</footer>
-
-
-</article>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">model</span> <span class="n">foo</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
-<article>
-  
-<h1><a href="/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration/">使用 Carrierwave 處理檔案上傳 (整合 imagemagick 與 Amazon S3)</a></h1>
-<time datetime="2012-01-10T23:38:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>10</span> <span class='year'>2012</span></time>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/amazon-s3/'>Amazon-S3</a>, <a class='category' href='/blog/categories/imagemagick/'>ImageMagick</a>, <a class='category' href='/blog/categories/carrierwave/'>carrierwave</a>, <a class='category' href='/blog/categories/fog/'>fog</a>, <a class='category' href='/blog/categories/rmagick/'>rmagick</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/">Devise 在登入或登出之後執行回乎</a></h1>
-<time datetime="2012-01-10T23:11:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>10</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/devise/'>Devise</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
-</footer>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">invoke</span>  <span class="n">active_record</span>
+</span><span class='line'>  <span class="n">create</span>    <span class="n">db</span><span class="o">/</span><span class="n">migrate</span><span class="o">/</span><span class="mi">20120204063026</span><span class="n">_create_foos</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'>  <span class="n">create</span>    <span class="n">app</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">foo</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'>  <span class="n">invoke</span>    <span class="n">rspec</span>
+</span><span class='line'>  <span class="n">create</span>      <span class="n">spec</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">foo_spec</span><span class="o">.</span><span class="n">rb</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>同理, rails destroy 也會對應刪除</p>
 
-
-
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">databse 資料以 yaml 格式匯入/匯出</a></h1>
-<time datetime="2011-12-28T14:07:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>28</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/backup/'>backup</a>, <a class='category' href='/blog/categories/database/'>database</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/yaml/'>yaml</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a></h1>
-<time datetime="2011-12-25T15:14:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>25</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/assets/'>assets</a>, <a class='category' href='/blog/categories/capistrano/'>capistrano</a>, <a class='category' href='/blog/categories/deploy/'>deploy</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
-</footer>
-
-
-</article>
-
+<p>下一篇將會介紹基本語法以及跑測試的方法</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-04T14:00:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-01-30/ci-system-bigtuna-index/" title="Previous Post: CI server - Bigtuna 系列文">&laquo; CI server - Bigtuna 系列文</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012-02-04/rails-rspec-basic-syntax/" title="next Post: Rails Rspec (2) 基本語法與執行">Rails Rspec (2) 基本語法與執行 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -310,7 +365,10 @@ e(js,fjs);}}(document,"script","twitter-wjs");</script>
       var disqus_shortname = 'rubyist-marsz';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-intro-and-setup/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
