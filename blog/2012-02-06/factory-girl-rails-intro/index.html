@@ -5,15 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rails Rspec (3) pending 的使用 - 黃金俠</title>
+  <title>使用 Factory Girl 產生測試用資料 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="pending 的使用可先參考 官方文件
-一般 generator 產生的 spec 檔都會先幫你把 pending 加好 1
-2
-3
-describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot; &hellip;">
+  <meta name="description" content="在寫測試的時候, 為了實際測試程式處理資料的正確性
+免不了要依據資料庫的關聯建立假資料
+但往往會因為 model 增加了一些 validation 而導致產生假資料的 code, 必須符合驗證而修改
+當測試的量日漸龐大時, 改起來就會非常麻煩 factory_girl_rails &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +21,7 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -86,7 +85,7 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
   
   <header>
     
-      <h1 class="entry-title">Rails Rspec (3) pending 的使用</h1>
+      <h1 class="entry-title">使用 Factory Girl 產生測試用資料</h1>
     
     
       <p class="meta">
@@ -102,7 +101,7 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
   
 
 
-<time datetime="2012-02-03T16:06:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
+<time datetime="2012-02-06T16:57:00+08:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -111,86 +110,98 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
   </header>
 
 
-<div class="entry-content"><p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
-一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
+<div class="entry-content"><p>在寫測試的時候, 為了實際測試程式處理資料的正確性<br/>
+免不了要依據資料庫的關聯建立假資料<br/>
+但往往會因為 model 增加了一些 validation 而導致產生假資料的 code, 必須符合驗證而修改<br/>
+當測試的量日漸龐大時, 改起來就會非常麻煩</p>
 
 <!-- more -->
 
 
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;add some examples to (or delete) </span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">1</span> <span class="n">example</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span><span class="p">,</span> <span class="mi">1</span> <span class="n">pending</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因為不是每個專案都會讓你有時間寫 spec<br/>
-等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
-所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
-
-<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
-
-<p>pending 可分幾個層次如下&#8230;</p>
-
-<h4>整個 class 的 pending</h4>
-
-<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
+<p>factory_girl_rails 讓產生假資料的方式變得簡單和一致, 同時提昇 code 的可讀性<br/>
+例如:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">FoosController</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">pending</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>  <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;foo@bar.com&quot;</span><span class="p">,</span> <span class="ss">:state</span> <span class="o">=&gt;</span> <span class="ss">:block</span><span class="p">)</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h4>某個 method 的 pending</h4>
-
-<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
+<p>改用 factory_girl 後</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>  <span class="vi">@user</span> <span class="o">=</span> <span class="no">Factory</span> <span class="ss">:user_state_blocked</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>安裝</h4>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span><span class="p">,</span> <span class="ss">:development</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s2">&quot;factory_girl_rails&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>設定</h4>
+
+<p>factory 的設定建議一個檔案對應一個 model, 放在 spec/factories 下<br/>
+例如 app/models/user.rb => sepc/factiries/user.rb<br/>
+為了讓 rails g model 的時候, 可以自動產生對應的 factory file, 可以加入以下 code 在 config/application.rb</p>
+
+<figure class='code'><figcaption><span>config/application.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">pending</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">generators</span> <span class="k">do</span> <span class="o">|</span><span class="n">g</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">g</span><span class="o">.</span><span class="n">test_framework</span> <span class="ss">:rspec</span><span class="p">,</span> <span class="ss">:fixture</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">:views</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span> <span class="ss">:fixture_replacement</span> <span class="o">=&gt;</span> <span class="ss">:factory_girl</span>
+</span><span class='line'>  <span class="n">g</span><span class="o">.</span><span class="n">fixture_replacement</span> <span class="ss">:factory_girl</span><span class="p">,</span> <span class="ss">:dir</span> <span class="o">=&gt;</span> <span class="s2">&quot;spec/factories&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>之後只要 &#8220;rails g model user&#8221; 也會自動產生 spec/factories/user.rb<br/>
+內容如下</p>
+
+<figure class='code'><figcaption><span>spec/factories/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>或</p>
+<p>針對已經存在的 model 可以透過 -s 來略過已存在的檔案</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;#bar&quot;</span>
-</span><span class='line'><span class="k">end</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">model</span> <span class="n">user</span> <span class="o">-</span><span class="n">s</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>一般都是後者的寫法</p>
+<h4>定義與使用</h4>
 
-<h4>method/action 內的某個 case</h4>
+<p>基本, factory 內的 method 對應 column name</p>
 
-<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>spec/factories/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -198,20 +209,77 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be a kind of Bar&quot;</span> <span class="k">do</span>
-</span><span class='line'>      <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">pending</span> <span class="s2">&quot;should raise error if bar_id is nil&quot;</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;foo&quot;</span>
+</span><span class='line'>    <span class="n">email</span> <span class="s2">&quot;bar@foo.com&quot;</span>
+</span><span class='line'>    <span class="n">password</span> <span class="s2">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="n">birthday</span> <span class="s2">&quot;1982-03-30&quot;</span>
 </span><span class='line'>  <span class="k">end</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>另外, method 只針對 public methods 寫, 一般 protected 和 private method 都不寫 spec<br/>
-嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
-我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
+<p>巢狀定義, 可用於某種 test case 下的資料內容, 下層的 column 內容會覆寫上層</p>
+
+<figure class='code'><figcaption><span>spec/factories/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;foo&quot;</span>
+</span><span class='line'>    <span class="n">email</span> <span class="s2">&quot;bar@foo.com&quot;</span>
+</span><span class='line'>    <span class="n">password</span> <span class="s2">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="n">birthday</span> <span class="s2">&quot;1982-03-30&quot;</span>
+</span><span class='line'>    <span class="n">state</span> <span class="s2">&quot;actived&quot;</span>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:user_state_locked</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">state</span> <span class="s2">&quot;locked&quot;</span>
+</span><span class='line'>      <span class="n">locked_at</span> <span class="s2">&quot;2012-12-12&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">factory</span> <span class="ss">:user_state_closed</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">state</span> <span class="s2">&quot;closed&quot;</span>
+</span><span class='line'>      <span class="n">closed_at</span> <span class="s2">&quot;2012-12-12 12:12:12&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>spec/models/user_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@user</span> <span class="o">=</span> <span class="no">Factory</span> <span class="ss">:user</span>
+</span><span class='line'><span class="vi">@user_state_closed</span> <span class="o">=</span> <span class="no">Factory</span> <span class="ss">:user_state_closed</span>
+</span><span class='line'><span class="vi">@user_state_locked</span> <span class="o">=</span> <span class="no">Factory</span> <span class="ss">:user_state_locked</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用 factory 時, 也可以在後面的參數帶入自定欄位內容或關連</p>
+
+<figure class='code'><figcaption><span>spec/models/user_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@user</span> <span class="o">=</span> <span class="no">Factory</span> <span class="ss">:user</span><span class="p">,</span> <span class="ss">:birthday</span> <span class="o">=&gt;</span> <span class="s2">&quot;1983-01-28&quot;</span>
+</span><span class='line'><span class="vi">@post</span> <span class="o">=</span> <span class="no">Factory</span> <span class="ss">:post</span><span class="p">,</span> <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="vi">@user</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>下一篇將介紹更進階的 factory 定義!!</p>
 </div>
 
 
@@ -234,12 +302,12 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
   
 
 
-<time datetime="2012-02-03T16:06:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
+<time datetime="2012-02-06T16:57:00+08:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>, <a class='category' href='/blog/categories/testing/'>testing</a>
+    <a class='category' href='/blog/categories/factory-girl/'>factory-girl</a>, <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>
   
 </span>
 
@@ -248,7 +316,7 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro/" >Tweet</a>
   
   
   
@@ -259,10 +327,8 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012-02-02/rails-rspec-basic-syntax/" title="Previous Post: Rails Rspec (2) 基本語法與執行">&laquo; Rails Rspec (2) 基本語法與執行</a>
+        <a class="basic-alignment left" href="/blog/2012-02-05/facebook-posters/" title="Previous Post: Facebook 辦公室的駭客精神標語">&laquo; Facebook 辦公室的駭客精神標語</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012-02-04/rails-rspec-model-spec/" title="next Post: Rails Spec (4) model validations 的 spec">Rails Spec (4) model validations 的 spec &raquo;</a>
       
     </p>
   </footer>
@@ -391,8 +457,8 @@ describe Foo do pending &quot;add some examples to (or delete) #{__FILE__}&quot;
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro/';
         var disqus_script = 'embed.js';
       
     (function () {

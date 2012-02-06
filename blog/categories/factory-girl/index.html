@@ -5,18 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>rake assets:precompile 時出現 stack level too deep 的訊息 - 黃金俠</title>
+  <title>Category: factory-girl - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="上禮拜終於要把服務佈署上去了
-結果在執行 precompile 時遇到錯誤訊息如下: 1
-2
-rake aborted!
-stack level too deep 經過一陣搜索後發現, assets 檔案在同層目錄中, 不能有檔名和目錄名相同的情形
-例如 1
-2
-app/assets/admin/ &hellip;">
+  <meta name="description" content="Category: factory-girl">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +18,7 @@ app/assets/admin/ &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep">
+  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/factory-girl">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -85,133 +78,36 @@ app/assets/admin/ &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">rake assets:precompile 時出現 stack level too deep 的訊息</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-24T19:53:00+08:00" pubdate data-updated="true">Jan 24<span>th</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
+    <h1 class="entry-title">Category: factory-girl</h1>
     
   </header>
-
-
-<div class="entry-content"><p>上禮拜終於要把服務佈署上去了<br/>
-結果在執行 precompile 時遇到錯誤訊息如下:</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake aborted!
-</span><span class='line'>stack level too deep</span></code></pre></td></tr></table></div></figure>
-
-
-<p>經過一陣搜索後發現, assets 檔案在同層目錄中, 不能有檔名和目錄名相同的情形<br/>
-例如</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>app/assets/admin/foo.scss
-</span><span class='line'>app/assets/admin.scss</span></code></pre></td></tr></table></div></figure>
-
-
-<p>主要是因為我的 admin.scss 是用來作 layout file 的
-其內容</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/*</span>
-</span><span class='line'><span class="c"> *= require_tree ./admin</span>
-</span><span class='line'><span class="c">*/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>於是在 precompile 時就發生了悲劇 :p<br/>
-後來將檔名更換後就沒問題了</p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012-02-06/factory-girl-rails-intro/">使用 Factory Girl 產生測試用資料</a></h1>
+<time datetime="2012-02-06T16:57:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>06</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/factory-girl/'>factory-girl</a>, <a class='category' href='/blog/categories/rspec/'>rspec</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
+</footer>
 
 
-<time datetime="2012-01-24T19:53:00+08:00" pubdate data-updated="true">Jan 24<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/assets/'>assets</a>, <a class='category' href='/blog/categories/assets-precompile/'>assets-precompile</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012-01-20/git-pull-with-rebase/" title="Previous Post: git pull 時請愛用 rebase">&laquo; git pull 時請愛用 rebase</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012-01-27/ci-system-bigtuna-install/" title="next Post: CI server - Bigtuna (安裝篇)">CI server - Bigtuna (安裝篇) &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -329,10 +225,7 @@ app/assets/admin/ &hellip;">
       var disqus_shortname = 'rubyist-marsz';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

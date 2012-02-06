@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rspec | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rspec/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-06T08:19:18+08:00</updated>
+  <updated>2012-02-06T17:31:10+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,137 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用 Factory Girl 產生測試用資料]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro/"/>
+    <updated>2012-02-06T16:57:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro</id>
+    <content type="html"><![CDATA[<p>在寫測試的時候, 為了實際測試程式處理資料的正確性<br/>
+免不了要依據資料庫的關聯建立假資料<br/>
+但往往會因為 model 增加了一些 validation 而導致產生假資料的 code, 必須符合驗證而修改<br/>
+當測試的量日漸龐大時, 改起來就會非常麻煩</p>
+
+<!-- more -->
+
+
+<p>factory_girl_rails 讓產生假資料的方式變得簡單和一致, 同時提昇 code 的可讀性<br/>
+例如:</p>
+
+<p><code>ruby
+before do
+  @user = User.create(:name =&gt; "foo", :email =&gt; "foo@bar.com", :state =&gt; :block)
+end
+</code></p>
+
+<p>改用 factory_girl 後</p>
+
+<p><code>ruby
+before do
+  @user = Factory :user_state_blocked
+end
+</code></p>
+
+<h4>安裝</h4>
+
+<p><code>ruby Gemfile
+group :test, :development do
+  gem "factory_girl_rails"
+end
+</code></p>
+
+<p><code>ruby
+bundle install
+</code></p>
+
+<h4>設定</h4>
+
+<p>factory 的設定建議一個檔案對應一個 model, 放在 spec/factories 下<br/>
+例如 app/models/user.rb => sepc/factiries/user.rb<br/>
+為了讓 rails g model 的時候, 可以自動產生對應的 factory file, 可以加入以下 code 在 config/application.rb</p>
+
+<p><code>ruby config/application.rb
+config.generators do |g|
+  g.test_framework :rspec, :fixture =&gt; true, :views =&gt; false, :fixture_replacement =&gt; :factory_girl
+  g.fixture_replacement :factory_girl, :dir =&gt; "spec/factories"
+end
+</code></p>
+
+<p>之後只要 "rails g model user" 也會自動產生 spec/factories/user.rb<br/>
+內容如下</p>
+
+<p><code>ruby spec/factories/user.rb
+FactoryGirl.define do
+  factory :user do
+  end
+end
+</code></p>
+
+<p>針對已經存在的 model 可以透過 -s 來略過已存在的檔案</p>
+
+<p><code>ruby
+rails g model user -s
+</code></p>
+
+<h4>定義與使用</h4>
+
+<p>基本, factory 內的 method 對應 column name</p>
+
+<p>```ruby spec/factories/user.rb
+FactoryGirl.define do
+  factory :user do</p>
+
+<pre><code>name "foo"
+email "bar@foo.com"
+password "12341234"
+birthday "1982-03-30"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>巢狀定義, 可用於某種 test case 下的資料內容, 下層的 column 內容會覆寫上層</p>
+
+<p>```ruby spec/factories/user.rb
+FactoryGirl.define do
+  factory :user do</p>
+
+<pre><code>name "foo"
+email "bar@foo.com"
+password "12341234"
+birthday "1982-03-30"
+state "actived"
+factory :user_state_locked do
+  state "locked"
+  locked_at "2012-12-12"
+end
+factory :user_state_closed do
+  state "closed"
+  closed_at "2012-12-12 12:12:12"
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>ruby spec/models/user_spec.rb
+@user = Factory :user
+@user_state_closed = Factory :user_state_closed
+@user_state_locked = Factory :user_state_locked
+</code></p>
+
+<p>使用 factory 時, 也可以在後面的參數帶入自定欄位內容或關連</p>
+
+<p><code>ruby spec/models/user_spec.rb
+@user = Factory :user, :birthday =&gt; "1983-01-28"
+@post = Factory :post, :user =&gt; @user
+</code></p>
+
+<p>下一篇將介紹更進階的 factory 定義!!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails Spec (4) model validations 的 spec]]></title>
