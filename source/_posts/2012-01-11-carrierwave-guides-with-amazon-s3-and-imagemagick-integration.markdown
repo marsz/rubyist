@@ -12,6 +12,8 @@ categories: ["rubygems","carrierwave","fog","Amazon-S3","rmagick","ImageMagick"]
 
 * Github [https://github.com/jnicklas/carrierwave](https://github.com/jnicklas/carrierwave)
 
+<!-- more -->
+
 安裝
 -------
 
