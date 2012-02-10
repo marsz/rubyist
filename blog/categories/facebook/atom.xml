@@ -4,7 +4,7 @@
   <title><![CDATA[Category: facebook | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/facebook/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-11T02:51:41+08:00</updated>
+  <updated>2012-02-11T03:06:33+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -230,6 +230,12 @@ get '/users/sign_out' =&gt; 'devise/sessions#destroy', :as =&gt; :user_sign_out
 
 <p>  end
 ```</p>
+
+<p>view 裡面的 Facebook 登入按鈕 (html)</p>
+
+<p><code>html
+&lt;a href="http://rubyist.marsz.tw/auth/facebook"&gt;Facebook 登入&lt;/a&gt;
+</code></p>
 
 <p>若希望 Facebook 登入後可以導回登入前的頁面, 則可以做以下設定<br/>
 主要參考 <a href="https://github.com/plataformatec/devise/wiki/How-To:-Redirect-to-a-specific-page-on-successful-sign-in" target="_blank">Devise Wiki</a></p>
