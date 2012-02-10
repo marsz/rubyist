@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CI server - Bigtuna (專案設定篇) - 黃金俠</title>
+  <title>Category: omniauth - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="上回提到 Bigtuna 的安裝
-這次示範如何針對一個專案的自動化測試進行設定 首先點選右上角的 &#8220;new project&#8221; 填好重點資訊, 儲存 儲存後仍會停留在同一頁, 拉到下面會看到 到目前為止,bigtuna可自動將專案從 github clone 下來( &hellip;">
+  <meta name="description" content="Category: omniauth">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project">
+  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/omniauth">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,178 +78,36 @@
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">CI server - Bigtuna (專案設定篇)</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-28T12:06:00+08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
-        
-         | <a href="#disqus_thread">Comments</a>
-        
-      </p>
+    <h1 class="entry-title">Category: omniauth</h1>
     
   </header>
-
-
-<div class="entry-content"><p>上回提到 Bigtuna 的安裝<br/>
-這次示範如何針對一個專案的自動化測試進行設定</p>
-
-<!-- more -->
-
-
-<p>首先點選右上角的 &#8220;new project&#8221;</p>
-
-<p><img src="https://img.skitch.com/20120204-gxm36jskatwejffbr9emf3h13.png" alt="" /></p>
-
-<p>填好重點資訊, 儲存</p>
-
-<p><img src="https://img.skitch.com/20120204-nkft6nwwm4323bd4grrix5xxdr.png" alt="" /></p>
-
-<p>儲存後仍會停留在同一頁, 拉到下面會看到</p>
-
-<p><img src="https://img.skitch.com/20120204-bh4iib8dj31ac9wsymi4nc44m7.png" alt="" /></p>
-
-<p>到目前為止,bigtuna可自動將專案從 github clone 下來(並且針對設定的分支)<br/>
-因此這裡的 configuration 則是在 clone 下來後要做的動作(一般就是跑測試啦)</p>
-
-<p>以下提供小弟的 steps 範例</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># 用 rvm 切換到專案所使用的 ruby 版本
-</span><span class='line'>rvm 1.9.2-p290
-</span><span class='line'># 將專案的設定檔 copy 到 clone 下來的專案目錄中
-</span><span class='line'>cp /home/marsz/projects/myapp/config/database.yml %build_dir%/config/database.yml
-</span><span class='line'># bundle install for test 環境
-</span><span class='line'>bundle install RAILS_ENV=test
-</span><span class='line'># 將資料庫schema load 到 mysql 中
-</span><span class='line'>bundle exec rake db:setup RAILS_ENV=test
-</span><span class='line'># 進行 rspec 測試
-</span><span class='line'>bundle exec rake spec RAILS_ENV=test</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定檔的部份, 因為我們不會將 db user/password 和 email smtp config 等設定 commit 到版本管理中, 因此每個專案在 bigtuna server 上的設定檔都要先手動建立, 以上述範例, 我將 myapp 這個專案的設定檔固定放在 /home/marsz/projects/myspp/config 下</p>
-
-<p>而 %build_dir% 則是 bigtuna 提供的變數, 指向到每次 clone myapp 下來的臨時目錄</p>
-
-<p>此外, 所有指令的環境都是在 test 下, 因此 config 設定也都必須針對 test</p>
-
-<p>&#8220;rake spec&#8221; 設針對 gem Rspec 所跑的自動化測試, 也是測試的重點所在, 前面的步驟都是為了讓 Rspec 能順利跑起來</p>
-
-<p>儲存後回到 &#8220;Home&#8221; 會看到專案列表, 在 bigtuna 中, 顏色的含意如下:<br/>
-藍色 - 尚未執行<br/>
-黃色 - 執行中
-綠色 - 執行完畢 (沒error)<br/>
-紅色 - 執行完畢 (有error)</p>
-
-<p><img src="https://img.skitch.com/20120204-rxha851d97n1bi7kjjjhtt5hef.png" alt="" /></p>
-
-<p>點進去 project 後, 右上角有一個 &#8220;BUILD NOW&#8221;, 可進行手動 build</p>
-
-<p><img src="https://img.skitch.com/20120204-mi4mgi3fwswdwg5xchaa3gss9c.png" alt="" /></p>
-
-<p>點了 &#8220;BUILD NOW&#8221; 我們就會看到專案開始進行 build</p>
-
-<p><img src="https://img.skitch.com/20120204-pkhykjqc63thr3rkduqnymbus.png" alt="" /></p>
-
-<p>若 build 結果有問題, 會看到&#8221;紅燈&#8221;, 點進去可以看到該 build 出現的錯誤訊息</p>
-
-<p><img src="https://img.skitch.com/20120204-fi6b2tte3qs7x19fgjyu8h9wpa.png" alt="" /><br/>
-<img src="https://img.skitch.com/20120204-ks36ja1g5i4wydaiq8qxjdrke4.png" alt="" /></p>
-
-<p>如此一個專案的 CI 設定算是完成了<br/>
-下一篇將介紹如何自動化進行 build, 整合 github 與 email 通知</p>
-
-<h5>補充說明</h5>
-
-<p>若你在 github 上的專案是 private 的話<br/>
-必須讓 ci server 能夠 ssh github<br/>
-相關設定可參考<a href="http://help.github.com/mac-set-up-git/" target="_blank">官網說明</a></p>
-</div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
-
-      
-
-
-
-
-
+  <div id="blog-archives" class="category">
 
 
 
   
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a></h1>
+<time datetime="2012-02-11T01:20:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>11</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/devise/'>devise</a>, <a class='category' href='/blog/categories/facebook/'>facebook</a>, <a class='category' href='/blog/categories/omniauth/'>omniauth</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a></span>
+</footer>
 
 
-<time datetime="2012-01-28T12:06:00+08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/bigtuna/'>Bigtuna</a>, <a class='category' href='/blog/categories/continuous-interation/'>Continuous Interation</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012-01-27/ci-system-bigtuna-install/" title="Previous Post: CI server - Bigtuna (安裝篇)">&laquo; CI server - Bigtuna (安裝篇)</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/" title="next Post: CI server - Bigtuna (進階設定篇)">CI server - Bigtuna (進階設定篇) &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-  </section>
+
+  
+</article>
 
 </div>
 
@@ -368,10 +225,7 @@
       var disqus_shortname = 'rubyist-marsz';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

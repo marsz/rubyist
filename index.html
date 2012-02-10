@@ -9,10 +9,9 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在寫測試的時候, 為了實際測試程式處理資料的正確性
-免不了要依據資料庫的關聯建立假資料
-但往往會因為 model 增加了一些 validation 而導致產生假資料的 code, 必須符合驗證而修改
-當測試的量日漸龐大時, 改起來就會非常麻煩 ">
+  <meta name="description" content="以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2
+直接使用 devise 中的 omniauthable 有許多彈性不足的問題
+因此小弟參考了網路上的作法, 加上因應某些需求的修改&#8230; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-11T01:20:00+08:00" pubdate data-updated="true">Feb 11<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2<br/>
+直接使用 devise 中的 omniauthable 有許多彈性不足的問題<br/>
+因此小弟參考了網路上的作法, 加上因應某些需求的修改&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -488,53 +532,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-01-27/ci-system-bigtuna-install/">CI server - Bigtuna (安裝篇)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-27T11:17:00+08:00" pubdate data-updated="true">Jan 27<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-01-27/ci-system-bigtuna-install/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>CI 全名 &#8220;Continuous Interation&#8221;<br/>
-用於開發流程中的一種管理技巧<br/>
-在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中<br/>
-相關介紹可參考 ihower 的 <a href="http://ihower.tw/rails3/testing.html" target="_blank">測試 Testing</a><br/>
-今天要介紹的則是用於 CI system 的 Bigtuna</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-01-27/ci-system-bigtuna-install/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -562,6 +559,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-02-06/factory-girl-rails-intro/">使用 Factory Girl 產生測試用資料</a>
       </li>
     
@@ -577,16 +578,12 @@
         <a href="/blog/2012-02-03/rails-rspec-pending/">Rails Rspec (3) pending 的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-02-02/rails-rspec-basic-syntax/">Rails Rspec (2) 基本語法與執行</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 124.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 106.0%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 112.0%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 106.0%'>Assets-precompile(1)</a>  <a href='/blog/categories/backup' style='font-size: 106.0%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 124.0%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 112.0%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 106.0%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-interation' style='font-size: 124.0%'>Continuous interation(4)</a>  <a href='/blog/categories/counter' style='font-size: 106.0%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 106.0%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 106.0%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 112.0%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 106.0%'>Devise(1)</a>  <a href='/blog/categories/encoding' style='font-size: 106.0%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 106.0%'>Facebook(1)</a>  <a href='/blog/categories/factory-girl' style='font-size: 106.0%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 106.0%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 112.0%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 106.0%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 106.0%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 106.0%'>Json(1)</a>  <a href='/blog/categories/model' style='font-size: 106.0%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 106.0%'>Model validations(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 106.0%'>Regular expression(1)</a>  <a href='/blog/categories/rmagick' style='font-size: 106.0%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 130.0%'>Rspec(5)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(10)</a>  <a href='/blog/categories/sql' style='font-size: 106.0%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 106.0%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 106.0%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 124.0%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 106.0%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 106.0%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 106.0%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 121.81818181818181%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 105.45454545454545%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 110.9090909090909%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 105.45454545454545%'>Assets-precompile(1)</a>  <a href='/blog/categories/backup' style='font-size: 105.45454545454545%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 121.81818181818181%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 110.9090909090909%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 105.45454545454545%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-interation' style='font-size: 121.81818181818181%'>Continuous interation(4)</a>  <a href='/blog/categories/counter' style='font-size: 105.45454545454545%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 105.45454545454545%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 105.45454545454545%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 110.9090909090909%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 110.9090909090909%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 105.45454545454545%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 110.9090909090909%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 105.45454545454545%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 105.45454545454545%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 105.45454545454545%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 105.45454545454545%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 105.45454545454545%'>Json(1)</a>  <a href='/blog/categories/model' style='font-size: 105.45454545454545%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 105.45454545454545%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 105.45454545454545%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 105.45454545454545%'>Regular expression(1)</a>  <a href='/blog/categories/rmagick' style='font-size: 105.45454545454545%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 127.27272727272728%'>Rspec(5)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(11)</a>  <a href='/blog/categories/sql' style='font-size: 105.45454545454545%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 105.45454545454545%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 105.45454545454545%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 121.81818181818181%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 105.45454545454545%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 105.45454545454545%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 105.45454545454545%'>Yaml(1)</a> </span>
 </section>
 
 

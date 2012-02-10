@@ -1,0 +1,649 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Devise + Omniauth 的 Facebook 登入範例 - 黃金俠</title>
+  <meta name="author" content="MarsZ">
+
+  
+  <meta name="description" content="以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2
+直接使用 devise 中的 omniauthable 有許多彈性不足的問題
+因此小弟參考了網路上的作法, 加上因應某些需求的修改&#8230; 參考 http://blog. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="黃金俠" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27972021-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">黃金俠</a></h1>
+  
+    <h2>Ruby on Rails / Rubygems / Git</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rubyist.marsz.tw" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首頁</a></li>
+  <li><a href="/blog/archives">所有文章</a></li>
+  <!--
+  <li><a href="/pages/about">關於我</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Devise + Omniauth 的 Facebook 登入範例</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-11T01:20:00+08:00" pubdate data-updated="true">Feb 11<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2<br/>
+直接使用 devise 中的 omniauthable 有許多彈性不足的問題<br/>
+因此小弟參考了網路上的作法, 加上因應某些需求的修改&#8230;</p>
+
+<!-- more -->
+
+
+<h4>參考</h4>
+
+<p><a href="http://blog.railsrumble.com/blog/2010/10/08/intridea-omniauth" target="_blank">http://blog.railsrumble.com/blog/2010/10/08/intridea-omniauth</a></p>
+
+<h4>步驟</h4>
+
+<p>(以下範例以 user 做為 model 名稱)</p>
+
+<p>安裝 gem</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s2">&quot;devise&quot;</span><span class="p">,</span> <span class="s2">&quot;1.4.9&quot;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;oa-oauth&quot;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s2">&quot;omniauth/oauth&quot;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;oa-openid&quot;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s2">&quot;omniauth/openid&quot;</span> <span class="c1"># for google 或其他 openid auth</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>devise initial setup</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">devise</span><span class="ss">:install</span>
+</span><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">devise</span> <span class="n">user</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 users 的 migration 中, 依照需求可自行選擇加入</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:name</span> <span class="c1"># 儲存使用者名稱</span>
+</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">confirmable</span> <span class="c1"># email 認證, 若未來有提供註冊流程產生新使用者的可能性, 就加吧</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">change_column</span> <span class="ss">:users</span><span class="p">,</span><span class="ss">:email</span><span class="p">,</span> <span class="ss">:string</span><span class="p">,</span> <span class="ss">:null</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="c1"># 若登入 open id 的 provider 不提供 email, 則必須做此設定, 讓 email 可以為 null</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>建立對應 opend id 和 user 的 model - authorization</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">model</span> <span class="n">authorization</span> <span class="n">provider</span><span class="ss">:string</span> <span class="n">uid</span><span class="ss">:string</span> <span class="n">user_id</span><span class="ss">:integer</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>user model 內容<br/>
+1. devise 的 module 比預設的多了 confirmable, 主要為了提供未來也能使用站內註冊流程的可能<br/>
+2. create_from_auth 處理 omniauth 丟過來的 auth_hash 並且以 email 為 unique key 新增 user</p>
+
+<figure class='code'><figcaption><span>app/models/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">devise</span> <span class="ss">:database_authenticatable</span><span class="p">,</span> <span class="ss">:registerable</span><span class="p">,</span>
+</span><span class='line'>         <span class="ss">:recoverable</span><span class="p">,</span> <span class="ss">:rememberable</span><span class="p">,</span> <span class="ss">:trackable</span><span class="p">,</span> <span class="ss">:validatable</span><span class="p">,</span>
+</span><span class='line'>         <span class="ss">:confirmable</span> <span class="c1"># 加上 confirmable</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:authorizations</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">create_from_auth!</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">created_hash</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:email</span> <span class="o">=&gt;</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:user_info</span><span class="o">][</span><span class="ss">:email</span><span class="o">]</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:user_info</span><span class="o">][</span><span class="ss">:name</span><span class="o">]</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="p">(</span><span class="n">created_hash</span><span class="o">[</span><span class="ss">:email</span><span class="o">].</span><span class="n">nil?</span> <span class="p">?</span> <span class="kp">nil</span> <span class="p">:</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">created_hash</span><span class="o">[</span><span class="ss">:email</span><span class="o">]</span><span class="p">))</span> <span class="o">||</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">created_hash</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+</span><span class='line'>      <span class="n">user</span><span class="o">.</span><span class="n">confirm!</span>
+</span><span class='line'>    <span class="k">elsif</span> <span class="n">user</span>
+</span><span class='line'>      <span class="n">user</span><span class="o">.</span><span class="n">save!</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">user</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>authorization model 內容<br/>
+1. 對應 user 和 open id, 使其不重複<br/>
+2. #create_by_omniauth 處理從 omniauth 登入後的資料, 可以將 provider 的資料整合進指定的user(例如目前登入者) 或相同 email 的 user<br/>
+3. constant PROVIDERS 用以提供未來擴充 provider 的彈性</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Authorization</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="no">PROVIDERS</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:facebook</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:user</span>
+</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:user_id</span><span class="p">,</span> <span class="ss">:uid</span><span class="p">,</span> <span class="ss">:provider</span>
+</span><span class='line'>  <span class="n">validates_uniqueness_of</span> <span class="ss">:uid</span><span class="p">,</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:provider</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">create_by_omniauth</span><span class="p">(</span><span class="nb">hash</span><span class="p">,</span> <span class="n">current_user</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">hash</span> <span class="o">=</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">HashWithIndifferentAccess</span><span class="o">.</span><span class="n">new</span> <span class="nb">hash</span>
+</span><span class='line'>    <span class="n">auth</span> <span class="o">=</span> <span class="n">find_from_hash</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">unless</span> <span class="n">auth</span>
+</span><span class='line'>      <span class="n">current_user</span> <span class="o">||=</span> <span class="no">User</span><span class="o">.</span><span class="n">create_from_auth!</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">auth</span> <span class="o">=</span> <span class="no">Authorization</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:user</span><span class="o">=&gt;</span><span class="n">current_user</span><span class="p">,</span><span class="ss">:uid</span><span class="o">=&gt;</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:uid</span><span class="o">]</span><span class="p">,</span><span class="ss">:provider</span><span class="o">=&gt;</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:provider</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">auth</span><span class="o">.</span><span class="n">save</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">auth</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_from_hash</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:provider</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:uid</span><span class="o">]</span>
+</span><span class='line'>      <span class="n">find_by_provider_and_uid</span><span class="p">(</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:provider</span><span class="o">]</span><span class="p">,</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:uid</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 omniauth (facebook 登入的 app data), 同時讓 /auth/facebook 的 route 可以連接 fb 的 oauth, 相關可參考 <a href="https://github.com/intridea/omniauth" target="_blank">omniauth 的說明</a></p>
+
+<figure class='code'><figcaption><span>config/initializers/omniauth.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="no">OmniAuth</span><span class="o">::</span><span class="no">Builder</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/omniauth.yml&quot;</span><span class="p">))</span><span class="o">[</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">provider</span> <span class="ss">:facebook</span><span class="p">,</span> <span class="n">config</span><span class="o">[</span><span class="ss">:facebook</span><span class="o">][</span><span class="ss">:api_id</span><span class="o">]</span><span class="p">,</span> <span class="n">config</span><span class="o">[</span><span class="ss">:facebook</span><span class="o">][</span><span class="ss">:api_secret</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/omniauth.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:facebook</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&quot;foo.com&quot;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:api_id</span><span class="p-Indicator">:</span> <span class="s">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:api_secret</span><span class="p-Indicator">:</span> <span class="s">&quot;barbarbarbar&quot;</span>
+</span><span class='line'><span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:facebook</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&quot;foo.com&quot;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:api_id</span><span class="p-Indicator">:</span> <span class="s">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:api_secret</span><span class="p-Indicator">:</span> <span class="s">&quot;barbarbarbar&quot;</span>
+</span><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:facebook</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&quot;foo.com&quot;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:api_id</span><span class="p-Indicator">:</span> <span class="s">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">:api_secret</span><span class="p-Indicator">:</span> <span class="s">&quot;barbarbarbar&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如同 omniauth 的做法, 把接 facebook (或其他 provider) 的 route 和 controller 寫好</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">controller</span> <span class="n">sessions</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>有可能登入 facebook 會 fail, 所以也要把 fail 的部份寫好</p>
+
+<figure class='code'><figcaption><span>app/controllers/sessions_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>    <span class="vi">@auth</span> <span class="o">=</span> <span class="no">Authorization</span><span class="o">.</span><span class="n">create_by_omniauth</span><span class="p">(</span><span class="n">auth_hash</span><span class="p">,</span> <span class="n">current_user</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="vi">@auth</span><span class="o">.</span><span class="n">user</span>
+</span><span class='line'>       <span class="n">sign_in_and_redirect</span> <span class="ss">:user</span><span class="p">,</span> <span class="vi">@auth</span><span class="o">.</span><span class="n">user</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="k">raise</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;auth_hash: </span><span class="si">#{</span><span class="n">auth_hash</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;@auth: </span><span class="si">#{</span><span class="vi">@auth</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">new_user_session_path</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">failure</span>
+</span><span class='line'>    <span class="n">flash</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:message</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">new_user_session_path</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">auth_hash</span>
+</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;omniauth.auth&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 route, 包含 omniauth 和 devise</p>
+
+<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">match</span> <span class="s1">&#39;/auth/:provider/callback&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;sessions#create&#39;</span>
+</span><span class='line'>  <span class="n">match</span> <span class="s1">&#39;/auth/failure&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;sessions#failure&#39;</span>
+</span><span class='line'>  <span class="n">devise_for</span> <span class="ss">:users</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">get</span> <span class="s1">&#39;/users/sign_in&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;devise/sessions#new&#39;</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:new_user_session</span>
+</span><span class='line'>    <span class="n">get</span> <span class="s1">&#39;/users/sign_out&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;devise/sessions#destroy&#39;</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:user_sign_out</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若希望 Facebook 登入後可以導回登入前的頁面, 則可以做以下設定<br/>
+主要參考 <a href="https://github.com/plataformatec/devise/wiki/How-To:-Redirect-to-a-specific-page-on-successful-sign-in" target="_blank">Devise Wiki</a></p>
+
+<figure class='code'><figcaption><span>app/controllers/application_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">after_sign_in_path_for</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;omniauth.origin&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="n">stored_location_for</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">||</span> <span class="n">users_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>目前沒有使用 devise 1.5 以上的原因是在這裡會遇到 redirect loop 的問題</p>
+
+<h4>結論</h4>
+
+<p>本篇範例主要以最常用的 facebook 登入為主<br/>
+另外也提供了整合 openid 至現有帳號的功能<br/>
+大多數的使用者帳號系統最在意的是能否拿到 email, 雖然 Facebook 是最多人使用的 open id, 但是基於網站本身的內容特性, 提供網站自己的註冊流程也是必要的<br/>
+接下來還有另一篇介紹上述範例中的 rspec 會怎麼寫</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-11T01:20:00+08:00" pubdate data-updated="true">Feb 11<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/devise/'>devise</a>, <a class='category' href='/blog/categories/facebook/'>facebook</a>, <a class='category' href='/blog/categories/omniauth/'>omniauth</a>, <a class='category' href='/blog/categories/rubygems/'>rubygems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-02-06/factory-girl-rails-intro/" title="Previous Post: 使用 Factory Girl 產生測試用資料">&laquo; 使用 Factory Girl 產生測試用資料</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>黃金俠</h1>
+<br />
+<img src="http://www.gravatar.com/avatar/0b2f434918eb4a08439d180a13829631.png" alt="marsz" />
+<br />
+<img src="/images/gmail.png" alt="gmail" />
+<!-- Facebook Badge START --><a href="http://zh-tw.facebook.com/marsz330" target="_blank" title="MarsZ Chen"><img src="http://badge.facebook.com/badge/585508563.880.1901225542.png" style="border: 0px;" /></a><!-- Facebook Badge END -->
+<a href="https://twitter.com/marsz330" class="twitter-follow-button" data-show-count="false" data-lang="zh-tw">關注 @marsz330</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+<p><a href="http://feeds.feedburner.com/marsz/ZKPk"><img src="http://feeds.feedburner.com/~fc/marsz/ZKPk?bg=CCCCCC&amp;fg=000000&amp;anim=1&amp;label=listeners" height="26" width="88" style="border:0" alt="" /></a></p>
+</section>
+<section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-06/factory-girl-rails-intro/">使用 Factory Girl 產生測試用資料</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-05/facebook-posters/">Facebook 辦公室的駭客精神標語</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-04/rails-rspec-model-spec/">Rails Spec (4) model validations 的 spec</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-03/rails-rspec-pending/">Rails Rspec (3) pending 的使用</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+<h1>分類</h1>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 121.81818181818181%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 105.45454545454545%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 110.9090909090909%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 105.45454545454545%'>Assets-precompile(1)</a>  <a href='/blog/categories/backup' style='font-size: 105.45454545454545%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 121.81818181818181%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 110.9090909090909%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 105.45454545454545%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-interation' style='font-size: 121.81818181818181%'>Continuous interation(4)</a>  <a href='/blog/categories/counter' style='font-size: 105.45454545454545%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 105.45454545454545%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 105.45454545454545%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 110.9090909090909%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 110.9090909090909%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 105.45454545454545%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 110.9090909090909%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 105.45454545454545%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 105.45454545454545%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 105.45454545454545%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 105.45454545454545%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 105.45454545454545%'>Json(1)</a>  <a href='/blog/categories/model' style='font-size: 105.45454545454545%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 105.45454545454545%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 105.45454545454545%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 105.45454545454545%'>Regular expression(1)</a>  <a href='/blog/categories/rmagick' style='font-size: 105.45454545454545%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 127.27272727272728%'>Rspec(5)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(11)</a>  <a href='/blog/categories/sql' style='font-size: 105.45454545454545%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 105.45454545454545%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 105.45454545454545%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 121.81818181818181%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 105.45454545454545%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 105.45454545454545%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 105.45454545454545%'>Yaml(1)</a> </span>
+</section>
+
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("marsz330", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/marsz330" class="twitter-follow-button" data-show-count="false">Follow @marsz330</a>
+  
+</section>
+
+
+
+
+<section>
+  <h2>Links</h2>
+  <ul id="links">
+    <li class="link">
+      <a href="http://ihower.tw/rails3/" target="_blank">ihower Rails 實戰聖經</a>
+    </li>
+    <li class="link">
+      <a href="http://ihower.tw/blog/" target="_blank">ihower的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://wildjcrt.pixnet.net/blog" target="_blank">小蟹的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://blog.xdite.net/" target="_blank">XDite的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://blog.hellolucky.info/" target="_blank">HelloLucky的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://gogojimmy.net/" target="_blank">Jimmy 的 blog</a>
+    </li>
+    <!--
+    <li class="link">
+      <a href="" target="_blank"></a>
+    </li>
+    -->
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - MarsZ -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rubyist-marsz';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

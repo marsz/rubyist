@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: facebook | 黃金俠]]></title>
-  <link href="http://rubyist.marsz.tw/blog/categories/facebook/atom.xml" rel="self"/>
+  <title><![CDATA[Category: omniauth | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/omniauth/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
   <updated>2012-02-11T02:48:50+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
@@ -255,44 +255,6 @@ end
 另外也提供了整合 openid 至現有帳號的功能<br/>
 大多數的使用者帳號系統最在意的是能否拿到 email, 雖然 Facebook 是最多人使用的 open id, 但是基於網站本身的內容特性, 提供網站自己的註冊流程也是必要的<br/>
 接下來還有另一篇介紹上述範例中的 rspec 會怎麼寫</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Facebook 辦公室的駭客精神標語]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters/"/>
-    <updated>2012-02-05T01:04:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters</id>
-    <content type="html"><![CDATA[<p>海報原文在<a href="http://designforfun.com/facebookposters/" target="_blank">這裡</a><br/>
-每一句看了都令人非常的振奮<br/>
-於是就來給它翻譯一下, 網路公司的辦公室都應該貼滿這些標語 XD</p>
-
-<!-- more -->
-
-
-<h4>Done is better than perfect</h4>
-
-<p>比完美更重要的是完成</p>
-
-<h4>Fortune favors the bold</h4>
-
-<p>命運之神眷顧勇者</p>
-
-<h4>Move faster and break things</h4>
-
-<p>快速前進, 打破陳規</p>
-
-<h4>Proceed and be bold</h4>
-
-<p>大膽得向前推進 (翻得不是很好T_T)</p>
-
-<h4>Stay focused &amp; Keep shipping</h4>
-
-<p>保持專注, 持續推出產品</p>
-
-<h4>What would you do if you weren't afraid</h4>
-
-<p>假如我不害怕，我會怎麼做？</p>
 ]]></content>
   </entry>
   
