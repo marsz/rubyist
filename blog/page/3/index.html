@@ -9,8 +9,9 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
-因此若我們直接下 sql 時, 必須將時區考量進去 ">
+  <meta name="description" content="ruby 中 Date 或 Datetime 都有 #srtftime 可以用來作自定格式的日期輸出
+若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫
+以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,96 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-10/date_format_without_zero/">輸出除去0的日期格式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-10T22:34:00+08:00" pubdate data-updated="true">Jan 10<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-10/date_format_without_zero/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ruby 中 Date 或 Datetime 都有 <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" taget="_blank">#srtftime</a> 可以用來作自定格式的日期輸出<br/>
+若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫<br/>
+以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-10/date_format_without_zero/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-04/new-post/">在 validates_format_of 中使用正規表示法(Regular Expression)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-04T17:43:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-04/new-post/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
+
+<p>因此小弟不疑有他, 於是&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-04/new-post/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -390,6 +481,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-02-15/resque-basic-usage/">用 resque 實作背景作業 (基本使用篇)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-13/resque-redis-and-worker-config/">用 resque 實作背景作業 (前置設定篇)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a>
       </li>
     
@@ -401,20 +500,12 @@
         <a href="/blog/2012-02-05/facebook-posters/">Facebook 辦公室的駭客精神標語</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-02-04/rails-rspec-model-spec/">Rails Spec (4) model validations 的 spec</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012-02-03/rails-rspec-pending/">Rails Rspec (3) pending 的使用</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 121.81818181818181%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 105.45454545454545%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 110.9090909090909%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 105.45454545454545%'>Assets-precompile(1)</a>  <a href='/blog/categories/backup' style='font-size: 105.45454545454545%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 121.81818181818181%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 110.9090909090909%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 105.45454545454545%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 121.81818181818181%'>Continuous integration(4)</a>  <a href='/blog/categories/counter' style='font-size: 105.45454545454545%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 105.45454545454545%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 105.45454545454545%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 110.9090909090909%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 110.9090909090909%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 105.45454545454545%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 110.9090909090909%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 105.45454545454545%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 105.45454545454545%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 105.45454545454545%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 105.45454545454545%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 105.45454545454545%'>Json(1)</a>  <a href='/blog/categories/model' style='font-size: 105.45454545454545%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 105.45454545454545%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 105.45454545454545%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 105.45454545454545%'>Regular expression(1)</a>  <a href='/blog/categories/rmagick' style='font-size: 105.45454545454545%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 127.27272727272728%'>Rspec(5)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(11)</a>  <a href='/blog/categories/sql' style='font-size: 105.45454545454545%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 105.45454545454545%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 105.45454545454545%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 121.81818181818181%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 105.45454545454545%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 105.45454545454545%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 105.45454545454545%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 118.46153846153845%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 104.61538461538461%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 109.23076923076923%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 104.61538461538461%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 109.23076923076923%'>Background-job(2)</a>  <a href='/blog/categories/backup' style='font-size: 104.61538461538461%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 118.46153846153845%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 109.23076923076923%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 104.61538461538461%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 118.46153846153845%'>Continuous integration(4)</a>  <a href='/blog/categories/counter' style='font-size: 104.61538461538461%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 104.61538461538461%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 104.61538461538461%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 109.23076923076923%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 109.23076923076923%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 104.61538461538461%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 109.23076923076923%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 104.61538461538461%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 104.61538461538461%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 109.23076923076923%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 104.61538461538461%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 104.61538461538461%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 104.61538461538461%'>Json(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 109.23076923076923%'>Message-queue(2)</a>  <a href='/blog/categories/model' style='font-size: 104.61538461538461%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 104.61538461538461%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 104.61538461538461%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 104.61538461538461%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 109.23076923076923%'>Resque(2)</a>  <a href='/blog/categories/rmagick' style='font-size: 104.61538461538461%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 123.07692307692308%'>Rspec(5)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(13)</a>  <a href='/blog/categories/sql' style='font-size: 104.61538461538461%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 104.61538461538461%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 104.61538461538461%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 118.46153846153845%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 104.61538461538461%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 104.61538461538461%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 104.61538461538461%'>Yaml(1)</a> </span>
 </section>
 
 

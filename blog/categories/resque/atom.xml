@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: resque | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/resque/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-02-23T19:37:53+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (基本使用篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage/"/>
+    <updated>2012-02-15T15:36:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage</id>
+    <content type="html"><![CDATA[<p>上篇提到如何進行 redis, resque, worker 的設定安裝
+本篇將介紹基本使用方式</p>
+
+<!-- more -->
+
+
+<h4>參考連結</h4>
+
+<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a>
+RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">
+Resque</a>
+官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
+
+<h4>基本使用</h4>
+
+<p>情境: 文章內容更新後, 要重新計算其價值(p幣~XD)</p>
+
+<p>先寫好 worker 要做的事情, worker 可以是任何 class</p>
+
+<p>```ruby app/workers/post_evaluate.rb
+class PostEvaluate</p>
+
+<p>  @queue = :post_evaluate</p>
+
+<p>  def self.perform(post_id, total_time_seconds)</p>
+
+<pre><code>evaluate Post.find(post_id), total_time_seconds
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>worker 必備兩個部分:
+1. @queue 指定 queue 的名稱
+2. class method: perform 執行 job 內容, 參數可自定</p>
+
+<p>接下來是如何把 job 丟上 queue</p>
+
+<p>```ruby app/models/post.rb
+after_save :evaluate</p>
+
+<p>def evaluate
+  Resque.enqueue PostEvaluate, self.id, total_secs
+end
+```</p>
+
+<p>Resque.enqueue [worker class], [argument 1], [argument 2], .....</p>
+
+<p>相當於 worker 執行了 PostEvaluate.perform(self.id, total_secs)</p>
+
+<h4>注意事項</h4>
+
+<p>enqueue 的參數類型儘可能簡單: Fixnum, String, Array, Hash<br/>
+不要將整個 model 或 class instance 丟到 mq 上<br/>
+redis 無法儲存像 model 這樣複雜的變數類型</p>
+
+<p>下一篇將介紹如何寫測試(Rspec)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (前置設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config/"/>
+    <updated>2012-02-13T14:51:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config</id>
+    <content type="html"><![CDATA[<p>resque 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度<br/>
+resque 是以 redis 做為 message queue server 的方式來進行...</p>
+
+<!-- more -->
+
+
+<h4>參考連結</h4>
+
+<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a><br/>
+RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">Resque</a><br/>
+官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
+
+<h4>安裝 Gem</h4>
+
+<p>```</p>
+
+<h1>Gemfile</h1>
+
+<p>gem "resque"
+```</p>
+
+<p><code>
+bundle install
+</code></p>
+
+<h4>安裝 redis</h4>
+
+<p>MacOS</p>
+
+<p><code>
+sudo brew install redis
+</code></p>
+
+<p>Debian / Ubuntu</p>
+
+<p><code>
+sudo apt-get install redis-server
+</code></p>
+
+<h4>啟動/停止 redis server</h4>
+
+<p>MacOS</p>
+
+<p>```</p>
+
+<h1>啟動</h1>
+
+<p>/usr/local/bin/redis-server /usr/local/etc/redis.conf</p>
+
+<h1>停止 ps + kill :p</h1>
+
+<p>sudo kill -SIGHUP $(ps aux|grep 'redis-server'|grep -v 'grep'|awk '{print $2}')
+```</p>
+
+<p>Debian / Ubuntu</p>
+
+<p>```</p>
+
+<h1>啟動</h1>
+
+<p>sudo service redis-server start</p>
+
+<h1>停止</h1>
+
+<p>sudo service redis-server stop
+```</p>
+
+<h4>Resque 中的 redis 設定</h4>
+
+<p>由於 resque 必須將 job 丟上 redis (mq server)<br/>
+因此必須設定連線的位址</p>
+
+<p>手動建立兩個檔案<br/>
+config/redis.yml => redis 的連線設定檔<br/>
+config/initializers/resque.rb => 初始化 resque</p>
+
+<p><code>yml config/redis.yml
+development:
+  :redis: "localhost:6379"
+</code></p>
+
+<p><code>ruby config/initializers/resque.rb
+config = YAML.load_file("#{Rails.root}/config/resque.yml")[Rails.env]
+Resque.redis = config[:redis]
+</code></p>
+
+<h6>RedisToGo</h6>
+
+<p>若是使用雲端的Redis服務-<a href="https://redistogo.com/" target="_blank">RedisToGo</a><br/>
+可以直接在 yml 中貼上 instance 的 uri, 如</p>
+
+<p><code>yml config/redis.yml
+development:
+  :redis: "redis://marsz:xxxxxx@stingfish.redistogo.com:9999"
+</code></p>
+
+<h6>redis-rb</h6>
+
+<p>若 redis 有同時兼作 cache 或 db 用, 而且是透過 gem "redis" 進行連線的話<br/>
+則可以直接將變數指定</p>
+
+<p><code>yml config/redis.yml
+development:
+  :db: 0
+  :host: "localhost"
+  :port: 6379
+</code></p>
+
+<p><code>ruby config/initializers/resque.rb
+config = YAML.load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
+Resque.redis = Redis.new( :host =&gt; config[:host], :port =&gt; config[:port], :db =&gt; config[:db] )
+</code></p>
+
+<p>一般小弟比較偏好最後一個方法, 因為 redis 太方便了, 只做 background job 有點可惜 XD</p>
+
+<h4>Resque server</h4>
+
+<p>想要有直觀的介面可以看目前 message queue (redis) 上的 job 執行狀況<br/>
+resque 也有提供 :)</p>
+
+<p>```ruby config/initializers/resque.rb</p>
+
+<h1>在任何 initial 的檔案中加都可</h1>
+
+<p>require "resque/server"
+```</p>
+
+<p><code>ruby config/routes.rb
+mount Resque::Server.new, :at =&gt; "/admin/resque"  
+</code></p>
+
+<p>啟動 rails server, 連線 <a href="http://localhost:3000/admin/resque" target="_blank">http://localhost:3000/admin/resque</a> 就可以看到啦</p>
+
+<h4>啟動 worker</h4>
+
+<p>丟上 message queue 的工作, 必須透過 worker 逐個要下來執行<br/>
+啟動worker...</p>
+
+<p><code>ruby
+QUEUE=* bundle exec rake resque:work
+</code></p>
+
+<p>上述指令啟動後就會掛著, 而 server 上的啟動可以透過 BACKGROUND=yes 讓 worker 變成背景執行, 之後會再介紹完整參數說明</p>
+
+<p>worker 在 message queue 中有許多 issue, 例如:<br/>
+1. 佈署時如何自動的重啟<br/>
+2. server 上的 worker 掛了要怎麼自動重啟<br/>
+3. worker 能否 multi-thread 執行或針對特定 queue 等等<br/>
+將在後續會有相關 solution 的分享</p>
+
+<hr />
+
+<p>以上是有關 resque 的環境設定</p>
+
+<p>redis => resuqe config => worker</p>
+
+<p>下一篇將會介紹在 rails 中的基本使用方式</p>
+]]></content>
+  </entry>
+  
+</feed>

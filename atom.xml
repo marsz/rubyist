@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-11T03:06:33+08:00</updated>
+  <updated>2012-02-23T19:37:53+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,270 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (基本使用篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage/"/>
+    <updated>2012-02-15T15:36:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage</id>
+    <content type="html"><![CDATA[<p>上篇提到如何進行 redis, resque, worker 的設定安裝
+本篇將介紹基本使用方式</p>
+
+<!-- more -->
+
+
+<h4>參考連結</h4>
+
+<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a>
+RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">
+Resque</a>
+官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
+
+<h4>基本使用</h4>
+
+<p>情境: 文章內容更新後, 要重新計算其價值(p幣~XD)</p>
+
+<p>先寫好 worker 要做的事情, worker 可以是任何 class</p>
+
+<figure class='code'><figcaption><span>app/workers/post_evaluate.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">PostEvaluate</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="vi">@queue</span> <span class="o">=</span> <span class="ss">:post_evaluate</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">perform</span><span class="p">(</span><span class="n">post_id</span><span class="p">,</span> <span class="n">total_time_seconds</span><span class="p">)</span>
+</span><span class='line'>    <span class="n">evaluate</span> <span class="no">Post</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">post_id</span><span class="p">),</span> <span class="n">total_time_seconds</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>worker 必備兩個部分:
+1. @queue 指定 queue 的名稱
+2. class method: perform 執行 job 內容, 參數可自定</p>
+
+<p>接下來是如何把 job 丟上 queue</p>
+
+<figure class='code'><figcaption><span>app/models/post.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">after_save</span> <span class="ss">:evaluate</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">evaluate</span>
+</span><span class='line'>  <span class="no">Resque</span><span class="o">.</span><span class="n">enqueue</span> <span class="no">PostEvaluate</span><span class="p">,</span> <span class="nb">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">total_secs</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Resque.enqueue [worker class], [argument 1], [argument 2], &#8230;..</p>
+
+<p>相當於 worker 執行了 PostEvaluate.perform(self.id, total_secs)</p>
+
+<h4>注意事項</h4>
+
+<p>enqueue 的參數類型儘可能簡單: Fixnum, String, Array, Hash<br/>
+不要將整個 model 或 class instance 丟到 mq 上<br/>
+redis 無法儲存像 model 這樣複雜的變數類型</p>
+
+<p>下一篇將介紹如何寫測試(Rspec)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (前置設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config/"/>
+    <updated>2012-02-13T14:51:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config</id>
+    <content type="html"><![CDATA[<p>resque 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度<br/>
+resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
+
+<!-- more -->
+
+
+<h4>參考連結</h4>
+
+<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a><br/>
+RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">Resque</a><br/>
+官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
+
+<h4>安裝 Gem</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Gemfile
+</span><span class='line'>gem "resque"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle install</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>安裝 redis</h4>
+
+<p>MacOS</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo brew install redis</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Debian / Ubuntu</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install redis-server</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>啟動/停止 redis server</h4>
+
+<p>MacOS</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># 啟動
+</span><span class='line'>/usr/local/bin/redis-server /usr/local/etc/redis.conf
+</span><span class='line'># 停止 ps + kill :p
+</span><span class='line'>sudo kill -SIGHUP $(ps aux|grep 'redis-server'|grep -v 'grep'|awk '{print $2}')</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Debian / Ubuntu</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># 啟動
+</span><span class='line'>sudo service redis-server start
+</span><span class='line'># 停止
+</span><span class='line'>sudo service redis-server stop</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Resque 中的 redis 設定</h4>
+
+<p>由於 resque 必須將 job 丟上 redis (mq server)<br/>
+因此必須設定連線的位址</p>
+
+<p>手動建立兩個檔案<br/>
+config/redis.yml => redis 的連線設定檔<br/>
+config/initializers/resque.rb => 初始化 resque</p>
+
+<figure class='code'><figcaption><span>config/redis.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:redis</span><span class="p-Indicator">:</span> <span class="s">&quot;localhost:6379&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/initializers/resque.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/resque.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">]</span>
+</span><span class='line'><span class="no">Resque</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">config</span><span class="o">[</span><span class="ss">:redis</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>RedisToGo</h6>
+
+<p>若是使用雲端的Redis服務-<a href="https://redistogo.com/" target="_blank">RedisToGo</a><br/>
+可以直接在 yml 中貼上 instance 的 uri, 如</p>
+
+<figure class='code'><figcaption><span>config/redis.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:redis</span><span class="p-Indicator">:</span> <span class="s">&quot;redis://marsz:xxxxxx@stingfish.redistogo.com:9999&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>redis-rb</h6>
+
+<p>若 redis 有同時兼作 cache 或 db 用, 而且是透過 gem &#8220;redis&#8221; 進行連線的話<br/>
+則可以直接將變數指定</p>
+
+<figure class='code'><figcaption><span>config/redis.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:db</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:host</span><span class="p-Indicator">:</span> <span class="s">&quot;localhost&quot;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">6379</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/initializers/resque.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/redis.yml&quot;</span><span class="p">))</span><span class="o">[</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">]</span>
+</span><span class='line'><span class="no">Resque</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="no">Redis</span><span class="o">.</span><span class="n">new</span><span class="p">(</span> <span class="ss">:host</span> <span class="o">=&gt;</span> <span class="n">config</span><span class="o">[</span><span class="ss">:host</span><span class="o">]</span><span class="p">,</span> <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="n">config</span><span class="o">[</span><span class="ss">:port</span><span class="o">]</span><span class="p">,</span> <span class="ss">:db</span> <span class="o">=&gt;</span> <span class="n">config</span><span class="o">[</span><span class="ss">:db</span><span class="o">]</span> <span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一般小弟比較偏好最後一個方法, 因為 redis 太方便了, 只做 background job 有點可惜 XD</p>
+
+<h4>Resque server</h4>
+
+<p>想要有直觀的介面可以看目前 message queue (redis) 上的 job 執行狀況<br/>
+resque 也有提供 :)</p>
+
+<figure class='code'><figcaption><span>config/initializers/resque.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># 在任何 initial 的檔案中加都可</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;resque/server&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mount</span> <span class="no">Resque</span><span class="o">::</span><span class="no">Server</span><span class="o">.</span><span class="n">new</span><span class="p">,</span> <span class="ss">:at</span> <span class="o">=&gt;</span> <span class="s2">&quot;/admin/resque&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>啟動 rails server, 連線 <a href="http://localhost:3000/admin/resque" target="_blank">http://localhost:3000/admin/resque</a> 就可以看到啦</p>
+
+<h4>啟動 worker</h4>
+
+<p>丟上 message queue 的工作, 必須透過 worker 逐個要下來執行<br/>
+啟動worker&#8230;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上述指令啟動後就會掛著, 而 server 上的啟動可以透過 BACKGROUND=yes 讓 worker 變成背景執行, 之後會再介紹完整參數說明</p>
+
+<p>worker 在 message queue 中有許多 issue, 例如:<br/>
+1. 佈署時如何自動的重啟<br/>
+2. server 上的 worker 掛了要怎麼自動重啟<br/>
+3. worker 能否 multi-thread 執行或針對特定 queue 等等<br/>
+將在後續會有相關 solution 的分享</p>
+
+<hr />
+
+<p>以上是有關 resque 的環境設定</p>
+
+<p>redis => resuqe config => worker</p>
+
+<p>下一篇將會介紹在 rails 中的基本使用方式</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Devise + Omniauth 的 Facebook 登入範例]]></title>
@@ -2211,93 +2475,6 @@ Gemfile 要有 gem &#8216;whenever&#8217;</p>
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[輸出除去0的日期格式]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-10/date_format_without_zero/"/>
-    <updated>2012-01-10T22:34:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-10/date_format_without_zero</id>
-    <content type="html"><![CDATA[<p>ruby 中 Date 或 Datetime 都有 <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" taget="_blank">#srtftime</a> 可以用來作自定格式的日期輸出<br/>
-若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫<br/>
-以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">date</span> <span class="o">=</span> <span class="s2">&quot;2012-01-01&quot;</span><span class="o">.</span><span class="n">to_date</span>
-</span><span class='line'><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%m/%d&quot;</span><span class="p">)</span> <span class="c1"># 01/01</span>
-</span><span class='line'><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%-m/%-d&quot;</span><span class="p">)</span> <span class="c1"># 1/1</span>
-</span><span class='line'><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%d %b&quot;</span><span class="p">)</span> <span class="c1"># 1 Jan</span>
-</span><span class='line'><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%d %^b&quot;</span><span class="p">)</span> <span class="c1"># 1 JAN</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>完整細節可以參考<a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" target="_blank">官方文件</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在 validates_format_of 中使用正規表示法(Regular Expression)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-04/new-post/"/>
-    <updated>2012-01-04T17:43:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-04/new-post</id>
-    <content type="html"><![CDATA[<p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
-
-<p>因此小弟不疑有他, 於是&#8230;</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">validates_format_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="sr">/[a-z\-]+/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>讓 name 只能存小寫英文以及 dash(-) 值</p>
-
-<p>結果&#8230;
-name = &#8220;ab-ac $@#&#8221; # 可存
-name = &#8220;@#$%^ &#8221; # 不可存
-預期應兩者皆不可存</p>
-
-<p>後來去找了 <a href="http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each" target="_blank">api source</a> 發現是透過 string =~ regexp 做驗證</p>
-
-<p>但小弟很不用功, 不知道 =~ 和 !~ 是什麼, 所以又再回去找<a href="http://guides.ruby.tw/ruby/regexp.html" target="_blank">以前學習的資料</a>&#8230;</p>
-
-<p>於是終於明白&#8230;<br />
-=~ 用在正規表示法的意思是回傳字串中符合此表示法的位置<br />
-而上述的範例中, 因為正規表示法是 /[a-z-]+/<br />
-&#8220;ab-ac $@#&#8221; 有 ab-ac 所以匹配<br />
-&#8221;@#$%^ &#8221; 沒有任何字串匹配<br />
-若希望正規表示法可以比對整個字串, 讓 &#8220;ab-ac $@#&#8221; 也不匹配<br />
-則必須善用正規表示法中的<a href="http://www.regular-expressions.info/reference.html" target="_blank">特殊語法</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">validates_format_of</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="sr">/\A[a-z\-]+\Z/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中 \A 是字串開頭 \Z 是字串結尾, 也可以用 ^ 和 $ 分別表示單行開頭與結尾<br />
-這樣就可以啦!!!</p>
-
-<h5>參考</h5>
-
-<p>api source: <a href="http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each" target="_blank">http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each</a></p>
-
-<p>regular expression: <a href="http://www.regular-expressions.info/reference.html" target="_blank">http://www.regular-expressions.info/reference.html</a></p>
-
-<p>ruby: <a href="http://guides.ruby.tw/ruby/regexp.html" target="_blank">http://guides.ruby.tw/ruby/regexp.html</a></p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-11T03:06:33+08:00</updated>
+  <updated>2012-02-23T19:38:01+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,240 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (基本使用篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage/"/>
+    <updated>2012-02-15T15:36:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage</id>
+    <content type="html"><![CDATA[<p>上篇提到如何進行 redis, resque, worker 的設定安裝
+本篇將介紹基本使用方式</p>
+
+<!-- more -->
+
+
+<h4>參考連結</h4>
+
+<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a>
+RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">
+Resque</a>
+官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
+
+<h4>基本使用</h4>
+
+<p>情境: 文章內容更新後, 要重新計算其價值(p幣~XD)</p>
+
+<p>先寫好 worker 要做的事情, worker 可以是任何 class</p>
+
+<p>```ruby app/workers/post_evaluate.rb
+class PostEvaluate</p>
+
+<p>  @queue = :post_evaluate</p>
+
+<p>  def self.perform(post_id, total_time_seconds)</p>
+
+<pre><code>evaluate Post.find(post_id), total_time_seconds
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>worker 必備兩個部分:
+1. @queue 指定 queue 的名稱
+2. class method: perform 執行 job 內容, 參數可自定</p>
+
+<p>接下來是如何把 job 丟上 queue</p>
+
+<p>```ruby app/models/post.rb
+after_save :evaluate</p>
+
+<p>def evaluate
+  Resque.enqueue PostEvaluate, self.id, total_secs
+end
+```</p>
+
+<p>Resque.enqueue [worker class], [argument 1], [argument 2], .....</p>
+
+<p>相當於 worker 執行了 PostEvaluate.perform(self.id, total_secs)</p>
+
+<h4>注意事項</h4>
+
+<p>enqueue 的參數類型儘可能簡單: Fixnum, String, Array, Hash<br/>
+不要將整個 model 或 class instance 丟到 mq 上<br/>
+redis 無法儲存像 model 這樣複雜的變數類型</p>
+
+<p>下一篇將介紹如何寫測試(Rspec)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (前置設定篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config/"/>
+    <updated>2012-02-13T14:51:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config</id>
+    <content type="html"><![CDATA[<p>resque 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度<br/>
+resque 是以 redis 做為 message queue server 的方式來進行...</p>
+
+<!-- more -->
+
+
+<h4>參考連結</h4>
+
+<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a><br/>
+RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">Resque</a><br/>
+官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
+
+<h4>安裝 Gem</h4>
+
+<p>```</p>
+
+<h1>Gemfile</h1>
+
+<p>gem "resque"
+```</p>
+
+<p><code>
+bundle install
+</code></p>
+
+<h4>安裝 redis</h4>
+
+<p>MacOS</p>
+
+<p><code>
+sudo brew install redis
+</code></p>
+
+<p>Debian / Ubuntu</p>
+
+<p><code>
+sudo apt-get install redis-server
+</code></p>
+
+<h4>啟動/停止 redis server</h4>
+
+<p>MacOS</p>
+
+<p>```</p>
+
+<h1>啟動</h1>
+
+<p>/usr/local/bin/redis-server /usr/local/etc/redis.conf</p>
+
+<h1>停止 ps + kill :p</h1>
+
+<p>sudo kill -SIGHUP $(ps aux|grep 'redis-server'|grep -v 'grep'|awk '{print $2}')
+```</p>
+
+<p>Debian / Ubuntu</p>
+
+<p>```</p>
+
+<h1>啟動</h1>
+
+<p>sudo service redis-server start</p>
+
+<h1>停止</h1>
+
+<p>sudo service redis-server stop
+```</p>
+
+<h4>Resque 中的 redis 設定</h4>
+
+<p>由於 resque 必須將 job 丟上 redis (mq server)<br/>
+因此必須設定連線的位址</p>
+
+<p>手動建立兩個檔案<br/>
+config/redis.yml => redis 的連線設定檔<br/>
+config/initializers/resque.rb => 初始化 resque</p>
+
+<p><code>yml config/redis.yml
+development:
+  :redis: "localhost:6379"
+</code></p>
+
+<p><code>ruby config/initializers/resque.rb
+config = YAML.load_file("#{Rails.root}/config/resque.yml")[Rails.env]
+Resque.redis = config[:redis]
+</code></p>
+
+<h6>RedisToGo</h6>
+
+<p>若是使用雲端的Redis服務-<a href="https://redistogo.com/" target="_blank">RedisToGo</a><br/>
+可以直接在 yml 中貼上 instance 的 uri, 如</p>
+
+<p><code>yml config/redis.yml
+development:
+  :redis: "redis://marsz:xxxxxx@stingfish.redistogo.com:9999"
+</code></p>
+
+<h6>redis-rb</h6>
+
+<p>若 redis 有同時兼作 cache 或 db 用, 而且是透過 gem "redis" 進行連線的話<br/>
+則可以直接將變數指定</p>
+
+<p><code>yml config/redis.yml
+development:
+  :db: 0
+  :host: "localhost"
+  :port: 6379
+</code></p>
+
+<p><code>ruby config/initializers/resque.rb
+config = YAML.load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
+Resque.redis = Redis.new( :host =&gt; config[:host], :port =&gt; config[:port], :db =&gt; config[:db] )
+</code></p>
+
+<p>一般小弟比較偏好最後一個方法, 因為 redis 太方便了, 只做 background job 有點可惜 XD</p>
+
+<h4>Resque server</h4>
+
+<p>想要有直觀的介面可以看目前 message queue (redis) 上的 job 執行狀況<br/>
+resque 也有提供 :)</p>
+
+<p>```ruby config/initializers/resque.rb</p>
+
+<h1>在任何 initial 的檔案中加都可</h1>
+
+<p>require "resque/server"
+```</p>
+
+<p><code>ruby config/routes.rb
+mount Resque::Server.new, :at =&gt; "/admin/resque"  
+</code></p>
+
+<p>啟動 rails server, 連線 <a href="http://localhost:3000/admin/resque" target="_blank">http://localhost:3000/admin/resque</a> 就可以看到啦</p>
+
+<h4>啟動 worker</h4>
+
+<p>丟上 message queue 的工作, 必須透過 worker 逐個要下來執行<br/>
+啟動worker...</p>
+
+<p><code>ruby
+QUEUE=* bundle exec rake resque:work
+</code></p>
+
+<p>上述指令啟動後就會掛著, 而 server 上的啟動可以透過 BACKGROUND=yes 讓 worker 變成背景執行, 之後會再介紹完整參數說明</p>
+
+<p>worker 在 message queue 中有許多 issue, 例如:<br/>
+1. 佈署時如何自動的重啟<br/>
+2. server 上的 worker 掛了要怎麼自動重啟<br/>
+3. worker 能否 multi-thread 執行或針對特定 queue 等等<br/>
+將在後續會有相關 solution 的分享</p>
+
+<hr />
+
+<p>以上是有關 resque 的環境設定</p>
+
+<p>redis => resuqe config => worker</p>
+
+<p>下一篇將會介紹在 rails 中的基本使用方式</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Devise + Omniauth 的 Facebook 登入範例]]></title>
@@ -472,239 +706,6 @@ end
 <p>當然上述的範例中除了麻煩之外, 當然 User 有追加了新的 validation 時, before 的 User.new 也要跟著對應, 倘若有很多需要 create user model 的 spec 時, 改起來就會很痛苦</p>
 
 <p>因此上述的兩個 issue, 將會在下兩篇將會介紹透過 factory_girl_rails 和 shoulda-matchers 這兩個 gem 解決</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Rspec (3) pending 的使用]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/"/>
-    <updated>2012-02-03T16:06:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending</id>
-    <content type="html"><![CDATA[<p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
-一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
-
-<!-- more -->
-
-
-<p><code>ruby
-describe Foo do
-  pending "add some examples to (or delete) #{__FILE__}"
-end
-</code></p>
-
-<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
-
-<p><code>
-1 example, 0 failures, 1 pending
-</code></p>
-
-<p>因為不是每個專案都會讓你有時間寫 spec<br/>
-等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
-所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
-
-<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
-
-<p>pending 可分幾個層次如下...</p>
-
-<h4>整個 class 的 pending</h4>
-
-<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
-
-<p><code>ruby
-describe FoosController do
-  pending
-end
-</code></p>
-
-<h4>某個 method 的 pending</h4>
-
-<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
-
-<p>```ruby
-describe Foo do
-  describe "#bar" do</p>
-
-<pre><code>pending
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>或</p>
-
-<p><code>ruby
-describe Foo do
-  pending "#bar"
-end
-</code></p>
-
-<p>一般都是後者的寫法</p>
-
-<h4>method/action 內的某個 case</h4>
-
-<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
-
-<p>```ruby
-describe Foo do
-  describe "#bar" do</p>
-
-<pre><code>it "should be a kind of Bar" do
-  ....
-end
-pending "should raise error if bar_id is nil"
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>另外, method 只針對 public methods 寫, 一般 protected 和 private method 都不寫 spec<br/>
-嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
-我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Rspec (2) 基本語法與執行]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax/"/>
-    <updated>2012-02-02T14:35:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax</id>
-    <content type="html"><![CDATA[<p>建議在開始本系列文以前先讀過, 以下參考文件與資源</p>
-
-<!-- more -->
-
-
-<p><a href="http://www.slideshare.net/ihower/rspec-7394497" target="_blank">ihower 投影片</a> - 必看!!!!!<br/>
-<a href="http://rubydoc.info/gems/rspec-core/2.8.0/file/README.md#" target="_blank">Rspec-core Rdoc</a> - 架構必看!!!<br/>
-<a href="https://github.com/rspec/rspec-rails" target="_blank">Rspec Rails</a> - 官方提供的簡單範例 for models, controllers, routes, helpers 等</p>
-
-<h4>describe 與 it + should</h4>
-
-<p>最簡單的 rspec 可由 describe 和 it 組成<br/>
-it 裡面必須有 should (或其他 match 語法) 才會構成測試</p>
-
-<p>小弟在初學 rspec 的時候, 大多透過 should == 和 should_not == 就吃遍天下了 :p<br/>
-一般在初學 rspec 時, 需要多注意 describe 和 it 的階層關係, 才會讓你的 spec 可讀性較高</p>
-
-<p>有規劃的 spec</p>
-
-<p>```ruby
-describe Foo do
-  describe "#get_bar" do</p>
-
-<pre><code>it "should be nil" do
-  Foo.new.get_bar.should == nil
-end
-it "should be Bar" do
-  Foo.first.get_bar.class.should == Bar
-end
-</code></pre>
-
-<p>  end
-```</p>
-
-<p>沒有規劃的 spec</p>
-
-<p>```ruby
-describe Foo do
-  it "#get_bar" do</p>
-
-<pre><code>Foo.new.get_bar.should == nil # 當這行的測試沒過時, 下面的測試便不會再執行
-Foo.first.get_bar.class.should == Bar
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>盡可能讓每個 it 都是針對一種結果進行測試<br/>
-描述中用 # 開頭的就表示是 method name</p>
-
-<p>當漸漸學會其他的 match 語法時, 可讀性就去更高了
-例如 <a href="http://apidock.com/rspec/Spec/Matchers/be_a_kind_of" target="_blank">be_a_kind_of</a> 可用於做 is_a_kind_of 的 match</p>
-
-<p><code>ruby
-Foo.first.get_bar.should be_a_kind_of(Bar)
-</code></p>
-
-<p>相當於</p>
-
-<p><code>ruby
-Foo.first.get_bar.class.should == Bar
-</code></p>
-
-<p>前者的可讀性是比較高的</p>
-
-<h4>before 與 it</h4>
-
-<p>before 必定是在某個 describe 下, 而 before 內的行為會在每個 it 以前執行<br/>
-而善用 instance 變數, 可以將 before 產生的變數傳遞給底下每個 it 用</p>
-
-<p>```ruby
-describe Foo do
-  before do</p>
-
-<pre><code>@foo = Foo.create!
-</code></pre>
-
-<p>  end
-  describe "#bar" do</p>
-
-<pre><code>before do
-  @bar = Bar.create!
-  @foo.bar = @bar
-  @foo.save
-end
-it "should be Bar" do
-   @foo.bar.should be_a_kind_of(Bar) # 可以拿到 @foo
-end
-it "should be equeal to @bar" do
-   @foo.bar.id.should == @bar.id # 也可以拿到 @bar
-end
-</code></pre>
-
-<p>  end
-  it "be a kind of Foo" do</p>
-
-<pre><code>@foo.should be_a_kind_of(Foo) # 只能拿到 @foo
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>此外每個 it 結束後, 都會將此 it (含 before) 內對 test db 的修改通通 rollback, 因此我們可視為每個 it 執行前 (before 前), test db 都會是空的</p>
-
-<h4>執行測試</h4>
-
-<p>必須注意:</p>
-
-<ol>
-<li>config/database.yml 必須要有 test env 的設定, 且 database 不能和 migrate 一樣</li>
-<li>執行前若 development 有 migrations 沒跑的話, 必須先跑完</li>
-</ol>
-
-
-<p>跑 spec/ 下的所有測試</p>
-
-<p><code>
-bundle exec rake spec
-</code></p>
-
-<p>跑單一檔案的 spec</p>
-
-<p><code>
-bundle exec rspec spec/models/foo_spec.rb
-</code></p>
-
-<p>跑單一檔案時, 不會先重新 load db schema, 因此若有新的 migrations 在 development 跑過後, 必須先 rake spec 後才能跑單一檔案的 rspec</p>
-
-<p>更多 rspec 指令的應用</p>
-
-<p><code>
-bundle exec rspec -h
-</code></p>
 ]]></content>
   </entry>
   
