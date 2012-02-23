@@ -9,8 +9,9 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="上篇提到如何進行 redis, resque, worker 的設定安裝
-本篇將介紹基本使用方式 ">
+  <meta name="description" content="透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker
+因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動
+以下將介紹如何將重啟 worker 整合到 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,246 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-21/resque-deploy-worker/">用 resque 實作背景作業 ( 佈署篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-21T01:56:00+08:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-21/resque-deploy-worker/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker<br/>
+因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動<br/>
+以下將介紹如何將重啟 worker 整合到 capistrano 中</p>
+
+<!-- more --->
+
+
+<h4>將 worker 丟背景執行的方法</h4>
+
+<p>resque 1.9 以上有提供參數 :)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work</span></code></pre></td></tr></table></div></figure>
+
+
+<p>背景的 worker 要留一下 pid file, 以方便 kill</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PIDFILE=./resque.pid BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>整合 capistrano</h4>
+
+<p>deploy 中加 restart_resque 的 task</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># .....</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart_resque</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">queues</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:foo_queue</span><span class="p">,</span> <span class="ss">:barbar</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">queues</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">queue</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">pid_file</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">/tmp/pids/resque-</span><span class="si">#{</span><span class="n">queue</span><span class="si">}</span><span class="s2">.pid&quot;</span>
+</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;test -f </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2"> &amp;&amp; cd </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2"> &amp;&amp; kill -s QUIT `cat </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2">` || rm -f </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;cd </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2"> &amp;&amp; PIDFILE=</span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2"> RAILS_ENV=</span><span class="si">#{</span><span class="n">rails_env</span><span class="si">}</span><span class="s2"> BACKGROUND=yes QUEUE=</span><span class="si">#{</span><span class="n">queue</span><span class="si">}</span><span class="s2"> bundle exec rake environment resque:work&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1">#...</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的例子是以一條 queue 配一個 worker 的方式執行，若要通通塞一個 worker 就 QUEUE=* 吧 XD</p>
+
+<p>restart app 後就 restart resque worker 吧!!</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">after</span> <span class="s1">&#39;deploy:restart&#39;</span><span class="p">,</span> <span class="s1">&#39;deploy:restart_resque&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>有關啟動 worker 的參數</h4>
+
+<p>resque 提供了許多參數，讓你可以依照不同的需求執行worker，底下將介紹</p>
+
+<h6>將 worker 執行的結果輸出</h6>
+
+<p>debug 很好用，但個人還是推薦用 rspec 去 debug 吧 XD</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VVERBOSE</span><span class="o">=</span><span class="mi">1</span> <span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>指定 queue (一條或多條)</h6>
+
+<p>多條可以逗號隔開</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUES</span><span class="o">=</span><span class="n">file_serve</span><span class="p">,</span><span class="n">warm_cache</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>則是所有的 queue</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUES</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>polling 的頻率</h6>
+
+<p>針對即時性高的需求,以秒計,預設為 5 秒</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">INTERVAL</span><span class="o">=</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="no">QUEUE</span><span class="o">=</span><span class="n">foo</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>多個 worker 同步執行</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">COUNT</span><span class="o">=</span><span class="mi">5</span> <span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:workers</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但官方推薦用 gem &#8220;god&#8221; 來執行多個 worker<br/>
+相關可參考 <a href="https://github.com/defunkt/resque/blob/master/examples/god/resque.god" target="_blank">官方範例</a><br/>
+god 也可以用來解決 worker 掛掉的問題<br/>
+有關 god 的整合, 有空再分享 :p</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-19/resque-mailer/">用 resque 實作背景作業 ( mailer 篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-19T01:36:00+08:00" pubdate data-updated="true">Feb 19<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-19/resque-mailer/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>寄信的工作是最必要丟背景的。在 web 前端使用的過程中，若要等待 server 產生 email 內容、和 smtp 連線、然後再把信送出去，這樣的過程肯定讓使用品質大大扣分&#8230;<br/>
+因此 gem &#8220;resque_mailer&#8221; 將 resque 的 enqueue 和 perform 實作到 ActionMailer::Base 中</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-19/resque-mailer/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-17/resque-spec/">用 resque 實作背景作業 (測試篇 - Rspec)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-17T00:40:00+08:00" pubdate data-updated="true">Feb 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-17/resque-spec/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>不管用什麼方式實作 background job 後<br/>
+令人頭痛的是很難知道 worker 在執行工作時有沒有噴 exception<br/>
+因此測試就顯得更為重要, 每次佈署前必須做好完整的測試, 以減少 worker 出錯<br/>
+當然也可以搭配 Exceptional 或 Aribrake 之類的雲端服務來進行監控&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-17/resque-spec/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -395,137 +636,6 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-02/rails-rspec-basic-syntax/">Rails Rspec (2) 基本語法與執行</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-02T14:35:00+08:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-02/rails-rspec-basic-syntax/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>建議在開始本系列文以前先讀過, 以下參考文件與資源</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-02/rails-rspec-basic-syntax/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-01/rails-rspec-intro-and-setup/">Rails Rspec (1) 介紹與設定</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-01T14:00:00+08:00" pubdate data-updated="true">Feb 1<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-01/rails-rspec-intro-and-setup/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>有關寫測試的重要性, 本文不再贅述<br/>
-觀念性文章可參考以下大大們的見解&#8230;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-01/rails-rspec-intro-and-setup/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-01-30/ci-system-bigtuna-index/">CI server - Bigtuna 系列文</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-30T12:06:00+08:00" pubdate data-updated="true">Jan 30<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-01-30/ci-system-bigtuna-index/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>呼呼~終於完成了 Bigtuna 的系列文<br/>
-這裡索引連結如下</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-01-30/ci-system-bigtuna-index/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -553,6 +663,18 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-02-21/resque-deploy-worker/">用 resque 實作背景作業 ( 佈署篇)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-19/resque-mailer/">用 resque 實作背景作業 ( mailer 篇)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-02-17/resque-spec/">用 resque 實作背景作業 (測試篇 - Rspec)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-02-15/resque-basic-usage/">用 resque 實作背景作業 (基本使用篇)</a>
       </li>
     
@@ -560,24 +682,12 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
         <a href="/blog/2012-02-13/resque-redis-and-worker-config/">用 resque 實作背景作業 (前置設定篇)</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012-02-06/factory-girl-rails-intro/">使用 Factory Girl 產生測試用資料</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012-02-05/facebook-posters/">Facebook 辦公室的駭客精神標語</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 118.46153846153845%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 104.61538461538461%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 109.23076923076923%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 104.61538461538461%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 109.23076923076923%'>Background-job(2)</a>  <a href='/blog/categories/backup' style='font-size: 104.61538461538461%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 118.46153846153845%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 109.23076923076923%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 104.61538461538461%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 118.46153846153845%'>Continuous integration(4)</a>  <a href='/blog/categories/counter' style='font-size: 104.61538461538461%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 104.61538461538461%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 104.61538461538461%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 109.23076923076923%'>Deploy(2)</a>  <a href='/blog/categories/devise' style='font-size: 109.23076923076923%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 104.61538461538461%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 109.23076923076923%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 104.61538461538461%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 104.61538461538461%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 109.23076923076923%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 104.61538461538461%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 104.61538461538461%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 104.61538461538461%'>Json(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 109.23076923076923%'>Message-queue(2)</a>  <a href='/blog/categories/model' style='font-size: 104.61538461538461%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 104.61538461538461%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 104.61538461538461%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 104.61538461538461%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 109.23076923076923%'>Resque(2)</a>  <a href='/blog/categories/rmagick' style='font-size: 104.61538461538461%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 123.07692307692308%'>Rspec(5)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(13)</a>  <a href='/blog/categories/sql' style='font-size: 104.61538461538461%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 104.61538461538461%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 104.61538461538461%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 118.46153846153845%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 104.61538461538461%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 104.61538461538461%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 104.61538461538461%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 115.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 103.75%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 107.5%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 103.75%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 118.75%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 103.75%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 115.0%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 107.5%'>Capistrano(2)</a>  <a href='/blog/categories/carrierwave' style='font-size: 103.75%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 115.0%'>Continuous integration(4)</a>  <a href='/blog/categories/counter' style='font-size: 103.75%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 103.75%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 103.75%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 111.25%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 107.5%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 103.75%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 107.5%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 103.75%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 103.75%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 107.5%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 103.75%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 103.75%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 103.75%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 103.75%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 118.75%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 103.75%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 103.75%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 103.75%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 103.75%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 118.75%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 103.75%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 122.5%'>Rspec(6)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(16)</a>  <a href='/blog/categories/sql' style='font-size: 103.75%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 103.75%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 103.75%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 115.0%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 103.75%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 103.75%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 103.75%'>Yaml(1)</a> </span>
 </section>
 
 

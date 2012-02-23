@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-23T19:37:53+08:00</updated>
+  <updated>2012-02-24T02:25:43+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,358 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 ( 佈署篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker/"/>
+    <updated>2012-02-21T01:56:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker</id>
+    <content type="html"><![CDATA[<p>透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker<br/>
+因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動<br/>
+以下將介紹如何將重啟 worker 整合到 capistrano 中</p>
+
+<!-- more --->
+
+
+<h4>將 worker 丟背景執行的方法</h4>
+
+<p>resque 1.9 以上有提供參數 :)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work</span></code></pre></td></tr></table></div></figure>
+
+
+<p>背景的 worker 要留一下 pid file, 以方便 kill</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PIDFILE=./resque.pid BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>整合 capistrano</h4>
+
+<p>deploy 中加 restart_resque 的 task</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># .....</span>
+</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart_resque</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">queues</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:foo_queue</span><span class="p">,</span> <span class="ss">:barbar</span><span class="o">]</span>
+</span><span class='line'>    <span class="n">queues</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">queue</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">pid_file</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">/tmp/pids/resque-</span><span class="si">#{</span><span class="n">queue</span><span class="si">}</span><span class="s2">.pid&quot;</span>
+</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;test -f </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2"> &amp;&amp; cd </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2"> &amp;&amp; kill -s QUIT `cat </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2">` || rm -f </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;cd </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2"> &amp;&amp; PIDFILE=</span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2"> RAILS_ENV=</span><span class="si">#{</span><span class="n">rails_env</span><span class="si">}</span><span class="s2"> BACKGROUND=yes QUEUE=</span><span class="si">#{</span><span class="n">queue</span><span class="si">}</span><span class="s2"> bundle exec rake environment resque:work&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="c1">#...</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的例子是以一條 queue 配一個 worker 的方式執行，若要通通塞一個 worker 就 QUEUE=* 吧 XD</p>
+
+<p>restart app 後就 restart resque worker 吧!!</p>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">after</span> <span class="s1">&#39;deploy:restart&#39;</span><span class="p">,</span> <span class="s1">&#39;deploy:restart_resque&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>有關啟動 worker 的參數</h4>
+
+<p>resque 提供了許多參數，讓你可以依照不同的需求執行worker，底下將介紹</p>
+
+<h6>將 worker 執行的結果輸出</h6>
+
+<p>debug 很好用，但個人還是推薦用 rspec 去 debug 吧 XD</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VVERBOSE</span><span class="o">=</span><span class="mi">1</span> <span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>指定 queue (一條或多條)</h6>
+
+<p>多條可以逗號隔開</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUES</span><span class="o">=</span><span class="n">file_serve</span><span class="p">,</span><span class="n">warm_cache</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>則是所有的 queue</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUES</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>polling 的頻率</h6>
+
+<p>針對即時性高的需求,以秒計,預設為 5 秒</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">INTERVAL</span><span class="o">=</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="no">QUEUE</span><span class="o">=</span><span class="n">foo</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>多個 worker 同步執行</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">COUNT</span><span class="o">=</span><span class="mi">5</span> <span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:workers</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但官方推薦用 gem &#8220;god&#8221; 來執行多個 worker<br/>
+相關可參考 <a href="https://github.com/defunkt/resque/blob/master/examples/god/resque.god" target="_blank">官方範例</a><br/>
+god 也可以用來解決 worker 掛掉的問題<br/>
+有關 god 的整合, 有空再分享 :p</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 ( mailer 篇)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-19/resque-mailer/"/>
+    <updated>2012-02-19T01:36:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-19/resque-mailer</id>
+    <content type="html"><![CDATA[<p>寄信的工作是最必要丟背景的。在 web 前端使用的過程中，若要等待 server 產生 email 內容、和 smtp 連線、然後再把信送出去，這樣的過程肯定讓使用品質大大扣分&#8230;<br/>
+因此 gem &#8220;resque_mailer&#8221; 將 resque 的 enqueue 和 perform 實作到 ActionMailer::Base 中</p>
+
+<!-- more -->
+
+
+<p>即原本的 deliver 應該是要根據 app 的 mailer 設定 (smtp或sendmail等) 把信送出<br/>
+bundle resqie_mailer 後, deliver 的結果則變成送到 mq 上 (透過 Resque.enqueue)</p>
+
+<h4>安裝</h4>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;resque&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;resque_mailer&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>設定</h4>
+
+<figure class='code'><figcaption><span>config/initializers/resque_mailer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># queue 的名稱</span>
+</span><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">default_queue_name</span> <span class="o">=</span> <span class="s2">&quot;foo_mailer&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># 有 resque_spec</span>
+</span><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">excluded_environments</span> <span class="o">=</span> <span class="o">[]</span>
+</span><span class='line'><span class="c1"># 無 resque_spec</span>
+</span><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">excluded_environments</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:test</span><span class="p">,</span> <span class="ss">:cucumber</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>使用</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">MyMailer</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+</span><span class='line'>    <span class="c1"># .....</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>寄信 (送到 mq)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">MyMailer</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>寄信 (直接寄出不送 mq)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">MyMailer</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">deliver!</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這裡要注意!!!!! 因為 resque 會將參數內容送到 mq 上, 而 redis 無法處理 number, string, array, hash 以外的變數, 所以在定義 mailer action 時, 參數務必限制在上述這些變數類型的範圍內</p>
+
+<h4>worker 的執行</h4>
+
+<p>一般 mailer 的 worker 建議獨立一條 queue 執行, 效率會比較好 :p</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUE</span><span class="o">=</span><span class="n">foo_mailer</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">resque</span><span class="ss">:work</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<p>resque_mailer 簡單, 但仍是 background job<br/>
+因此測試還是要多多寫 XD</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[用 resque 實作背景作業 (測試篇 - Rspec)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-17/resque-spec/"/>
+    <updated>2012-02-17T00:40:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-17/resque-spec</id>
+    <content type="html"><![CDATA[<p>不管用什麼方式實作 background job 後<br/>
+令人頭痛的是很難知道 worker 在執行工作時有沒有噴 exception<br/>
+因此測試就顯得更為重要, 每次佈署前必須做好完整的測試, 以減少 worker 出錯<br/>
+當然也可以搭配 Exceptional 或 Aribrake 之類的雲端服務來進行監控&#8230;</p>
+
+<!-- more -->
+
+
+<p>resque 的測試有專門的 gem, 用來在測試環境下模擬 message queue 和 worker</p>
+
+<p>resque_spec : <a href="https://github.com/leshill/resque_spec" target="_blank">https://github.com/leshill/resque_spec</a></p>
+
+<h4>安裝</h4>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;resque_spec&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這裡要注意一點, 不要在 development 環境下 bundle resque_spec, 即 Gemfile 中的 resque_spec 只能 group 在 test 下, 否則執行 Resque.enqueue 就不會送到 redis 而是送進 resque_spec 中</p>
+
+<h4>使用</h4>
+
+<p>resque_spec 的作法是讓原本丟工作到 mq 上的 Resque.enqueue 改為丟到 resque_spec 模擬的 mq 中<br/>
+因此 Gemfile bundle 後, 就可以直接在 rspec 中使用, 以下將介紹 rspec 中常用的語法</p>
+
+<h6>清空 mq 所有的 job</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s2">&quot;#foo&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
+</span><span class='line'>    <span class="no">ResqueSpec</span><span class="o">.</span><span class="n">reset!</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>檢查某個 worker 的 job 數</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">FooWorker</span><span class="o">.</span><span class="n">should</span> <span class="n">have_queue_size_of</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>檢查某個 worker 的 queue 中應該要有的 job</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">FooWorker</span><span class="o">.</span><span class="n">should</span> <span class="n">have_queued</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>foo.id, &#8220;bar&#8221; 都是 enqueue 的參數</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="c1"># some where enqueue</span>
+</span><span class='line'>  <span class="no">Resque</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="no">FooWorker</span><span class="p">,</span> <span class="n">foo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>立即執行不送 queue</h6>
+
+<p>用 &#8220;with_resque&#8221;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="s2">&quot;should works&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">with_resque</span> <span class="k">do</span>
+</span><span class='line'>    <span class="vi">@foo</span><span class="o">.</span><span class="n">run</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>假設 run 的內容是</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">run</span>
+</span><span class='line'>  <span class="no">Resque</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="no">FooWorker</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 with_resque 內, Resque.enqueue(FooWorker, id) 相當於 FooWorker.perform(id)</p>
+
+<h6>執行 queue 裡面所有的 job</h6>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="s2">&quot;should  works&quot;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="vi">@foo</span><span class="o">.</span><span class="n">run</span>
+</span><span class='line'>  <span class="no">ResqueSpec</span><span class="o">.</span><span class="n">perform_all</span><span class="p">(</span><span class="ss">:queue_foo</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8220;queue_foo&#8221; 是 Worker 中定義的 queue name</p>
+
+<h4>整合 ResqueMailer</h4>
+
+<p>gem &#8220;resque_mailer&#8221; 會將 mailer 中的 deliver 行為內容改為 Resque.enqueue<br/>
+但是在 test 環境中, resque_mailer 則會還原 deliver 原本的行為<br/>
+所以為了 rspec 中也可以測試 mailer 是否 enqueu, 要在 resque_mailer 中的 config 將原本排除掉的 test 環境加入 resque_mailer 的運作中</p>
+
+<figure class='code'><figcaption><span>config/initializers/resque_mailer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">excluded_environments</span> <span class="o">=</span> <span class="o">[]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<p>一般我們都會將複雜或吃效能的工作丟到背景執行<br/>
+而複雜的工作又常常需要 debug<br/>
+因此平常應該要養成寫 spec 的習慣<br/>
+才不會讓自己跟這些複雜的功能過不去 :p</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用 resque 實作背景作業 (基本使用篇)]]></title>
@@ -2032,449 +2384,6 @@ Gemfile 要有 gem &#8216;whenever&#8217;</p>
 
 <p>若想要在 cap deploy 時也執行 rake assets:precompile<br/>
 可以參考 <a href="http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" target="_blank">這篇</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用 Carrierwave 處理檔案上傳 (整合 imagemagick 與 Amazon S3)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration/"/>
-    <updated>2012-01-10T23:38:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration</id>
-    <content type="html"><![CDATA[<h2>參考來源</h2>
-
-<ul>
-<li>Github <a href="https://github.com/jnicklas/carrierwave">https://github.com/jnicklas/carrierwave</a></li>
-</ul>
-
-
-<!-- more -->
-
-
-<h2>安裝</h2>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;carrierwave&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>建立 uploader</h2>
-
-<pre><code>rails generate uploader user_avatar
-</code></pre>
-
-<p>檔案產生於</p>
-
-<pre><code>app/uploader/user_avatar_uploader.rb
-</code></pre>
-
-<h2>簡易範例</h2>
-
-<h4>直接使用</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">uploader</span> <span class="o">=</span> <span class="no">UserAvatarUploader</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">uploader</span><span class="o">.</span><span class="n">store!</span><span class="p">(</span><span class="n">my_file</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>掛在 model 裡使用</h4>
-
-<p>在 model 裡</p>
-
-<figure class='code'><figcaption><span>app/models/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span>
-</span><span class='line'>  <span class="n">mount_uploader</span> <span class="ss">:picture</span><span class="p">,</span> <span class="no">UserAvatarUploader</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>新增 migration, 因欄位名稱是 picture, 所以新增一個 picture 的 string 欄位在 users table 裡</p>
-
-<pre><code>rails g migration add_column_picture_to_users
-</code></pre>
-
-<figure class='code'><figcaption><span>db/migrate/201101011213_add_column_picture_to_users.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:picture</span><span class="p">,</span> <span class="ss">:string</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>_form.html.erb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;file&quot;</span> <span class="na">name=</span><span class="s">&quot;picture&quot;</span> <span class="nt">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>users_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">u</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:picture</span><span class="o">]</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">save!</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">picture</span><span class="o">.</span><span class="n">url</span> <span class="c1"># =&gt; /url/to/file.png</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 _form.html.erb 送出 post 後, 便會按照在 user_avatar_uploader.rb 中的設定進行儲存並且回傳檔案>網址</p>
-
-<h2>uploader 設定</h2>
-
-<h4>儲存</h4>
-
-<p>存成檔案, fog  為將檔案上傳至 cdn 用, 稍後會介紹</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">storage</span> <span class="ss">:file</span>
-</span><span class='line'><span class="c1"># storage :fog</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可覆寫 store_dir, 以指定儲存路徑, 以 public/ 為基礎</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">store_dir</span>
-</span><span class='line'>   <span class="s2">&quot;uploader/user_avatar&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>限定檔案附檔名</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">extension_white_list</span>
-</span><span class='line'>  <span class="sx">%w(jpg jpeg gif png)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>指定檔名, 包含附檔名 (model.id 稍後介紹)</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">filename</span>
-</span><span class='line'>  <span class="c1"># @filename</span>
-</span><span class='line'>  <span class="s2">&quot;</span><span class="si">#{</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.png&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>指定預設的 url (e.g.沒有圖的時候)</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">default_url</span>
-</span><span class='line'>  <span class="s2">&quot;/images/fallback/&quot;</span> <span class="o">+</span> <span class="o">[</span><span class="n">version_name</span><span class="p">,</span> <span class="s2">&quot;default.png&quot;</span><span class="o">].</span><span class="n">compact</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>使用 Imagemagick 壓縮</h4>
-
-<p>Gemfile</p>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;rmagick&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>uploader 加上</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">include</span> <span class="no">CarrierWave</span><span class="o">::</span><span class="no">RMagick</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 user_avatar_uploader.rb 中可以自行定義要用哪些 Imagemagick 的 method 處理圖片</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># 轉換成 png</span>
-</span><span class='line'><span class="n">process</span> <span class="ss">:convert</span> <span class="o">=&gt;</span> <span class="s1">&#39;png&#39;</span>
-</span><span class='line'><span class="c1"># 按比例縮成指定大小並且補白</span>
-</span><span class='line'><span class="n">process</span> <span class="ss">:resize_and_pad</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">160</span><span class="p">,</span> <span class="mi">160</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>所有可用的 api 見 <a href="https://github.com/jnicklas/carrierwave/blob/master/lib/carrierwave/processing/rmagick.rb">https://github.com/jnicklas/carrierwave/blob/master/lib/carrierwave/processing/rmagick.rb</a></p>
-
-<p>若希望可以另做縮圖, 可以透過 version 同時建立與原圖不同的版本</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># 版本名稱為 thumb</span>
-</span><span class='line'><span class="n">version</span> <span class="ss">:thumb</span> <span class="k">do</span>
-</span><span class='line'>   <span class="n">process</span> <span class="ss">:resize_and_pad</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="o">]</span>
-</span><span class='line'>   <span class="n">process</span> <span class="ss">:convert</span> <span class="o">=&gt;</span> <span class="s1">&#39;png&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="c1"># 版本名稱為 small</span>
-</span><span class='line'><span class="n">version</span> <span class="ss">:small</span> <span class="k">do</span>
-</span><span class='line'>   <span class="n">process</span> <span class="ss">:resize_and_pad</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="mi">160</span><span class="p">,</span> <span class="mi">160</span><span class="o">]</span>
-</span><span class='line'>   <span class="n">process</span> <span class="ss">:convert</span> <span class="o">=&gt;</span> <span class="s1">&#39;png&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>mixin 類似 CarrierWave::RMagick 的 module 可以將更多 RMagick 的 api 應用在 process 中</p>
-
-<p>RMagick api 可參考</p>
-
-<blockquote><ul>
-<li>doc: <a href="http://studio.imagemagick.org/RMagick/doc/">http://studio.imagemagick.org/RMagick/doc/</a></li>
-<li>source: <a href="https://github.com/rmagick/rmagick/blob/master/lib/RMagick.rb">https://github.com/rmagick/rmagick/blob/master/lib/RMagick.rb</a></li>
-</ul>
-</blockquote>
-
-<p>取得 version :</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">u</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">picture</span><span class="o">.</span><span class="n">url</span> <span class="c1"># 原圖 url</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">picture</span><span class="o">.</span><span class="n">thumb</span><span class="o">.</span><span class="n">url</span> <span class="c1"># thumb 版本的 url</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">picture</span><span class="o">.</span><span class="n">small</span><span class="o">.</span><span class="n">url</span> <span class="c1"># small 版本的 url</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>上傳至 CDN (以 Amazon S3 為例)</h4>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;fog&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 storage 改為 fog</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">storage</span> <span class="ss">:fog</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>新增 config/initializer/carrierwave.rb, 內容如下</p>
-
-<figure class='code'><figcaption><span>config/initializer/carrierwave.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">CarrierWave</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">fog_credentials</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>    <span class="ss">:provider</span>               <span class="o">=&gt;</span> <span class="s1">&#39;AWS&#39;</span><span class="p">,</span>       <span class="c1"># required</span>
-</span><span class='line'>    <span class="ss">:aws_access_key_id</span>      <span class="o">=&gt;</span> <span class="s1">&#39;XXXXX&#39;</span><span class="p">,</span>       <span class="c1"># your aws access key id</span>
-</span><span class='line'>    <span class="ss">:aws_secret_access_key</span>  <span class="o">=&gt;</span> <span class="s1">&#39;xxxxxxxxxx&#39;</span><span class="p">,</span>       <span class="c1"># your aws secret access key</span>
-</span><span class='line'>    <span class="ss">:region</span>                 <span class="o">=&gt;</span> <span class="s1">&#39;ap-southeast-1&#39;</span>  <span class="c1"># your bucket&#39;s region in S3, defaults to &#39;us-east-1&#39;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="c1"># your S3 bucket name</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">fog_directory</span>  <span class="o">=</span> <span class="s1">&#39;my_bucket&#39;</span>
-</span><span class='line'>  <span class="c1"># custome your domain on aws S3, defaults to nil</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">fog_host</span>       <span class="o">=</span> <span class="s1">&#39;http://myapp.com&#39;</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">fog_public</span>     <span class="o">=</span> <span class="kp">true</span>                                   <span class="c1"># optional, defaults to true</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">fog_attributes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Cache-Control&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;max-age=315576000&#39;</span><span class="p">}</span>  <span class="c1"># optional, defaults to {}</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>依上述範例, 要在 S3 開一個 public bucket 名為 &#8220;my_bucket&#8221;, 地區為新加坡</p>
-
-<p>access key 可至 <a href="https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key">https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key</a> 搜尋</p>
-
-<p>bucket 中儲存的路徑可在 user_avatar_uploader.rb 中的 store_dir 定義</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">store_dir</span>
-</span><span class='line'>    <span class="s2">&quot;user_avatar/</span><span class="si">#{</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>uploader 的 methods</h4>
-
-<p>當你將 uploader mount 進 model, 就可以在 uploader 中直接取得該 model 的 instance</p>
-
-<figure class='code'><figcaption><span>app/uploader/user_avatar_uploader.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">filename</span>
-</span><span class='line'>   <span class="s2">&quot;</span><span class="si">#{</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.png&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="c1"># and mounted_as</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">store_dir</span>
-</span><span class='line'>   <span class="s2">&quot;uploader/user_avatar/</span><span class="si">#{</span><span class="n">mounted_as</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>uploader 有哪些 medthods 可參考 <a href="https://github.com/jnicklas/carrierwave/tree/master/lib/carrierwave/uploader">https://github.com/jnicklas/carrierwave/tree/master/lib/carrierwave/uploader</a></p>
-
-<h4>處理 local file 或 remote file</h4>
-
-<p>remote file, 參考 <a href="http://stackoverflow.com/questions/5007575/how-to-assign-a-remote-file-to-carrierwave">http://stackoverflow.com/questions/5007575/how-to-assign-a-remote-file-to-carrierwave</a></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">u</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.google.com/logo.png&quot;</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">remote_picture_url</span> <span class="o">=</span> <span class="n">url</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">save</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>local file</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">u</span> <span class="o">=</span>  <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/public/images/exmaples/foo.png&quot;</span>
-</span><span class='line'><span class="n">u</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Carrierwave 的特色在於細節定義都在 uploader 中, 而 model 只要 mount 以及加上 string 欄位即可</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Devise 在登入或登出之後執行回乎]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/"/>
-    <updated>2012-01-10T23:11:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out</id>
-    <content type="html"><![CDATA[<h4>需求</h4>
-
-<p>想要在登入或登出後執行指定的行為</p>
-
-<!-- more -->
-
-
-<h4>官方 wiki</h4>
-
-<p><a href="https://github.com/plataformatec/devise/wiki/How-To:-Change-the-redirect-path-after-destroying-a-session-i.e.-signing-out" target="_blank">How To: Change the redirect path after destroying a session i.e. signing out</a></p>
-
-<h4>說明</h4>
-
-<ul>
-<li>從 <a href="https://github.com/plataformatec/devise/blob/master/app/controllers/devise/sessions_controller.rb" target="_blank">SessionsController</a> 可得知每次登入後會 redirect 到 after_sign_in_path_for 這個 helper method 所回傳的路徑, 登出則是 after_sign_out_path_for</li>
-<li>找到 <a href="https://github.com/plataformatec/devise/blob/master/lib/devise/controllers/helpers.rb#L207" target="_blank">Controller::Helper</a> 定義了  after_sign_in_path_for 和 after_sign_out_path_for</li>
-<li>針對這兩個 method 進行覆寫</li>
-</ul>
-
-
-<h4>範例</h4>
-
-<p>注意要用 private, 並且傳進一參數為 model instance</p>
-
-<figure class='code'><figcaption><span>app/controllers/application_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># Overwriting the sign_in redirect path method</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">after_sign_in_path_for</span><span class="p">(</span><span class="n">resource_or_scope</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">root_path</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在partial中取得完整的locals(當Hash用)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-10/get-locals-whole-variables-as-hash-in-partial/"/>
-    <updated>2012-01-10T22:50:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-10/get-locals-whole-variables-as-hash-in-partial</id>
-    <content type="html"><![CDATA[<p>我們都知道在一般的 view 下,即使在 controller 沒有指定 @foo 的值, view 直接讀取 @foo 也不會噴 Exception. 可是同樣的情況到了 partial 就會噴 Exception</p>
-
-<!-- more -->
-
-
-<p>render_partial 沒有只指定該變數的key到locals中</p>
-
-<figure class='code'><figcaption><span>app/views/bar/index.erb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%=</span> <span class="n">render_partial</span> <span class="ss">:foo</span><span class="p">,</span> <span class="ss">:locals</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="mi">1</span> <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 partial 中直接讀取變數會噴 Exception</p>
-
-<figure class='code'><figcaption><span>app/views/bar/_foo.erb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%</span> <span class="k">if</span> <span class="o">!</span><span class="n">foo</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">  not assign foo to locals</span>
-</span><span class='line'><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>透過 local_assigns 便可將整個 locals 當 hash 用</p>
-
-<figure class='code'><figcaption><span>app/views/bar/_foo.erb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%</span> <span class="k">if</span> <span class="o">!</span><span class="n">local_assigns</span><span class="o">[</span><span class="ss">:foo</span><span class="o">]</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">  not assign foo to locals</span>
-</span><span class='line'><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>haml 版</p>
-
-<figure class='code'><figcaption><span>app/views/bar/_foo.haml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='haml'><span class='line'><span class="p">-</span> <span class="k">if</span> <span class="o">!</span><span class="n">local_assigns</span><span class="o">[</span><span class="ss">:foo</span><span class="o">]</span>
-</span><span class='line'>  <span class="p">=</span> <span class="s2">&quot;not assign foo to locals&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   
