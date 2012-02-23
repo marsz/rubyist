@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Regular Expression | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/regular-expression/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-24T02:25:43+08:00</updated>
+  <updated>2012-02-24T02:32:11+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[在 validates_format_of 中使用正規表示法(Regular Expression)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-04/new-post/"/>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-04/regexp-in-validates-format-of/"/>
     <updated>2012-01-04T17:43:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-04/new-post</id>
+    <id>http://rubyist.marsz.tw/blog/2012-01-04/regexp-in-validates-format-of</id>
     <content type="html"><![CDATA[<p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
 
 <p>因此小弟不疑有他, 於是...</p>

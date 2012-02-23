@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-24T02:25:43+08:00</updated>
+  <updated>2012-02-24T02:32:11+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -22,7 +22,7 @@
 因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動<br/>
 以下將介紹如何將重啟 worker 整合到 capistrano 中</p>
 
-<!-- more --->
+<!-- more -->
 
 
 <h4>將 worker 丟背景執行的方法</h4>
@@ -89,10 +89,7 @@ VVERBOSE=1 QUEUE=* bundle exec rake environment resque:work
 QUEUES=file_serve,warm_cache bundle exec rake environment resque:work
 </code></p>
 
-<ul>
-<li>則是所有的 queue</li>
-</ul>
-
+<p>* 則是所有的 queue</p>
 
 <p><code>ruby
 QUEUES=* bundle exec rake environment resque:work
