@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: File-upload | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/file-upload/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-03-17T11:14:24+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec 檔案上傳的測試]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload/"/>
+    <updated>2012-03-04T10:45:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload</id>
+    <content type="html"><![CDATA[<p><code>controller</code> 的測試中, 總是免不了要處理檔案上傳, rails 中的測試環境當然也提供了這樣的機制</p>
+
+<!-- more -->
+
+
+<h4>範例</h4>
+
+<p>假設要模擬 view 中 <code>&lt;input type="file" name="user[avatar]" /&gt;</code> 的檔案上傳</p>
+
+<p><code>ruby spec/requests/users_controller_spec.rb
+querys = { :user =&gt; { :avatar =&gt; fixture_file_upload("/example.jpg","image/jpeg") } }
+post :create, querys
+response.should be_success
+</code></p>
+
+<p><code>/example.jpg</code> 會抓 <code>spec/fixtures/example.jpg</code> 做為上傳用的範例圖檔<br/>
+<code>image/jpeg</code> 則是 <code>MIME type</code></p>
+
+<p>亦可寫在 <code>factory</code> 中</p>
+
+<p>```ruby
+Factory :video_file do
+  file { fixture_file_upload '/test.png', 'image/png' }</p>
+
+<p>  after_create do |video, proxy|</p>
+
+<pre><code>proxy.file.close
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>相關可參考<a href="http://apidock.com/rails/ActionDispatch/TestProcess/fixture_file_upload" target="_blank">Api Dock</a></p>
+]]></content>
+  </entry>
+  
+</feed>

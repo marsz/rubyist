@@ -9,8 +9,9 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息 1
-Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8 ">
+  <meta name="description" content="ruby 中 Date 或 Datetime 都有 #srtftime 可以用來作自定格式的日期輸出
+若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫
+以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,329 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-10/date_format_without_zero/">輸出除去0的日期格式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-10T22:34:00+08:00" pubdate data-updated="true">Jan 10<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-10/date_format_without_zero/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ruby 中 Date 或 Datetime 都有 <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" taget="_blank">#srtftime</a> 可以用來作自定格式的日期輸出<br/>
+若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫<br/>
+以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-10/date_format_without_zero/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-04/regexp-in-validates-format-of/">在 validates_format_of 中使用正規表示法(Regular Expression)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-04T17:43:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-04/regexp-in-validates-format-of/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
+
+<p>因此小弟不疑有他, 於是&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-04/regexp-in-validates-format-of/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-04/query-datetime-by-date/">如何在 datetime 的欄位中做日期的搜尋</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-04T16:54:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-04/query-datetime-by-date/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
+因此若我們直接下 sql 時, 必須將時區考量進去</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-04/query-datetime-by-date/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011-12-30/counter-increment-with-custom-value/">實作 sql 中的數值欄位的遞增(counter increment)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-30T17:07:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011-12-30/counter-increment-with-custom-value/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
+即想在 sql 中實作出</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-30/counter-increment-with-custom-value/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">databse 資料以 yaml 格式匯入/匯出</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
+可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
+
+<h2>yaml_db</h2>
+
+<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-25T15:14:00+08:00" pubdate data-updated="true">Dec 25<span>th</span>, 2011</time>
+        
+         | <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>當我們在專案目錄中執行 &#8220;capify .&#8221; 時, 會產生 Capfile 檔
+在該檔案加上</p>
+
+<figure class='code'><figcaption><span>Capfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="s1">&#39;deploy/assets&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011-12-23/nested-to_json-and-to_xml/">巢狀 (nested) to_json / to_xml 應用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-23T21:40:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2011</time>
+        
+         | <a href="/blog/2011-12-23/nested-to_json-and-to_xml/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-23/nested-to_json-and-to_xml/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -157,23 +481,23 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012-02-21/resque-deploy-worker/">用 resque 實作背景作業 ( 佈署篇)</a>
+        <a href="/blog/2012-03-06/rspec-render-views/">Rspec 設定 request 或 controller 的 spec 中 render view</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-19/resque-mailer/">用 resque 實作背景作業 ( mailer 篇)</a>
+        <a href="/blog/2012-03-04/rspec-file-upload/">Rspec 檔案上傳的測試</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-17/resque-spec/">用 resque 實作背景作業 (測試篇 - Rspec)</a>
+        <a href="/blog/2012-03-02/url-helper-set-host/">Url helper 中自定 host</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-15/resque-basic-usage/">用 resque 實作背景作業 (基本使用篇)</a>
+        <a href="/blog/2012-02-29/factory-girl-callbacks/">Factory Girl 的回呼 (callbacks)</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-13/resque-redis-and-worker-config/">用 resque 實作背景作業 (前置設定篇)</a>
+        <a href="/blog/2012-02-27/factory-girl-for-associations/">factory_girl 中的 model 關連 (association)</a>
       </li>
     
   </ul>
@@ -181,7 +505,7 @@ Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and U
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 115.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 103.75%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 107.5%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 103.75%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 118.75%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 103.75%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 115.0%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 111.25%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 103.75%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 115.0%'>Continuous integration(4)</a>  <a href='/blog/categories/counter' style='font-size: 103.75%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 103.75%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 103.75%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 111.25%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 107.5%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 103.75%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 107.5%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 103.75%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 103.75%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 107.5%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 103.75%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 103.75%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 103.75%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 103.75%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 118.75%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 103.75%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 103.75%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 103.75%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 103.75%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 118.75%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 103.75%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 122.5%'>Rspec(6)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(16)</a>  <a href='/blog/categories/sql' style='font-size: 103.75%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 103.75%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 103.75%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 115.0%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 103.75%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 103.75%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 103.75%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 112.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 103.0%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 106.0%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 103.0%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 115.0%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 103.0%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 115.0%'>Bigtuna(5)</a>  <a href='/blog/categories/capistrano' style='font-size: 109.0%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 106.0%'>Carrierwave(2)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 115.0%'>Continuous integration(5)</a>  <a href='/blog/categories/controller' style='font-size: 103.0%'>Controller(1)</a>  <a href='/blog/categories/counter' style='font-size: 103.0%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 103.0%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 103.0%'>Date(1)</a>  <a href='/blog/categories/delayed-job' style='font-size: 103.0%'>Delayed job(1)</a>  <a href='/blog/categories/deploy' style='font-size: 109.0%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 106.0%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 103.0%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 106.0%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 112.0%'>Factory-girl(4)</a>  <a href='/blog/categories/file-upload' style='font-size: 103.0%'>File-upload(1)</a>  <a href='/blog/categories/fog' style='font-size: 103.0%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 106.0%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 103.0%'>Git-rebase(1)</a>  <a href='/blog/categories/god' style='font-size: 103.0%'>God(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 103.0%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 103.0%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 103.0%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 115.0%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 103.0%'>Model(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 103.0%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 103.0%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 115.0%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 103.0%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 133.0%'>Rspec(11)</a>  <a href='/blog/categories/rspec-controllers' style='font-size: 103.0%'>Rspec-controllers(1)</a>  <a href='/blog/categories/rspec-requests' style='font-size: 103.0%'>Rspec-requests(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(20)</a>  <a href='/blog/categories/sql' style='font-size: 103.0%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 103.0%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 103.0%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 112.0%'>Testing(4)</a>  <a href='/blog/categories/url-helper' style='font-size: 103.0%'>Url-helper(1)</a>  <a href='/blog/categories/validations' style='font-size: 103.0%'>Validations(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 103.0%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 103.0%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 103.0%'>Yaml(1)</a> </span>
 </section>
 
 

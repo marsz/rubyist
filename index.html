@@ -9,9 +9,7 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker
-因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動
-以下將介紹如何將重啟 worker 整合到 &hellip;">
+  <meta name="description" content="rspec rails 中預設是不會 render view 的, 因此 response.body 的內容會是空字串 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +79,308 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-03-06/rspec-render-views/">Rspec 設定 request 或 controller 的 spec 中 render view</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-06T11:05:00+08:00" pubdate data-updated="true">Mar 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-03-06/rspec-render-views/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>rspec rails</code> 中預設是不會 render view 的, 因此 <code>response.body</code> 的內容會是空字串</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-03-06/rspec-render-views/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-03-04/rspec-file-upload/">Rspec 檔案上傳的測試</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T10:45:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-03-04/rspec-file-upload/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>controller</code> 的測試中, 總是免不了要處理檔案上傳, rails 中的測試環境當然也提供了這樣的機制</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-03-04/rspec-file-upload/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-03-02/url-helper-set-host/">Url helper 中自定 host</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-02T10:39:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012-03-02/url-helper-set-host/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>想要吐出 full url 時, 會用 <code>xxx_url</code>, rails 會抓 request 中的 host 做為 url 的 host, 但是當執行環境並非透過 http request (例如 background job), host 得自行指定</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-03-02/url-helper-set-host/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-29/factory-girl-callbacks/">Factory Girl 的回呼 (callbacks)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-29T10:18:00+08:00" pubdate data-updated="true">Feb 29<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-29/factory-girl-callbacks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在寫測試中, 有許多的情境, 可能會需要在產生測試用資料後做許多處理, 因此 <code>Factory Girl</code> 本身也提供了 <code>callback</code> 機制&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-29/factory-girl-callbacks/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-27/factory-girl-for-associations/">factory_girl 中的 model 關連 (association)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-27T09:42:00+08:00" pubdate data-updated="true">Feb 27<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-27/factory-girl-for-associations/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>不論是 <code>one-to-one</code> <code>one-to-many</code> 或 <code>many-to-many</code>, 我們都希望 model 中的關連也能反應到 <code>factory_girl</code> 的定義中</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-27/factory-girl-for-associations/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-25/factory-girl-for-uniqueness-column/">factory_girl 的 validates_uniqueness_of 欄位問題</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-25T09:25:00+08:00" pubdate data-updated="true">Feb 25<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-25/factory-girl-for-uniqueness-column/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>model</code> 中有 <code>validates_uniqueness_of</code> 的欄位, 在 <code>factory_girl</code> 中可透過 <code>sequence</code> 來避免兩次以上的 factory 因 validation 沒過而無法產生假資料的情況</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-25/factory-girl-for-uniqueness-column/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/">Bigtuna 保持 delayed_job 持續執行</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T08:59:00+08:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>BigTuna</code> 是透過 <a href="https://github.com/tobi/delayed_job" target="_blank">delayed_job</a> 讓所有 build 中的 process 的能夠正常運作<br/>
+當 <code>delayed_job</code> 因為某種不明因素終止時, 就得再 ssh 到 server 重啟 <code>delayed_job</code>&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -217,320 +517,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-15/resque-basic-usage/">用 resque 實作背景作業 (基本使用篇)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-15T15:36:00+08:00" pubdate data-updated="true">Feb 15<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-15/resque-basic-usage/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>上篇提到如何進行 redis, resque, worker 的設定安裝
-本篇將介紹基本使用方式</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-15/resque-basic-usage/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-13/resque-redis-and-worker-config/">用 resque 實作背景作業 (前置設定篇)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-13T14:51:00+08:00" pubdate data-updated="true">Feb 13<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-13/resque-redis-and-worker-config/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>resque 是一套可以用來實作 background job 的 gem<br/>
-舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
-以加速前端服務的反應速度<br/>
-resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-13/resque-redis-and-worker-config/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Devise + Omniauth 的 Facebook 登入範例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-11T01:20:00+08:00" pubdate data-updated="true">Feb 11<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-11/devise-omniauth-for-facebook-login/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2<br/>
-直接使用 devise 中的 omniauthable 有許多彈性不足的問題<br/>
-因此小弟參考了網路上的作法, 加上因應某些需求的修改&#8230;</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-11/devise-omniauth-for-facebook-login/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-06/factory-girl-rails-intro/">使用 Factory Girl 產生測試用資料</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-06T16:57:00+08:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-06/factory-girl-rails-intro/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在寫測試的時候, 為了實際測試程式處理資料的正確性<br/>
-免不了要依據資料庫的關聯建立假資料<br/>
-但往往會因為 model 增加了一些 validation 而導致產生假資料的 code, 必須符合驗證而修改<br/>
-當測試的量日漸龐大時, 改起來就會非常麻煩</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-06/factory-girl-rails-intro/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-05/facebook-posters/">Facebook 辦公室的駭客精神標語</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-05T01:04:00+08:00" pubdate data-updated="true">Feb 5<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-05/facebook-posters/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>海報原文在<a href="http://designforfun.com/facebookposters/" target="_blank">這裡</a><br/>
-每一句看了都令人非常的振奮<br/>
-於是就來給它翻譯一下, 網路公司的辦公室都應該貼滿這些標語 XD</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-05/facebook-posters/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-04/rails-rspec-model-spec/">Rails Spec (4) model validations 的 spec</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-04T16:45:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-04/rails-rspec-model-spec/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本篇將介紹以最原始, 沒有用任何外掛下的 model validation spec 寫法<br/>
-若覺得小弟有更好的寫法, 也歡迎不吝指教 :)</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-04/rails-rspec-model-spec/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-03/rails-rspec-pending/">Rails Rspec (3) pending 的使用</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-03T16:06:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-03/rails-rspec-pending/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
-一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-03/rails-rspec-pending/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -558,23 +544,23 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012-02-21/resque-deploy-worker/">用 resque 實作背景作業 ( 佈署篇)</a>
+        <a href="/blog/2012-03-06/rspec-render-views/">Rspec 設定 request 或 controller 的 spec 中 render view</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-19/resque-mailer/">用 resque 實作背景作業 ( mailer 篇)</a>
+        <a href="/blog/2012-03-04/rspec-file-upload/">Rspec 檔案上傳的測試</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-17/resque-spec/">用 resque 實作背景作業 (測試篇 - Rspec)</a>
+        <a href="/blog/2012-03-02/url-helper-set-host/">Url helper 中自定 host</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-15/resque-basic-usage/">用 resque 實作背景作業 (基本使用篇)</a>
+        <a href="/blog/2012-02-29/factory-girl-callbacks/">Factory Girl 的回呼 (callbacks)</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2012-02-13/resque-redis-and-worker-config/">用 resque 實作背景作業 (前置設定篇)</a>
+        <a href="/blog/2012-02-27/factory-girl-for-associations/">factory_girl 中的 model 關連 (association)</a>
       </li>
     
   </ul>
@@ -582,7 +568,7 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 115.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 103.75%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 107.5%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 103.75%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 118.75%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 103.75%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 115.0%'>Bigtuna(4)</a>  <a href='/blog/categories/capistrano' style='font-size: 111.25%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 103.75%'>Carrierwave(1)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 115.0%'>Continuous integration(4)</a>  <a href='/blog/categories/counter' style='font-size: 103.75%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 103.75%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 103.75%'>Date(1)</a>  <a href='/blog/categories/deploy' style='font-size: 111.25%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 107.5%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 103.75%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 107.5%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 103.75%'>Factory-girl(1)</a>  <a href='/blog/categories/fog' style='font-size: 103.75%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 107.5%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 103.75%'>Git-rebase(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 103.75%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 103.75%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 103.75%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 118.75%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 103.75%'>Model(1)</a>  <a href='/blog/categories/model-validations' style='font-size: 103.75%'>Model validations(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 103.75%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 103.75%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 118.75%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 103.75%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 122.5%'>Rspec(6)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(16)</a>  <a href='/blog/categories/sql' style='font-size: 103.75%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 103.75%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 103.75%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 115.0%'>Testing(4)</a>  <a href='/blog/categories/views-partial' style='font-size: 103.75%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 103.75%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 103.75%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 112.0%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 103.0%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 106.0%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 103.0%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 115.0%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 103.0%'>Backup(1)</a>  <a href='/blog/categories/bigtuna' style='font-size: 115.0%'>Bigtuna(5)</a>  <a href='/blog/categories/capistrano' style='font-size: 109.0%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 106.0%'>Carrierwave(2)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 115.0%'>Continuous integration(5)</a>  <a href='/blog/categories/controller' style='font-size: 103.0%'>Controller(1)</a>  <a href='/blog/categories/counter' style='font-size: 103.0%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 103.0%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 103.0%'>Date(1)</a>  <a href='/blog/categories/delayed-job' style='font-size: 103.0%'>Delayed job(1)</a>  <a href='/blog/categories/deploy' style='font-size: 109.0%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 106.0%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 103.0%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 106.0%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 112.0%'>Factory-girl(4)</a>  <a href='/blog/categories/file-upload' style='font-size: 103.0%'>File-upload(1)</a>  <a href='/blog/categories/fog' style='font-size: 103.0%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 106.0%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 103.0%'>Git-rebase(1)</a>  <a href='/blog/categories/god' style='font-size: 103.0%'>God(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 103.0%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 103.0%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 103.0%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 115.0%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 103.0%'>Model(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 103.0%'>Omniauth(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 103.0%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 115.0%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 103.0%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 133.0%'>Rspec(11)</a>  <a href='/blog/categories/rspec-controllers' style='font-size: 103.0%'>Rspec-controllers(1)</a>  <a href='/blog/categories/rspec-requests' style='font-size: 103.0%'>Rspec-requests(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(20)</a>  <a href='/blog/categories/sql' style='font-size: 103.0%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 103.0%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 103.0%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 112.0%'>Testing(4)</a>  <a href='/blog/categories/url-helper' style='font-size: 103.0%'>Url-helper(1)</a>  <a href='/blog/categories/validations' style='font-size: 103.0%'>Validations(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 103.0%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 103.0%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 103.0%'>Yaml(1)</a> </span>
 </section>
 
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rspec-controllers | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/rspec-controllers/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-03-17T11:14:24+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec 設定 request 或 controller 的 spec 中 render view]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views/"/>
+    <updated>2012-03-06T11:05:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views</id>
+    <content type="html"><![CDATA[<p><code>rspec rails</code> 中預設是不會 render view 的, 因此 <code>response.body</code> 的內容會是空字串</p>
+
+<!-- more -->
+
+
+<p>為了讓 response.body 能實際的把 view render 出來, 可以有個別或預設的作法</p>
+
+<p>個別</p>
+
+<p>```ruby
+describe UsersController do
+  render_views
+  it "GET #index" do</p>
+
+<pre><code>get :index
+response.body.should match("foo")
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>預設</p>
+
+<p><code>ruby spec/spec_helper.rb
+RSpec.configure do |config|
+  ....
+  config.render_views
+  ....
+end
+</code></p>
+
+<p>小弟個人較偏好每個 request / controller 的 spec 都要 render_view<br/>
+一方面可以檢驗 view 的正確性<br/>
+若 view 中有使用 helper method, 也可以順便檢驗</p>
+]]></content>
+  </entry>
+  
+</feed>

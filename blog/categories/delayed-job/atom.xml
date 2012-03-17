@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Delayed Job | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/delayed-job/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-03-17T11:14:24+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Bigtuna 保持 delayed_job 持續執行]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/"/>
+    <updated>2012-02-23T08:59:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god</id>
+    <content type="html"><![CDATA[<p><code>BigTuna</code> 是透過 <a href="https://github.com/tobi/delayed_job" target="_blank">delayed_job</a> 讓所有 build 中的 process 的能夠正常運作<br/>
+當 <code>delayed_job</code> 因為某種不明因素終止時, 就得再 ssh 到 server 重啟 <code>delayed_job</code>...</p>
+
+<!-- more -->
+
+
+<p><a href="http://godrb.com/" target="_blank">God</a> 是一套獨立的 <code>rubygems</code> <br/>
+可以讓你在 <code>linux</code> 環境下監控某 process, 並且保持其持續且正常運作<br/>
+因此我們可透過 <code>God</code> 來使 <code>delayed_job</code> 不被意外終止</p>
+
+<h4>安裝</h4>
+
+<p><code>
+sudo su -
+gem install god
+</code></p>
+
+<h4>BigTuna 的 god-ruby 範例檔</h4>
+
+<p><code>ruby
+God.watch do |w|
+  w.uid = "passenger"  # bigtuna 在 linux 下的 user id
+  w.gid = "passenger"  # bigtuna 在 linux 下的 group id
+  w.name = "bigtuna-delayed_job"  # 在 god 中的名稱
+  # 執行 delayed_job 的指令
+  w.start = "cd /path/to/bigtuna &amp;&amp; RAILS_ENV=production ./script/delayed_job start"
+  w.keepalive
+end
+</code></p>
+
+<h4>以 root 身分執行 god</h4>
+
+<p><code>
+god -c delayed_job.rb
+</code></p>
+
+<p>執行後可透過 <code>ps axu|grep "god"</code> 或 <code>ps axu|grep "delayed_job"</code> 看到 <code>god</code> 啟動 <code>delayed_job</code> 的相關 process</p>
+]]></content>
+  </entry>
+  
+</feed>

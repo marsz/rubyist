@@ -2,141 +2,169 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/</loc>
-        <lastmod>2011-12-28T14:37:09+08:00</lastmod>
+        <lastmod>2012-03-17T10:27:41+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/</loc>
-        <lastmod>2011-12-28T14:39:40+08:00</lastmod>
+        <lastmod>2012-03-17T10:28:05+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/</loc>
-        <lastmod>2012-02-04T13:58:52+08:00</lastmod>
+        <lastmod>2012-03-17T10:28:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-28/rake-data-dump-and-load-by-yaml/</loc>
-        <lastmod>2011-12-28T14:35:28+08:00</lastmod>
+        <lastmod>2012-03-17T10:28:57+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/</loc>
-        <lastmod>2011-12-30T17:23:50+08:00</lastmod>
+        <lastmod>2012-03-17T10:29:26+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/</loc>
-        <lastmod>2012-01-04T17:19:07+08:00</lastmod>
+        <lastmod>2012-03-17T10:29:47+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-04/regexp-in-validates-format-of/</loc>
-        <lastmod>2012-01-04T18:07:55+08:00</lastmod>
+        <lastmod>2012-03-17T10:30:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-10/date_format_without_zero/</loc>
-        <lastmod>2012-01-10T22:49:04+08:00</lastmod>
+        <lastmod>2012-03-17T10:30:37+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-10/get-locals-whole-variables-as-hash-in-partial/
         </loc>
-        <lastmod>2012-01-10T23:08:40+08:00</lastmod>
+        <lastmod>2012-03-17T10:30:56+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/
         </loc>
-        <lastmod>2012-02-11T02:46:48+08:00</lastmod>
+        <lastmod>2012-03-17T10:30:28+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-10/carrierwave-guides-with-amazon-s3-and-imagemagick-integration/
         </loc>
-        <lastmod>2012-01-14T18:14:54+08:00</lastmod>
+        <lastmod>2012-03-17T10:31:18+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/
         </loc>
-        <lastmod>2012-02-04T13:58:26+08:00</lastmod>
+        <lastmod>2012-03-17T10:31:43+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/
         </loc>
-        <lastmod>2012-02-03T19:52:36+08:00</lastmod>
+        <lastmod>2012-03-17T10:32:00+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase/</loc>
-        <lastmod>2012-02-03T19:52:22+08:00</lastmod>
+        <lastmod>2012-03-17T10:32:16+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/
         </loc>
-        <lastmod>2012-02-03T20:01:35+08:00</lastmod>
+        <lastmod>2012-03-17T10:32:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install/</loc>
-        <lastmod>2012-02-11T02:50:56+08:00</lastmod>
+        <lastmod>2012-03-17T10:32:55+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/</loc>
-        <lastmod>2012-02-11T02:51:07+08:00</lastmod>
+        <lastmod>2012-03-17T10:33:03+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/
         </loc>
-        <lastmod>2012-02-11T02:51:18+08:00</lastmod>
+        <lastmod>2012-03-17T10:33:09+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-01-30/ci-system-bigtuna-index/</loc>
-        <lastmod>2012-02-11T02:51:29+08:00</lastmod>
+        <lastmod>2012-03-17T10:33:20+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-01/rails-rspec-intro-and-setup/</loc>
-        <lastmod>2012-02-04T16:31:38+08:00</lastmod>
+        <lastmod>2012-03-17T10:33:45+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax/</loc>
-        <lastmod>2012-02-04T16:31:28+08:00</lastmod>
+        <lastmod>2012-03-17T10:34:03+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/</loc>
-        <lastmod>2012-02-04T17:18:01+08:00</lastmod>
+        <lastmod>2012-03-17T10:34:18+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/</loc>
-        <lastmod>2012-02-04T17:15:08+08:00</lastmod>
+        <lastmod>2012-03-17T10:34:35+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-05/facebook-posters/</loc>
-        <lastmod>2012-02-08T10:40:33+08:00</lastmod>
+        <lastmod>2012-03-17T10:34:45+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-06/factory-girl-rails-intro/</loc>
-        <lastmod>2012-02-06T17:30:56+08:00</lastmod>
+        <lastmod>2012-03-17T10:35:03+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/</loc>
-        <lastmod>2012-02-11T03:06:22+08:00</lastmod>
+        <lastmod>2012-03-17T10:35:27+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config/</loc>
-        <lastmod>2012-02-23T19:36:36+08:00</lastmod>
+        <lastmod>2012-03-17T10:35:49+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-15/resque-basic-usage/</loc>
-        <lastmod>2012-02-23T19:34:22+08:00</lastmod>
+        <lastmod>2012-03-17T10:36:10+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-17/resque-spec/</loc>
-        <lastmod>2012-02-24T01:34:40+08:00</lastmod>
+        <lastmod>2012-03-17T10:36:34+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-19/resque-mailer/</loc>
-        <lastmod>2012-02-24T01:54:44+08:00</lastmod>
+        <lastmod>2012-03-17T10:36:56+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker/</loc>
-        <lastmod>2012-02-24T02:32:03+08:00</lastmod>
+        <lastmod>2012-03-17T10:37:27+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/</loc>
+        <lastmod>2012-03-17T10:37:36+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column/</loc>
+        <lastmod>2012-03-17T10:37:54+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations/</loc>
+        <lastmod>2012-03-17T10:38:17+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks/</loc>
+        <lastmod>2012-03-17T10:38:27+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-03-02/url-helper-set-host/</loc>
+        <lastmod>2012-03-17T11:03:43+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload/</loc>
+        <lastmod>2012-03-17T11:03:34+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views/</loc>
+        <lastmod>2012-03-17T11:14:13+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/about/</loc>
@@ -144,10 +172,10 @@
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/archives/</loc>
-        <lastmod>2012-02-24T02:32:03+08:00</lastmod>
+        <lastmod>2012-03-17T11:14:13+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/</loc>
-        <lastmod>2012-02-24T02:32:03+08:00</lastmod>
+        <lastmod>2012-03-17T11:14:13+08:00</lastmod>
     </url>
 </urlset>

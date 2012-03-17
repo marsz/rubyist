@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-02-24T02:32:11+08:00</updated>
+  <updated>2012-03-17T11:14:24+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,333 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec 設定 request 或 controller 的 spec 中 render view]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views/"/>
+    <updated>2012-03-06T11:05:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views</id>
+    <content type="html"><![CDATA[<p><code>rspec rails</code> 中預設是不會 render view 的, 因此 <code>response.body</code> 的內容會是空字串</p>
+
+<!-- more -->
+
+
+<p>為了讓 response.body 能實際的把 view render 出來, 可以有個別或預設的作法</p>
+
+<p>個別</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">UsersController</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">render_views</span>
+</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;GET #index&quot;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">get</span> <span class="ss">:index</span>
+</span><span class='line'>    <span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">should</span> <span class="n">match</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>預設</p>
+
+<figure class='code'><figcaption><span>spec/spec_helper.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">render_views</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>小弟個人較偏好每個 request / controller 的 spec 都要 render_view<br/>
+一方面可以檢驗 view 的正確性<br/>
+若 view 中有使用 helper method, 也可以順便檢驗</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec 檔案上傳的測試]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload/"/>
+    <updated>2012-03-04T10:45:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload</id>
+    <content type="html"><![CDATA[<p><code>controller</code> 的測試中, 總是免不了要處理檔案上傳, rails 中的測試環境當然也提供了這樣的機制</p>
+
+<!-- more -->
+
+
+<h4>範例</h4>
+
+<p>假設要模擬 view 中 <code>&lt;input type="file" name="user[avatar]" /&gt;</code> 的檔案上傳</p>
+
+<figure class='code'><figcaption><span>spec/requests/users_controller_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">querys</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:avatar</span> <span class="o">=&gt;</span> <span class="n">fixture_file_upload</span><span class="p">(</span><span class="s2">&quot;/example.jpg&quot;</span><span class="p">,</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'><span class="n">post</span> <span class="ss">:create</span><span class="p">,</span> <span class="n">querys</span>
+</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">be_success</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>/example.jpg</code> 會抓 <code>spec/fixtures/example.jpg</code> 做為上傳用的範例圖檔<br/>
+<code>image/jpeg</code> 則是 <code>MIME type</code></p>
+
+<p>亦可寫在 <code>factory</code> 中</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Factory</span> <span class="ss">:video_file</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">file</span> <span class="p">{</span> <span class="n">fixture_file_upload</span> <span class="s1">&#39;/test.png&#39;</span><span class="p">,</span> <span class="s1">&#39;image/png&#39;</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">after_create</span> <span class="k">do</span> <span class="o">|</span><span class="n">video</span><span class="p">,</span> <span class="n">proxy</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">proxy</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>相關可參考<a href="http://apidock.com/rails/ActionDispatch/TestProcess/fixture_file_upload" target="_blank">Api Dock</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Url helper 中自定 host]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-02/url-helper-set-host/"/>
+    <updated>2012-03-02T10:39:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-02/url-helper-set-host</id>
+    <content type="html"><![CDATA[<p>想要吐出 full url 時, 會用 <code>xxx_url</code>, rails 會抓 request 中的 host 做為 url 的 host, 但是當執行環境並非透過 http request (例如 background job), host 得自行指定</p>
+
+<!-- more -->
+
+
+<p>rails 的 url helper 有提供參數 <code>:host</code> 可自行指定</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">users_url</span> <span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">&quot;foo.com&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若想要設定為預設, 可在 controller 中 override <code>default_url_options</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">default_url_options</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span><span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">&quot;ohmygod.com&quot;</span><span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Factory Girl 的回呼 (callbacks)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks/"/>
+    <updated>2012-02-29T10:18:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks</id>
+    <content type="html"><![CDATA[<p>在寫測試中, 有許多的情境, 可能會需要在產生測試用資料後做許多處理, 因此 <code>Factory Girl</code> 本身也提供了 <code>callback</code> 機制&#8230;</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:email</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;foo</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">@bar.com&quot;</span> <span class="p">}</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;barbar&quot;</span>
+</span><span class='line'>    <span class="n">password</span> <span class="s2">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="n">after_create</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
+</span><span class='line'>      <span class="c1"># callback code block here</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>詳細使用方式可見 <a href="https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md" target="_blank">官方說明文件</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[factory_girl 中的 model 關連 (association)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations/"/>
+    <updated>2012-02-27T09:42:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations</id>
+    <content type="html"><![CDATA[<p>不論是 <code>one-to-one</code> <code>one-to-many</code> 或 <code>many-to-many</code>, 我們都希望 model 中的關連也能反應到 <code>factory_girl</code> 的定義中</p>
+
+<!-- more -->
+
+
+<p>方法如下:  (brand has many products)</p>
+
+<figure class='code'><figcaption><span>spec/factories/brands.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:brand</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;brand name </span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>spec/factories/products.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:products</span> <span class="k">do</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;product name&quot;</span>
+</span><span class='line'>    <span class="n">brand</span> <span class="k">do</span>
+</span><span class='line'>      <span class="no">Factory</span> <span class="ss">:brand</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>app/models/product.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:brand</span>  <span class="c1"># brand_id</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如此只要每次 <code>Factory(:product)</code> , 該 product 的 brancd 也會透過 brancd 產生, 而不需要再每次的 factory 中去進行關連了 <code>Factory(:product, :brand =&gt; Factory(:brand))</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[factory_girl 的 validates_uniqueness_of 欄位問題]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column/"/>
+    <updated>2012-02-25T09:25:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column</id>
+    <content type="html"><![CDATA[<p><code>model</code> 中有 <code>validates_uniqueness_of</code> 的欄位, 在 <code>factory_girl</code> 中可透過 <code>sequence</code> 來避免兩次以上的 factory 因 validation 沒過而無法產生假資料的情況</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span>spec/factories/users.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:email</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+</span><span class='line'>      <span class="s2">&quot;foo</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">@bar.com&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;barbar&quot;</span>
+</span><span class='line'>    <span class="n">password</span> <span class="s2">&quot;12341234&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>n</code> 為流水號, 因此可用於 <code>number</code> 或 <code>string</code> 類型的 column</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bigtuna 保持 delayed_job 持續執行]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/"/>
+    <updated>2012-02-23T08:59:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god</id>
+    <content type="html"><![CDATA[<p><code>BigTuna</code> 是透過 <a href="https://github.com/tobi/delayed_job" target="_blank">delayed_job</a> 讓所有 build 中的 process 的能夠正常運作<br/>
+當 <code>delayed_job</code> 因為某種不明因素終止時, 就得再 ssh 到 server 重啟 <code>delayed_job</code>&#8230;</p>
+
+<!-- more -->
+
+
+<p><a href="http://godrb.com/" target="_blank">God</a> 是一套獨立的 <code>rubygems</code> <br/>
+可以讓你在 <code>linux</code> 環境下監控某 process, 並且保持其持續且正常運作<br/>
+因此我們可透過 <code>God</code> 來使 <code>delayed_job</code> 不被意外終止</p>
+
+<h4>安裝</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo su -
+</span><span class='line'>gem install god</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>BigTuna 的 god-ruby 範例檔</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">God</span><span class="o">.</span><span class="n">watch</span> <span class="k">do</span> <span class="o">|</span><span class="n">w</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="s2">&quot;passenger&quot;</span>  <span class="c1"># bigtuna 在 linux 下的 user id</span>
+</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">gid</span> <span class="o">=</span> <span class="s2">&quot;passenger&quot;</span>  <span class="c1"># bigtuna 在 linux 下的 group id</span>
+</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;bigtuna-delayed_job&quot;</span>  <span class="c1"># 在 god 中的名稱</span>
+</span><span class='line'>  <span class="c1"># 執行 delayed_job 的指令</span>
+</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="s2">&quot;cd /path/to/bigtuna &amp;&amp; RAILS_ENV=production ./script/delayed_job start&quot;</span>
+</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">keepalive</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>以 root 身分執行 god</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">god</span> <span class="o">-</span><span class="n">c</span> <span class="n">delayed_job</span><span class="o">.</span><span class="n">rb</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>執行後可透過 <code>ps axu|grep "god"</code> 或 <code>ps axu|grep "delayed_job"</code> 看到 <code>god</code> 啟動 <code>delayed_job</code> 的相關 process</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用 resque 實作背景作業 ( 佈署篇)]]></title>
@@ -1662,725 +1989,8 @@ it 裡面必須有 should (或其他 match 語法) 才會構成測試</p>
 
 <p><a href="http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install/">安裝篇</a> - 基本bigtuna安裝<br/>
 <a href="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/">專案設定篇</a> - 設定第一個專案<br/>
-<a href="http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/">進階設定篇</a> - github 整合, email 通知與安全性</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CI server - Bigtuna (進階設定篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/"/>
-    <updated>2012-01-29T12:50:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email</id>
-    <content type="html"><![CDATA[<p>上次提到專案在 bigtuna 上的設定<br/>
-這次要示範:</p>
-
-<ul>
-<li>和 github 整合</li>
-<li>將 build 結果寄送 email</li>
-<li>安全性設定</li>
-</ul>
-
-
-<!-- more -->
-
-
-<h4>一般的 github hook</h4>
-
-<p>專案的編輯頁面中, 有一個欄位叫 &#8220;Hook Name&#8221;<br/>
-用於做 http post request trigger (其實後來發現get也可以)</p>
-
-<p><img src="https://img.skitch.com/20120204-gtdidekib9pitb4yjmyc8rwhjb.png" alt="" /></p>
-
-<p>舉例來說, bigtuna server 的 domain 假設是 bigtina.marsz.tw 的話
-若專案的 hookname 設定為 &#8220;myapp&#8221;<br/>
-則 trigger project build 的 url 則是</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>http://bigtuna.marsz.tw/hooks/build/myapp</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因此只要到 github.com 的專案頁面裡 &#8220;Admin&#8221; -> &#8220;Service Hooks&#8221; -> &#8220;Post-Receive URLs&#8221; 填入該網址即可</p>
-
-<p><img src="https://img.skitch.com/20120204-tc8jni267711r4yi1d7qs3frfw.png" alt="" /></p>
-
-<p>github 會在每次該專案有 push code 上來時, 送 post 到該 url</p>
-
-<p>但常見的情況是, 在 github 上的專案裡有多條分支, 而我們只想針對某條分支有 push 時才進行 trigger</p>
-
-<h4>針對不同分支的 github hook</h4>
-
-<p>參考: <a href="http://bigtuna.appelier.com/configuration.html" target="_blank">http://bigtuna.appelier.com/configuration.html</a> 最下方區塊</p>
-
-<p>到 bigtuna 的專案目錄下, 打開 config/bugtuna.yml 加入</p>
-
-<figure class='code'><figcaption><span>config/bugtuna.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:github_secure</span><span class="p-Indicator">:</span> <span class="s">&quot;abcabc&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重起 bigtuna 後, hook 在 github 上的 url 則改為</p>
-
-<figure class='code'><figcaption><span>config/bugtuna.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">http://bigtuna.marsz.tw/hooks/build/github/abcabc</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&#8220;abcabc&#8221; 是你在 github_secure 填的值<br/>
-因為 github 在送 post 到 url 時, 會帶上 push 的專案以及分支名稱<br/>
-因此 bigtuna 會依據傳送過來的資訊找到對應的 github uri 和 branch 而啟動 build<br/>
-而原先設定的 hook name 在這裡就沒有用到了<br/>
-github_secure 的設定則是多一層簡單的安全性措施</p>
-
-<h4>email config</h4>
-
-<p>首先到 bigtuna 專案中設定 email smtp (以下為 gmail smtp 範例)</p>
-
-<figure class='code'><figcaption><span>config/email.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:address</span><span class="p-Indicator">:</span> <span class="s">&quot;smtp.gmail.com&quot;</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">587</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&#39;your</span><span class="nv"> </span><span class="s">domain&#39;</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:user_name</span><span class="p-Indicator">:</span> <span class="s">&#39;your</span><span class="nv"> </span><span class="s">email&#39;</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:password</span><span class="p-Indicator">:</span> <span class="s">&#39;ur</span><span class="nv"> </span><span class="s">password&#39;</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:authentication</span><span class="p-Indicator">:</span> <span class="s">&#39;plain&#39;</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:enable_starttls_auto</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 email 內容中的 url host</p>
-
-<figure class='code'><figcaption><span>config/bigtuna.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:url_host</span><span class="p-Indicator">:</span> <span class="s">&quot;bigtuna.marsz.tw&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>重起 delayed job</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span> <span class="o">.</span><span class="n">/script</span><span class="o">/</span><span class="n">delayed_job</span> <span class="n">stop</span>
-</span><span class='line'><span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span> <span class="o">.</span><span class="n">/script</span><span class="o">/</span><span class="n">delayed_job</span> <span class="n">start</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 project 中的 hook => mailer 打勾, 然後儲存</p>
-
-<p><img src="https://img.skitch.com/20120204-7tb6yfh51qek718t7ewk4uxkh.png" alt="" /></p>
-
-<p>儲存後會發現原先打勾的地方多了 Configure</p>
-
-<p><img src="https://img.skitch.com/20120204-qjtnx8xgh66rmd95u87yfcnjqt.png" alt="" /></p>
-
-<p>設定 email 時機與對象</p>
-
-<p><img src="https://img.skitch.com/20120204-mcnpxca3ad5r18kb6799m711fk.png" alt="" /></p>
-
-<p>注意: 若要寄給多人, 必須以半型逗號隔開, 不能用換行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">foo</span><span class="vi">@marsz</span><span class="o">.</span><span class="n">tw</span><span class="p">,</span><span class="n">bar</span><span class="vi">@marsz</span><span class="o">.</span><span class="n">tw</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>其他安全性設定</h4>
-
-<p>最簡單的方式可以利用 htpasswd<br/>
-相關設定請參考 <a href="http://doc.norang.ca/apache-basic-auth.html" target="_blank">htpasswd</a><br/>
-設定完成後, github 的 hook url 也必須一同加上帳號密碼</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">user</span><span class="ss">:pssword</span><span class="vi">@bigtuna</span><span class="o">.</span><span class="n">marsz</span><span class="o">.</span><span class="n">tw</span><span class="o">/</span><span class="n">hooks</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">github</span><span class="o">/</span><span class="n">abcabc</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CI server - Bigtuna (專案設定篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project/"/>
-    <updated>2012-01-28T12:06:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-28/ci-system-bigtuna-setup-project</id>
-    <content type="html"><![CDATA[<p>上回提到 Bigtuna 的安裝<br/>
-這次示範如何針對一個專案的自動化測試進行設定</p>
-
-<!-- more -->
-
-
-<p>首先點選右上角的 &#8220;new project&#8221;</p>
-
-<p><img src="https://img.skitch.com/20120204-gxm36jskatwejffbr9emf3h13.png" alt="" /></p>
-
-<p>填好重點資訊, 儲存</p>
-
-<p><img src="https://img.skitch.com/20120204-nkft6nwwm4323bd4grrix5xxdr.png" alt="" /></p>
-
-<p>儲存後仍會停留在同一頁, 拉到下面會看到</p>
-
-<p><img src="https://img.skitch.com/20120204-bh4iib8dj31ac9wsymi4nc44m7.png" alt="" /></p>
-
-<p>到目前為止,bigtuna可自動將專案從 github clone 下來(並且針對設定的分支)<br/>
-因此這裡的 configuration 則是在 clone 下來後要做的動作(一般就是跑測試啦)</p>
-
-<p>以下提供小弟的 steps 範例</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># 用 rvm 切換到專案所使用的 ruby 版本
-</span><span class='line'>rvm 1.9.2-p290
-</span><span class='line'># 將專案的設定檔 copy 到 clone 下來的專案目錄中
-</span><span class='line'>cp /home/marsz/projects/myapp/config/database.yml %build_dir%/config/database.yml
-</span><span class='line'># bundle install for test 環境
-</span><span class='line'>bundle install RAILS_ENV=test
-</span><span class='line'># 將資料庫schema load 到 mysql 中
-</span><span class='line'>bundle exec rake db:setup RAILS_ENV=test
-</span><span class='line'># 進行 rspec 測試
-</span><span class='line'>bundle exec rake spec RAILS_ENV=test</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定檔的部份, 因為我們不會將 db user/password 和 email smtp config 等設定 commit 到版本管理中, 因此每個專案在 bigtuna server 上的設定檔都要先手動建立, 以上述範例, 我將 myapp 這個專案的設定檔固定放在 /home/marsz/projects/myspp/config 下</p>
-
-<p>而 %build_dir% 則是 bigtuna 提供的變數, 指向到每次 clone myapp 下來的臨時目錄</p>
-
-<p>此外, 所有指令的環境都是在 test 下, 因此 config 設定也都必須針對 test</p>
-
-<p>&#8220;rake spec&#8221; 設針對 gem Rspec 所跑的自動化測試, 也是測試的重點所在, 前面的步驟都是為了讓 Rspec 能順利跑起來</p>
-
-<p>儲存後回到 &#8220;Home&#8221; 會看到專案列表, 在 bigtuna 中, 顏色的含意如下:<br/>
-藍色 - 尚未執行<br/>
-黃色 - 執行中
-綠色 - 執行完畢 (沒error)<br/>
-紅色 - 執行完畢 (有error)</p>
-
-<p><img src="https://img.skitch.com/20120204-rxha851d97n1bi7kjjjhtt5hef.png" alt="" /></p>
-
-<p>點進去 project 後, 右上角有一個 &#8220;BUILD NOW&#8221;, 可進行手動 build</p>
-
-<p><img src="https://img.skitch.com/20120204-mi4mgi3fwswdwg5xchaa3gss9c.png" alt="" /></p>
-
-<p>點了 &#8220;BUILD NOW&#8221; 我們就會看到專案開始進行 build</p>
-
-<p><img src="https://img.skitch.com/20120204-pkhykjqc63thr3rkduqnymbus.png" alt="" /></p>
-
-<p>若 build 結果有問題, 會看到&#8221;紅燈&#8221;, 點進去可以看到該 build 出現的錯誤訊息</p>
-
-<p><img src="https://img.skitch.com/20120204-fi6b2tte3qs7x19fgjyu8h9wpa.png" alt="" /><br/>
-<img src="https://img.skitch.com/20120204-ks36ja1g5i4wydaiq8qxjdrke4.png" alt="" /></p>
-
-<p>如此一個專案的 CI 設定算是完成了<br/>
-下一篇將介紹如何自動化進行 build, 整合 github 與 email 通知</p>
-
-<h5>補充說明</h5>
-
-<p>若你在 github 上的專案是 private 的話<br/>
-必須讓 ci server 能夠 ssh github<br/>
-相關設定可參考<a href="http://help.github.com/mac-set-up-git/" target="_blank">官網說明</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CI server - Bigtuna (安裝篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install/"/>
-    <updated>2012-01-27T11:17:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-27/ci-system-bigtuna-install</id>
-    <content type="html"><![CDATA[<p>CI 全名 &#8220;Continuous Interation&#8221;<br/>
-用於開發流程中的一種管理技巧<br/>
-在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中<br/>
-相關介紹可參考 ihower 的 <a href="http://ihower.tw/rails3/testing.html" target="_blank">測試 Testing</a><br/>
-今天要介紹的則是用於 CI system 的 Bigtuna</p>
-
-<!-- more -->
-
-
-<h5>參考官方文件</h5>
-
-<p><a href="http://bigtuna.appelier.com/" target="_blank">http://bigtuna.appelier.com/</a></p>
-
-<h5>安裝步驟</h5>
-
-<p>從 github clone</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/appelier/bigtuna.git
-</span><span class='line'>cd bigtuna</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 Gemfile</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>vim Gemfile</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2012.1.27 筆記: 因為 bigtuna 目前採用 rails 3.0.3, 而現行 rails 最新版為 3.1.2, 有許多 gem 因應更新, 而導致 3.0.3 無法使用最新版的 gem, 因此下列設定是針對 3.0.3 而做的版本修正, 若 bigtuna 有更新 rails 版本, 則下列的範例可能會不適用</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s2">&quot;mysql2&quot;</span><span class="p">,</span> <span class="s2">&quot;0.2.6&quot;</span>
-</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;delayed_job&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 2.1.4&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 config/database.yml 以 mysql 為例, 僅供參考</p>
-
-<figure class='code'><figcaption><span>config/database.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">production</span><span class="p">:</span>
-</span><span class='line'>  <span class="n">adapter</span><span class="p">:</span> <span class="n">mysql2</span>
-</span><span class='line'>  <span class="n">encoding</span><span class="p">:</span> <span class="n">utf8</span>
-</span><span class='line'>  <span class="n">reconnect</span><span class="p">:</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="n">database</span><span class="p">:</span> <span class="n">bigtuna_production</span>
-</span><span class='line'>  <span class="n">pool</span><span class="p">:</span> <span class="mi">5</span>
-</span><span class='line'>  <span class="n">username</span><span class="p">:</span> <span class="s2">&quot;db_user&quot;</span>
-</span><span class='line'>  <span class="n">password</span><span class="p">:</span> <span class="s2">&quot;db_password&quot;</span>
-</span><span class='line'>  <span class="n">host</span><span class="p">:</span> <span class="s2">&quot;db_host&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>安裝</p>
-
-<figure class='code'><figcaption><span>config/database.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="n">install</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:create</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">db</span><span class="ss">:schema:load</span> <span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>啟動 delayed job</p>
-
-<figure class='code'><figcaption><span>config/database.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RAILS_ENV</span><span class="o">=</span><span class="n">production</span> <span class="o">.</span><span class="n">/script</span><span class="o">/</span><span class="n">delayed_job</span> <span class="n">start</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>完成!!!<br/>
-透過 web server 連線後, 看到以下畫面就表示 ok 啦!!<br/>
-<img src="https://img.skitch.com/20120204-dayqp1qsffq3cnei1fgcpi3e2d.png" width="700" /><br/>
-下一篇將介紹如何設定專案</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[rake assets:precompile 時出現 stack level too deep 的訊息]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/"/>
-    <updated>2012-01-24T19:53:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep</id>
-    <content type="html"><![CDATA[<p>上禮拜終於要把服務佈署上去了<br/>
-結果在執行 precompile 時遇到錯誤訊息如下:</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake aborted!
-</span><span class='line'>stack level too deep</span></code></pre></td></tr></table></div></figure>
-
-
-<p>經過一陣搜索後發現, assets 檔案在同層目錄中, 不能有檔名和目錄名相同的情形<br/>
-例如</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>app/assets/admin/foo.scss
-</span><span class='line'>app/assets/admin.scss</span></code></pre></td></tr></table></div></figure>
-
-
-<p>主要是因為我的 admin.scss 是用來作 layout file 的
-其內容</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="c">/*</span>
-</span><span class='line'><span class="c"> *= require_tree ./admin</span>
-</span><span class='line'><span class="c">*/</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>於是在 precompile 時就發生了悲劇 :p<br/>
-後來將檔名更換後就沒問題了</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[git pull 時請愛用 rebase]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase/"/>
-    <updated>2012-01-20T19:44:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase</id>
-    <content type="html"><![CDATA[<p>因為
-git pull = git fetch + git merge (remote branch merge to local branch)
-而 merge 往往會造成線圖上產生無謂的分支 (可參考 <a href="http://ihower.tw/blog/archives/3843" target="_blank">ihower 大大的 rebase 文章</a> )</p>
-
-<!-- more -->
-
-
-<p>因此除了一般的 feture branch merge 時透過 rebase 外<br/>
-我們對內也會要求 pull 時用 rebase</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git pull --rebase</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若覺得每次加都很麻煩可以在專案的 .git/config 加上</p>
-
-<figure class='code'><figcaption><span>.git/config</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="n">branch</span> <span class="s2">&quot;master&quot;</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">remote</span> <span class="o">=</span> <span class="n">origin</span>
-</span><span class='line'>  <span class="n">merge</span> <span class="o">=</span> <span class="n">refs</span><span class="o">/</span><span class="n">heads</span><span class="o">/</span><span class="n">master</span>
-</span><span class='line'>  <span class="n">rebase</span> <span class="o">=</span> <span class="kp">true</span> <span class="c1"># 這行</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若覺得每個專案都要加很麻煩, 可以在 ~/.gitconfig 加上</p>
-
-<figure class='code'><figcaption><span>~/.gitconfig</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="n">branch</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">autosetuprebase</span> <span class="o">=</span> <span class="n">always</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[透過rebase -i, reset, revert還原某個commit的方法]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/"/>
-    <updated>2012-01-17T18:56:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-17/git-reset-and-revert-to-rollback-commit</id>
-    <content type="html"><![CDATA[<p>個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法</p>
-
-<p>commit 如下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E</span></code></pre></td></tr></table></div></figure>
-
-
-<p>想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback)</p>
-
-<!-- more -->
-
-
-<h5>用 git revert</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git revert E
-</span><span class='line'>git revert D</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G</span></code></pre></td></tr></table></div></figure>
-
-
-<p>F 是還原 commit E 修改結果的 commit<br/>
-G 是還原 commit D 修改結果的 commit<br/>
-因此 revert 只會讓 commit 繼續往前<br/>
-優點是可以針對某個 commit 進行還原 並且留下還原記錄</p>
-
-<h5>用 rebase -i</h5>
-
-<p>有關 rebase -i 的詳細使用方式可以參考<a href="http://blog.yorkxin.org/2011/07/29/git-rebase/" target="_blank">這篇</a></p>
-
-<p>假如想要抽掉某個 commit 又不想留下記錄, rebase -i 就很好用了</p>
-
-<p>假如只想要還原 D 變成 A -> B -> C -> E</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git rebase -i C</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這時候會出現文字編輯</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>pick D xxx
-</span><span class='line'>pick E ooo</span></code></pre></td></tr></table></div></figure>
-
-
-<p>把 pick D xxx 整列移除後儲存就可以了
-若中間有遇到衝突則必須自行修正後再</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git add .
-</span><span class='line'>git rebase --continue</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>用 reset</h5>
-
-<p>用於做整段 commits 的還原<br/>
-例如希望還原到 B commit  以後的狀態變成</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B  </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git reset B</span></code></pre></td></tr></table></div></figure>
-
-
-<p>則 git 會將 log 中的 C, D, E 都清除<br/>
-但檔案內容沒有任何變動, 因此會看到 C, D, E 修改的檔案處在 unstaged 階段<br/>
-若針對部分檔案還原可以用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout [file path]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若要全部還原可用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout -f</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>結論</h4>
-
-<p>還沒 push 前, 個人傾向不產生太多 commit<br/>
-因次我都會用 rebase -i 進行編修, 順便合併或reword 一些 commit</p>
-
-<p>某個特殊情況, 例如發現某個 commit 裡面包含了不相干的檔案, 欲重新 commit 時<br/>
-就會先用 rebase -i 把欲修改的 commit 換到後面(較新), 然後再用 reset 重新 stage + commit</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[我的 capistrano 完整設定檔說明]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared/"/>
-    <updated>2012-01-14T16:09:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-01-14/my-capistrano-config-with-multistage-apache-restart-assets-precompile-and-symlink-shared</id>
-    <content type="html"><![CDATA[<p>capistrano 是一套強大的佈署工具, 今天提供小弟的設定檔內容給大家參考</p>
-
-<!-- more -->
-
-
-<p>rvm 和 bundler</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vg">$:</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;./lib&#39;</span><span class="p">,</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;rvm_path&#39;</span><span class="o">]</span><span class="p">))</span> <span class="c1"># Add RVM&#39;s lib directory to the load path.</span>
-</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;rvm/capistrano&quot;</span> <span class="c1"># Load RVM&#39;s capistrano plugin.</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;bundler/capistrano&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>capistrano color, 讓佈署過程中的訊息內容上色<br/>
-Gemfile 必須先加上 gem &#8216;capistrano_colors&#8217;</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">begin</span>
-</span><span class='line'>  <span class="nb">require</span> <span class="s1">&#39;capistrano_colors&#39;</span>
-</span><span class='line'><span class="k">rescue</span> <span class="no">LoadError</span>
-</span><span class='line'>  <span class="nb">puts</span> <span class="s2">&quot;`gem install capistrano_colors` to get output more userfriendly.&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>cron 設定, 透過 whenever gem 在 deploy 時, 更新 cron<br/>
-Gemfile 要有 gem &#8216;whenever&#8217;</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;whenever/capistrano&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>multistages 設定, 讓 server 端的設定和佈署工作各自獨立管理, 同時資源佈署多個 server</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;capistrano/ext/multistage&#39;</span>
-</span><span class='line'><span class="n">set</span> <span class="ss">:stages</span><span class="p">,</span>        <span class="sx">%w(staging production)</span>
-</span><span class='line'><span class="n">set</span> <span class="ss">:default_stage</span><span class="p">,</span> <span class="s2">&quot;staging&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>基本設定, 包含 git</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:application</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span>
-</span><span class='line'><span class="n">set</span> <span class="ss">:repository</span><span class="p">,</span>  <span class="s2">&quot;git@github.com:marsz/foo.git&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">set</span> <span class="ss">:scm</span><span class="p">,</span> <span class="ss">:git</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">set</span> <span class="ss">:use_sudo</span><span class="p">,</span> <span class="kp">false</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 deploy:restart, capistrano 預設是空的, 所以重起 rack 的部份一定要自己寫, 以下範例以 <a href="http://www.modrails.com/documentation/Users%20guide%20Apache.html#_redeploying_restarting_the_ruby_on_rails_application" target="_blank">passenger + apache</a> 的重啟方式做為參考</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># namespace :deploy 內</span>
-</span><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
-</span><span class='line'>  <span class="c1"># .....</span>
-</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">run</span> <span class="s2">&quot;touch </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">/tmp/restart.txt&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="c1"># .....</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 symlink_shared, 有一些沒進 version control 的 config 檔案, 要在佈署時, link 過去, 例如 config/database.yml, 以下僅供參考, 實際 link 內容須自己寫</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># namespace :deploy 內</span>
-</span><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span>
-</span><span class='line'>  <span class="c1"># ....</span>
-</span><span class='line'>  <span class="n">task</span> <span class="ss">:symlink_shared</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:app</span><span class="o">]</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">config_files</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:database</span><span class="p">,</span> <span class="ss">:redis</span><span class="o">]</span>
-</span><span class='line'>    <span class="n">symlink_hash</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span class='line'>    <span class="n">config_files</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">fname</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">from</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">shared_path</span><span class="si">}</span><span class="s2">/config/</span><span class="si">#{</span><span class="n">fname</span><span class="si">}</span><span class="s2">.yml&quot;</span>
-</span><span class='line'>      <span class="n">to</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">release_path</span><span class="si">}</span><span class="s2">/config/</span><span class="si">#{</span><span class="n">fname</span><span class="si">}</span><span class="s2">.yml&quot;</span>
-</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;ln -s </span><span class="si">#{</span><span class="n">from</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">to</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="c1"># ....</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># 把 symlink_shared 內容掛進去 deploy 中</span>
-</span><span class='line'><span class="n">before</span> <span class="s2">&quot;bundle:install&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:symlink_shared&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>tail log, 要線上 debug 時可用</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">task</span> <span class="ss">:tail_log</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">run</span> <span class="s2">&quot;tail -f -n 100 </span><span class="si">#{</span><span class="n">shared_path</span><span class="si">}</span><span class="s2">/log/</span><span class="si">#{</span><span class="n">rails_env</span><span class="si">}</span><span class="s2">.log&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># 執行 cap production tail_log 即可</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用了 multistage 後, 各個 server 的設定檔必須放在 config/deploy/ 下, 檔名對應 stage 名稱<br/>
-例如 config/deploy/production.rb
-以下為 stage 設定檔內容</p>
-
-<p>預設 rails env</p>
-
-<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:rails_env</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>github 分支</p>
-
-<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:branch</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ssh 登入相關, 建議多利用 <a href="http://www.eng.cam.ac.uk/help/jpmg/ssh/authorized_keys_howto.html" target="_blank"> SSH 免密碼登入 </a></p>
-
-<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:user</span><span class="p">,</span> <span class="s1">&#39;marsz&#39;</span>
-</span><span class='line'><span class="n">set</span> <span class="ss">:domain</span><span class="p">,</span> <span class="s1">&#39;xxx.com&#39;</span>
-</span><span class='line'><span class="n">server</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ss">:web</span><span class="p">,</span> <span class="ss">:app</span><span class="p">,</span> <span class="ss">:db</span><span class="p">,</span> <span class="ss">:primary</span> <span class="o">=&gt;</span> <span class="kp">true</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>佈署的 dir path</p>
-
-<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:deploy_to</span><span class="p">,</span> <span class="s2">&quot;/path/to/app&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>佈署指令</p>
-
-<figure class='code'><figcaption><span>config/deploy/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cap</span> <span class="n">production</span> <span class="n">setup</span> <span class="c1"># 第一次佈署環境建立</span>
-</span><span class='line'><span class="n">cap</span> <span class="n">production</span> <span class="n">deploy</span> <span class="c1"># 進行佈署</span>
-</span><span class='line'><span class="n">cap</span> <span class="n">production</span> <span class="n">deploy</span><span class="ss">:migrations</span> <span class="c1"># 進行佈署並且跑 migration</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若想要在 cap deploy 時也執行 rake assets:precompile<br/>
-可以參考 <a href="http://rubyist.marsz.tw/blog/2011-12-25/assets-precompile-in-capistrano-deploy/" target="_blank">這篇</a></p>
+<a href="http://rubyist.marsz.tw/blog/2012-01-29/ci-system-bigtuna-github-interation-and-email/">進階設定篇</a> - github 整合, email 通知與安全性<br/>
+<a href="http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/">透過 God 自動重啟 delayed_job</a> - 讓 delayed_job 有不死之身</p>
 ]]></content>
   </entry>
   
