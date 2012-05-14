@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-03-17T11:14:24+08:00</updated>
+  <updated>2012-05-14T13:40:45+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,114 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用 backup gem 做自動化備份]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/"/>
+    <updated>2012-03-08T11:57:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-08/backup-gem</id>
+    <content type="html"><![CDATA[<p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
+和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
+
+<!-- more -->
+
+
+<p><code>backup</code> 的特色:</p>
+
+<ol>
+<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
+<li>可備份檔案、目錄</li>
+<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
+</ol>
+
+
+<p>範例檔的備份標的:</p>
+
+<ol>
+<li><code>Mysql</code></li>
+<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
+<li>備份檔案上傳至 <code>Amazon S3</code></li>
+</ol>
+
+
+<h4>安裝</h4>
+
+<p><code>gem install backup</code></p>
+
+<h4>範例</h4>
+
+<p>打開空檔案即可使用</p>
+
+<p>```ruby backup_config.rb
+Backup::Model.new(:my_app, 'db data of my app') do
+  # mysql 備份
+  database MySQL do |db|</p>
+
+<pre><code>db.name               = "my_app_db"
+db.username           = "root"
+db.password           = "12341234"
+db.host               = "127.0.0.1"
+db.port               = 3306
+db.socket             = "/tmp/mysql.sock"
+</code></pre>
+
+<p>  end</p>
+
+<p>  # user 頭像檔案<br/>
+  archive :uploads do |archive|</p>
+
+<pre><code>archive.add "/path/to/my_app/public/uploads"
+</code></pre>
+
+<p>  end</p>
+
+<p>  # 上傳至 S3<br/>
+  store_with S3 do |s3|</p>
+
+<pre><code>s3.access_key_id      = "12341234"
+s3.secret_access_key  = "!@#$%^&amp;*("
+s3.region             = "us-east-1"
+s3.bucket             = "my_app_backup"
+s3.path               = '/'
+s3.keep               = 50
+</code></pre>
+
+<p>  end</p>
+
+<p>  # 壓縮打包設定
+  compress_with Gzip do |compression|</p>
+
+<pre><code>compression.best = true
+compression.fast = false
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>執行</p>
+
+<p><code>ruby
+backup perform -t my_app -c backup_config.rb
+</code></p>
+
+<p>就可進行備份</p>
+
+<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
+另外再提供儲存於 local disk 的範例</p>
+
+<p>```ruby backup_config.rb
+  store_with Local do |local|</p>
+
+<pre><code>local.path = "/path/to/back/dir"
+local.keep = 50
+</code></pre>
+
+<p>  end
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rspec 設定 request 或 controller 的 spec 中 render view]]></title>
@@ -159,109 +267,6 @@ end
 ```</p>
 
 <p><code>n</code> 為流水號, 因此可用於 <code>number</code> 或 <code>string</code> 類型的 column</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 resque 實作背景作業 ( 佈署篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker/"/>
-    <updated>2012-02-21T01:56:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker</id>
-    <content type="html"><![CDATA[<p>透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker<br/>
-因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動<br/>
-以下將介紹如何將重啟 worker 整合到 capistrano 中</p>
-
-<!-- more -->
-
-
-<h4>將 worker 丟背景執行的方法</h4>
-
-<p>resque 1.9 以上有提供參數 :)</p>
-
-<p><code>
-BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work
-</code></p>
-
-<p>背景的 worker 要留一下 pid file, 以方便 kill</p>
-
-<p><code>
-PIDFILE=./resque.pid BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work
-</code></p>
-
-<h4>整合 capistrano</h4>
-
-<p>deploy 中加 restart_resque 的 task</p>
-
-<p>```ruby config/deploy.rb
-namespace :deploy do
-  # .....
-  task :restart_resque, :roles => :app do</p>
-
-<pre><code>queues = [:foo_queue, :barbar]
-queues.each do |queue|
-  pid_file = "#{current_path}/tmp/pids/resque-#{queue}.pid"    
-  run "test -f #{pid_file} &amp;&amp; cd #{current_path} &amp;&amp; kill -s QUIT `cat #{pid_file}` || rm -f #{pid_file}"
-  run "cd #{current_path} &amp;&amp; PIDFILE=#{pid_file} RAILS_ENV=#{rails_env} BACKGROUND=yes QUEUE=#{queue} bundle exec rake environment resque:work"
-end
-</code></pre>
-
-<p>  end
-  #...
-end
-```</p>
-
-<p>上面的例子是以一條 queue 配一個 worker 的方式執行，若要通通塞一個 worker 就 QUEUE=* 吧 XD</p>
-
-<p>restart app 後就 restart resque worker 吧!!</p>
-
-<p><code>ruby config/deploy.rb
-after 'deploy:restart', 'deploy:restart_resque'
-</code></p>
-
-<h4>有關啟動 worker 的參數</h4>
-
-<p>resque 提供了許多參數，讓你可以依照不同的需求執行worker，底下將介紹</p>
-
-<h6>將 worker 執行的結果輸出</h6>
-
-<p>debug 很好用，但個人還是推薦用 rspec 去 debug 吧 XD</p>
-
-<p><code>ruby
-VVERBOSE=1 QUEUE=* bundle exec rake environment resque:work
-</code></p>
-
-<h6>指定 queue (一條或多條)</h6>
-
-<p>多條可以逗號隔開</p>
-
-<p><code>ruby
-QUEUES=file_serve,warm_cache bundle exec rake environment resque:work
-</code></p>
-
-<p>* 則是所有的 queue</p>
-
-<p><code>ruby
-QUEUES=* bundle exec rake environment resque:work
-</code></p>
-
-<h6>polling 的頻率</h6>
-
-<p>針對即時性高的需求,以秒計,預設為 5 秒</p>
-
-<p><code>
-INTERVAL=0.1 QUEUE=foo bundle exec rake environment resque:work
-</code></p>
-
-<h6>多個 worker 同步執行</h6>
-
-<p><code>
-COUNT=5 QUEUE=* bundle exec rake environment resque:workers
-</code></p>
-
-<p>但官方推薦用 gem "god" 來執行多個 worker<br/>
-相關可參考 <a href="https://github.com/defunkt/resque/blob/master/examples/god/resque.god" target="_blank">官方範例</a><br/>
-god 也可以用來解決 worker 掛掉的問題<br/>
-有關 god 的整合, 有空再分享 :p</p>
 ]]></content>
   </entry>
   

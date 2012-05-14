@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Reading | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/reading/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-05-14T13:40:45+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[讀書心得: 刻意練習(1)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1/"/>
+    <updated>2012-05-14T12:28:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1</id>
+    <content type="html"><![CDATA[<p>博客來: <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601" target="_blank">http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601</a><br/>
+原書名為 <code>我比別人更認真</code>, 標題下 <code>刻意練習</code> 是因為這是本書的主軸<br/>
+我大約在 2010 年中買來看完, 覺得和 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010482162" target="_blank"><code>Rework</code></a> 一樣都是值得一讀再讀的好書 :)</p>
+
+<!-- more -->
+
+
+<h3>前言</h3>
+
+<p>一~三章舉證不少卓越人士和一般人之間的差異，天賦的因素幾乎是微乎其微，影響最深遠的差異在於 <code>你花了多少時間努力</code></p>
+
+<p>第四章則是本書重點的開始，以一位著名的足球運動員為例，說明努力是如何扭轉態勢...</p>
+
+<h5>努力通常不是卓越的保證</h5>
+
+<p>因此本書大量研究了各種卓越人士的案例，嘗試從其中找出 "努力的方法"，因為不努力是絕對無法邁向頂尖的!!</p>
+
+<h5>自發練習</h5>
+
+<p>大量的統計報告指出，卓越人士和一般人接受訓練的時間是差不多的，智商.環境.生活也都沒有顯著差異。而要提昇表現水準，<code>自發練習</code> 占了最重要的因素。以書中為例，卓越的小提琴家平均獨自練習的時間遠遠多於一般的小提琴家。</p>
+
+<h5>自發練習多半集中在上午</h5>
+
+<p>為了成為頂尖，必須安排固定的時間才能做大量練習，因此多半會選擇在"精神狀況較佳"的狀態下進行自發練習。而我個人對此的解讀是 <code>剛睡醒的2 ~ 3小時內</code>，這段時間身心都處在最佳狀態，沒有任何時間比這時候做自發練習更好了。這也可以解釋為什麼成功人士都在早上六起點起床(甚至更早)，利用早晨這 1~2 小時完成當天最重要的工作，然後才準備去上班。</p>
+
+<h5>睡得比較多</h5>
+
+<p>因為投入於自發練習的時間較長較集中，因此卓越人士也比平常人更耗費心力，所以為了保持在最佳狀態下做練習，自然睡得就比較多啦</p>
+
+<h5>十年法則</h5>
+
+<p>頂尖表現者的研究發現一個基調: 不管這些人是誰，也不管他們表現如此精進的原因為何，<code>他們都是經過多年</code>才變得如此出眾，無一例外。也因此說明了許多科學家或作家偉大的成果或作品都是在二十年以上的潛心努力後才問世。這和不久前看到的 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010516443" target="_blank"><code>一萬小時法則</code></a> 呼應。</p>
+
+<h5>刻意練習</h5>
+
+<p>矛盾的是，花在自發練習的時間長並不代表一定能有卓越表現，而這問題在於 <code>對練習定義的模糊</code>，所謂的練習並非是我們所想的"熟能生巧"這麼簡單，而是一套更為具體更有架構的 <code>刻意練習</code>，這也是本書從第五章開始所帶出的重點.</p>
+]]></content>
+  </entry>
+  
+</feed>

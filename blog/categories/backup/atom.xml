@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Backup | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/backup/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-03-17T11:14:24+08:00</updated>
+  <updated>2012-05-14T13:40:45+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,114 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用 backup gem 做自動化備份]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/"/>
+    <updated>2012-03-08T11:57:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-08/backup-gem</id>
+    <content type="html"><![CDATA[<p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
+和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
+
+<!-- more -->
+
+
+<p><code>backup</code> 的特色:</p>
+
+<ol>
+<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
+<li>可備份檔案、目錄</li>
+<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
+</ol>
+
+
+<p>範例檔的備份標的:</p>
+
+<ol>
+<li><code>Mysql</code></li>
+<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
+<li>備份檔案上傳至 <code>Amazon S3</code></li>
+</ol>
+
+
+<h4>安裝</h4>
+
+<p><code>gem install backup</code></p>
+
+<h4>範例</h4>
+
+<p>打開空檔案即可使用</p>
+
+<p>```ruby backup_config.rb
+Backup::Model.new(:my_app, 'db data of my app') do
+  # mysql 備份
+  database MySQL do |db|</p>
+
+<pre><code>db.name               = "my_app_db"
+db.username           = "root"
+db.password           = "12341234"
+db.host               = "127.0.0.1"
+db.port               = 3306
+db.socket             = "/tmp/mysql.sock"
+</code></pre>
+
+<p>  end</p>
+
+<p>  # user 頭像檔案<br/>
+  archive :uploads do |archive|</p>
+
+<pre><code>archive.add "/path/to/my_app/public/uploads"
+</code></pre>
+
+<p>  end</p>
+
+<p>  # 上傳至 S3<br/>
+  store_with S3 do |s3|</p>
+
+<pre><code>s3.access_key_id      = "12341234"
+s3.secret_access_key  = "!@#$%^&amp;*("
+s3.region             = "us-east-1"
+s3.bucket             = "my_app_backup"
+s3.path               = '/'
+s3.keep               = 50
+</code></pre>
+
+<p>  end</p>
+
+<p>  # 壓縮打包設定
+  compress_with Gzip do |compression|</p>
+
+<pre><code>compression.best = true
+compression.fast = false
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>執行</p>
+
+<p><code>ruby
+backup perform -t my_app -c backup_config.rb
+</code></p>
+
+<p>就可進行備份</p>
+
+<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
+另外再提供儲存於 local disk 的範例</p>
+
+<p>```ruby backup_config.rb
+  store_with Local do |local|</p>
+
+<pre><code>local.path = "/path/to/back/dir"
+local.keep = 50
+</code></pre>
+
+<p>  end
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[databse 資料以 yaml 格式匯入/匯出]]></title>

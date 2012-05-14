@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>用 backup gem 做自動化備份 - 黃金俠</title>
+  <meta name="author" content="MarsZ">
+
+  
+  <meta name="description" content="source: https://github.com/meskyanichi/backup
+和 God 一樣是一個獨立的 gem，因此也可用於其他語言 backup 的特色: 可備份 Redis、MongoDB、Mysql 等 DB
+可備份檔案、目錄
+備份可儲存於 local disk、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="黃金俠" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27972021-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">黃金俠</a></h1>
+  
+    <h2>Ruby on Rails / Rubygems / Git</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rubyist.marsz.tw" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首頁</a></li>
+  <li><a href="/blog/archives">所有文章</a></li>
+  <!--
+  <li><a href="/pages/about">關於我</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">用 backup gem 做自動化備份</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-08T11:57:00+08:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
+和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
+
+<!-- more -->
+
+
+<p><code>backup</code> 的特色:</p>
+
+<ol>
+<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
+<li>可備份檔案、目錄</li>
+<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
+</ol>
+
+
+<p>範例檔的備份標的:</p>
+
+<ol>
+<li><code>Mysql</code></li>
+<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
+<li>備份檔案上傳至 <code>Amazon S3</code></li>
+</ol>
+
+
+<h4>安裝</h4>
+
+<p><code>gem install backup</code></p>
+
+<h4>範例</h4>
+
+<p>打開空檔案即可使用</p>
+
+<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Backup</span><span class="o">::</span><span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:my_app</span><span class="p">,</span> <span class="s1">&#39;db data of my app&#39;</span><span class="p">)</span> <span class="k">do</span>
+</span><span class='line'>  <span class="c1"># mysql 備份</span>
+</span><span class='line'>  <span class="n">database</span> <span class="no">MySQL</span> <span class="k">do</span> <span class="o">|</span><span class="n">db</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="s2">&quot;my_app_db&quot;</span>
+</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
+</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">password</span>           <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">host</span>               <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
+</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">port</span>               <span class="o">=</span> <span class="mi">3306</span>
+</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">socket</span>             <span class="o">=</span> <span class="s2">&quot;/tmp/mysql.sock&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># user 頭像檔案  </span>
+</span><span class='line'>  <span class="n">archive</span> <span class="ss">:uploads</span> <span class="k">do</span> <span class="o">|</span><span class="n">archive</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">archive</span><span class="o">.</span><span class="n">add</span> <span class="s2">&quot;/path/to/my_app/public/uploads&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># 上傳至 S3  </span>
+</span><span class='line'>  <span class="n">store_with</span> <span class="no">S3</span> <span class="k">do</span> <span class="o">|</span><span class="n">s3</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">access_key_id</span>      <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
+</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">secret_access_key</span>  <span class="o">=</span> <span class="s2">&quot;!@#$%^&amp;*(&quot;</span>
+</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">region</span>             <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
+</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">bucket</span>             <span class="o">=</span> <span class="s2">&quot;my_app_backup&quot;</span>
+</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">path</span>               <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">keep</span>               <span class="o">=</span> <span class="mi">50</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># 壓縮打包設定</span>
+</span><span class='line'>  <span class="n">compress_with</span> <span class="no">Gzip</span> <span class="k">do</span> <span class="o">|</span><span class="n">compression</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">fast</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>執行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">backup</span> <span class="n">perform</span> <span class="o">-</span><span class="n">t</span> <span class="n">my_app</span> <span class="o">-</span><span class="n">c</span> <span class="n">backup_config</span><span class="o">.</span><span class="n">rb</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>就可進行備份</p>
+
+<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
+另外再提供儲存於 local disk 的範例</p>
+
+<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">store_with</span> <span class="no">Local</span> <span class="k">do</span> <span class="o">|</span><span class="n">local</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/to/back/dir&quot;</span>
+</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">keep</span> <span class="o">=</span> <span class="mi">50</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-08T11:57:00+08:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/backup/'>Backup</a>, <a class='category' href='/blog/categories/rubygems/'>Rubygems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-03-06/rspec-render-views/" title="Previous Post: Rspec 設定 request 或 controller 的 spec 中 render view">&laquo; Rspec 設定 request 或 controller 的 spec 中 render view</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012-05-14/reading-deliberate-practice-1/" title="next Post: 讀書心得: 刻意練習(1)">讀書心得: 刻意練習(1) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>黃金俠</h1>
+<p>
+  <!-- avatar start -->
+    <img src="http://www.gravatar.com/avatar/0b2f434918eb4a08439d180a13829631.png" alt="marsz" align="left" style="margin-right: 15px" />
+  <!-- avatar end -->
+  2008 年投身於網路圈，致力於創造能帶來幸福感的網路服務，專注網站開發與資料分析技術
+</p>
+
+  <div style="clear:both"></div>
+  <!-- facebook -->
+  <a href="http://zh-tw.facebook.com/marsz330" target="_blank" title="MarsZ Chen"><img src="/images/i_facebook.png" style="border: 0px;height: 30px" /></a>
+  <!-- /facebook -->
+  <!-- twitter -->
+  <a href="https://twitter.com/marsz330" target="_blank"><img src="/images/i_twitter.png" style="border: 0px;height: 30px"></a>
+  <!-- /twitter -->
+  <!-- github -->
+  <a href="https://github.com/marsz" target="_blank"><img src="/images/i_github.png" style="border: 0px;height: 30px"></a>
+  <!-- /github -->
+  <a href="http://www.linkedin.com/profile/view?id=97000937" target="_blank"><img src="/images/i_linkedin.png" style="border: 0px;height: 30px"></a>
+  
+  <p></p>
+  <!-- gamil start -->
+    <img src="/images/gmail.png" alt="gmail" />
+  <!-- gamil end -->
+
+<p style="display:none;"><a href="http://feeds.feedburner.com/marsz/ZKPk"><img src="http://feeds.feedburner.com/~fc/marsz/ZKPk?bg=CCCCCC&amp;fg=000000&amp;anim=1&amp;label=listeners" height="26" width="88" style="border:0" alt="" /></a></p>
+</section>
+<section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012-05-14/reading-deliberate-practice-1/">讀書心得: 刻意練習(1)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-03-08/backup-gem/">用 backup gem 做自動化備份</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-03-06/rspec-render-views/">Rspec 設定 request 或 controller 的 spec 中 render view</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-03-04/rspec-file-upload/">Rspec 檔案上傳的測試</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012-03-02/url-helper-set-host/">Url helper 中自定 host</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+<h1>分類</h1>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 111.42857142857143%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 102.85714285714286%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 105.71428571428571%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 102.85714285714286%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 114.28571428571429%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 105.71428571428571%'>Backup(2)</a>  <a href='/blog/categories/bigtuna' style='font-size: 114.28571428571429%'>Bigtuna(5)</a>  <a href='/blog/categories/capistrano' style='font-size: 108.57142857142857%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 105.71428571428571%'>Carrierwave(2)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 114.28571428571429%'>Continuous integration(5)</a>  <a href='/blog/categories/controller' style='font-size: 102.85714285714286%'>Controller(1)</a>  <a href='/blog/categories/counter' style='font-size: 102.85714285714286%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 102.85714285714286%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 102.85714285714286%'>Date(1)</a>  <a href='/blog/categories/delayed-job' style='font-size: 102.85714285714286%'>Delayed job(1)</a>  <a href='/blog/categories/deploy' style='font-size: 108.57142857142857%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 105.71428571428571%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 102.85714285714286%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 105.71428571428571%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 111.42857142857143%'>Factory-girl(4)</a>  <a href='/blog/categories/file-upload' style='font-size: 102.85714285714286%'>File-upload(1)</a>  <a href='/blog/categories/fog' style='font-size: 102.85714285714286%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 105.71428571428571%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 102.85714285714286%'>Git-rebase(1)</a>  <a href='/blog/categories/god' style='font-size: 102.85714285714286%'>God(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 102.85714285714286%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 102.85714285714286%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 102.85714285714286%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 114.28571428571429%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 102.85714285714286%'>Model(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 102.85714285714286%'>Omniauth(1)</a>  <a href='/blog/categories/reading' style='font-size: 102.85714285714286%'>Reading(1)</a>  <a href='/blog/categories/regular-expression' style='font-size: 102.85714285714286%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 114.28571428571429%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 102.85714285714286%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 131.42857142857142%'>Rspec(11)</a>  <a href='/blog/categories/rspec-controllers' style='font-size: 102.85714285714286%'>Rspec-controllers(1)</a>  <a href='/blog/categories/rspec-requests' style='font-size: 102.85714285714286%'>Rspec-requests(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(21)</a>  <a href='/blog/categories/sql' style='font-size: 102.85714285714286%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 102.85714285714286%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 102.85714285714286%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 111.42857142857143%'>Testing(4)</a>  <a href='/blog/categories/url-helper' style='font-size: 102.85714285714286%'>Url-helper(1)</a>  <a href='/blog/categories/validations' style='font-size: 102.85714285714286%'>Validations(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 102.85714285714286%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 102.85714285714286%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 102.85714285714286%'>Yaml(1)</a> </span>
+</section>
+
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("marsz330", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/marsz330" class="twitter-follow-button" data-show-count="false">Follow @marsz330</a>
+  
+</section>
+
+
+
+
+<section>
+  <h2>Links</h2>
+  <ul id="links">
+    <li class="link">
+      <a href="http://ihower.tw/rails3/" target="_blank">ihower Rails 實戰聖經</a>
+    </li>
+    <li class="link">
+      <a href="http://ihower.tw/blog/" target="_blank">ihower的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://wildjcrt.pixnet.net/blog" target="_blank">小蟹的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://blog.xdite.net/" target="_blank">XDite的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://blog.hellolucky.info/" target="_blank">HelloLucky的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://gogojimmy.net/" target="_blank">Jimmy 的 blog</a>
+    </li>
+    <!--
+    <li class="link">
+      <a href="" target="_blank"></a>
+    </li>
+    -->
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - MarsZ -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rubyist-marsz';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
