@@ -3,7 +3,8 @@ layout: post
 title: "Rails Rspec (1) 介紹與設定"
 date: 2012-02-01 14:00
 comments: true
-categories: [rspec, rubygems, testing]
+author: MarsZ
+categories: ["Rspec", "Rubygems", "Testing"]
 ---
 有關寫測試的重要性, 本文不再贅述  
 觀念性文章可參考以下大大們的見解...  

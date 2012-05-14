@@ -3,7 +3,7 @@ layout: post
 title: "在partial中取得完整的locals(當Hash用)"
 date: 2012-01-10 22:50
 comments: true
-categories: ["views-partial"]
+categories: ["Views-partial"]
 ---
 我們都知道在一般的 view 下,即使在 controller 沒有指定 @foo 的值, view 直接讀取 @foo 也不會噴 Exception. 可是同樣的情況到了 partial 就會噴 Exception
 

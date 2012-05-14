@@ -3,7 +3,8 @@ layout: post
 title: "使用 Carrierwave 處理檔案上傳 (整合 imagemagick 與 Amazon S3)"
 date: 2012-01-10 23:38
 comments: true
-categories: ["rubygems","carrierwave","fog","Amazon-S3","rmagick","ImageMagick"]
+author: MarsZ
+categories: ["Rubygems","Carrierwave","Fog","Amazon-S3","Rmagick","ImageMagick"]
 ---
 
 

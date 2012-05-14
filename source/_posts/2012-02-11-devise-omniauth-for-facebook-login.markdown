@@ -3,7 +3,8 @@ layout: post
 title: "Devise + Omniauth 的 Facebook 登入範例"
 date: 2012-02-11 01:20
 comments: true
-categories: [rubygems, devise, omniauth, facebook]
+author: MarsZ
+categories: ["Rubygems", "Devise", "Omniauth", "Facebook"]
 ---
 以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2  
 直接使用 devise 中的 omniauthable 有許多彈性不足的問題  
@@ -183,6 +184,12 @@ end
     get '/users/sign_in', :to => 'devise/sessions#new', :as => :new_user_session
     get '/users/sign_out' => 'devise/sessions#destroy', :as => :user_sign_out
   end
+```
+
+view 裡面的 Facebook 登入按鈕 (html)
+
+```html
+<a href="/auth/facebook">Facebook 登入</a>
 ```
 
 若希望 Facebook 登入後可以導回登入前的頁面, 則可以做以下設定  

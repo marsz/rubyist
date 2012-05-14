@@ -3,7 +3,7 @@ layout: post
 title: "如何在 datetime 的欄位中做日期的搜尋"
 date: 2012-01-04 16:54
 comments: true
-categories: ["Sql", "ActiveRecord"]
+categories: ["SQL", "ActiveRecord"]
 ---
 
 rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中

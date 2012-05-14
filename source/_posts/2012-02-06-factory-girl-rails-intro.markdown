@@ -3,7 +3,8 @@ layout: post
 title: "使用 Factory Girl 產生測試用資料"
 date: 2012-02-06 16:57
 comments: true
-categories: [rubygems, factory-girl, rspec]
+author: MarsZ
+categories: ["Rubygems", "Factory-girl", "Rspec"]
 ---
 在寫測試的時候, 為了實際測試程式處理資料的正確性  
 免不了要依據資料庫的關聯建立假資料  

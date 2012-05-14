@@ -3,7 +3,8 @@ layout: post
 title: "git pull 時請愛用 rebase"
 date: 2012-01-20 19:44
 comments: true
-categories: ["git", "git-rebase"] 
+author: MarsZ
+categories: ["Git", "Git-rebase"] 
 ---
 因為
 git pull = git fetch + git merge (remote branch merge to local branch)

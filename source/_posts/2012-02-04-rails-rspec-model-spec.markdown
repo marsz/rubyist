@@ -3,7 +3,8 @@ layout: post
 title: "Rails Spec (4) model validations 的 spec"
 date: 2012-02-04 16:45
 comments: true
-categories: [rspec, rubygems, testing, model]
+author: MarsZ
+categories: ["Rspec", "Rubygems", "Testing", "Model"]
 ---
 本篇將介紹以最原始, 沒有用任何外掛下的 model validation spec 寫法  
 若覺得小弟有更好的寫法, 也歡迎不吝指教 :)  

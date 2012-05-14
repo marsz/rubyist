@@ -3,6 +3,7 @@ layout: post
 title: "CI server - Bigtuna (專案設定篇)"
 date: 2012-01-28 12:06
 comments: true
+author: MarsZ
 categories: ["Continuous Integration", "Bigtuna"]
 ---
 上回提到 Bigtuna 的安裝  

@@ -3,7 +3,8 @@ layout: post
 title: "Devise 在登入或登出之後執行回乎"
 date: 2012-01-10 23:11
 comments: true
-categories: [rubygems,devise]
+author: MarsZ
+categories: ["Rubygems","Devise"]
 ---
 #### 需求
 

@@ -3,7 +3,8 @@ layout: post
 title: "Rails Rspec (3) pending 的使用"
 date: 2012-02-03 16:06
 comments: true
-categories: [rspec, rubygems, testing]
+author: MarsZ
+categories: ["Rspec", "Rubygems", "Testing"]
 ---
 pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a>  
 一般 generator 產生的 spec 檔都會先幫你把 pending 加好  

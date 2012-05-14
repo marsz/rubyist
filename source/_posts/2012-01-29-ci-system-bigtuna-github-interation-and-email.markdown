@@ -3,6 +3,7 @@ layout: post
 title: "CI server - Bigtuna (進階設定篇)"
 date: 2012-01-29 12:50
 comments: true
+author: MarsZ
 categories: ["Continuous Integration", "Bigtuna"]
 ---
 上次提到專案在 bigtuna 上的設定  

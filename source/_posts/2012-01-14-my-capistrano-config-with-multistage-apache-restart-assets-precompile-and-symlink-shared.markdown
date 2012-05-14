@@ -3,7 +3,8 @@ layout: post
 title: "我的 capistrano 完整設定檔說明"
 date: 2012-01-14 16:09
 comments: true
-categories: [rubygems, capistrano, deploy] 
+author: MarsZ
+categories: ["Rubygems", "Capistrano", "Deploy"] 
 ---
 
 capistrano 是一套強大的佈署工具, 今天提供小弟的設定檔內容給大家參考

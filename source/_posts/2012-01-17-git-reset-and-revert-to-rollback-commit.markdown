@@ -3,7 +3,8 @@ layout: post
 title: "透過rebase -i, reset, revert還原某個commit的方法"
 date: 2012-01-17 18:56
 comments: true
-categories: ["git"]
+author: MarsZ
+categories: ["Git"]
 ---
 個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法
 

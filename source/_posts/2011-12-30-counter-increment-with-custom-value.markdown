@@ -3,7 +3,8 @@ layout: post
 title: "實作 sql 中的數值欄位的遞增(counter increment)"
 date: 2011-12-30 17:07
 comments: true
-categories: [ActiveRecord, Counter, sql] 
+author: MarsZ
+categories: ["ActiveRecord", "Counter", "Sql"] 
 ---
 針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
 即想在 sql 中實作出

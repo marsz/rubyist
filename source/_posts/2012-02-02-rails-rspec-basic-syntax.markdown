@@ -3,7 +3,8 @@ layout: post
 title: "Rails Rspec (2) 基本語法與執行"
 date: 2012-02-02 14:35
 comments: true
-categories: [rspec, rubygems, testing]
+author: MarsZ
+categories: ["Rspec", "Rubygems", "Testing"]
 ---
 建議在開始本系列文以前先讀過, 以下參考文件與資源  
 <!-- more -->

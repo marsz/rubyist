@@ -3,7 +3,8 @@ layout: post
 title: "rake assets:precompile 時出現 stack level too deep 的訊息"
 date: 2012-01-24 19:53
 comments: true
-categories: ["assets","assets-precompile"]
+author: MarsZ
+categories: ["Assets","Assets-precompile"]
 ---
 上禮拜終於要把服務佈署上去了  
 結果在執行 precompile 時遇到錯誤訊息如下:

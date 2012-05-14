@@ -3,6 +3,7 @@ layout: post
 title: "CI server - Bigtuna (安裝篇)"
 date: 2012-01-27 11:17
 comments: true
+author: MarsZ
 categories: ["Continuous Integration", "Bigtuna"]
 ---
 CI 全名 "Continuous Interation"  

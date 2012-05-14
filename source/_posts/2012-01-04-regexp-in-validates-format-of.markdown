@@ -3,7 +3,7 @@ layout: post
 title: "在 validates_format_of 中使用正規表示法(Regular Expression)"
 date: 2012-01-04 17:43
 comments: true
-categories: ["ActiveRecord", "Regular Expression", "Model Validations"]
+categories: ["ActiveRecord", "Regular Expression", "Validations"]
 ---
 在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確
 

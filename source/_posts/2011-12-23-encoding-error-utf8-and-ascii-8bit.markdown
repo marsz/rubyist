@@ -4,7 +4,7 @@ title: "Encoding::CompatibilityError: incompatible character encodings: ASCII-8B
 date: 2011-12-23 21:01
 comments: true
 author: MarsZ
-categories: [Encoding]
+categories: ["Encoding"]
 ---
 
 在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息

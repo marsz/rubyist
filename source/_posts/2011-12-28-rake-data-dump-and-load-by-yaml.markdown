@@ -3,7 +3,7 @@ layout: post
 title: "databse 資料以 yaml 格式匯入/匯出"
 date: 2011-12-28 14:07
 comments: true
-categories: [rubygems,yaml,database,backup]
+categories: ["Rubygems","YAML","Database","Backup"]
 ---
 
 在備份資料的過程中常用到的一個 gem

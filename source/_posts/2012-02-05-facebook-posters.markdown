@@ -3,7 +3,8 @@ layout: post
 title: "Facebook 辦公室的駭客精神標語"
 date: 2012-02-05 01:04
 comments: true
-categories: [facebook]
+author: MarsZ
+categories: ["Facebook"]
 ---
 海報原文在<a href="http://designforfun.com/facebookposters/" target="_blank">這裡</a>  
 每一句看了都令人非常的振奮  
