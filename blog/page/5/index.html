@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>用 backup gem 做自動化備份 - 黃金俠</title>
+  <title>黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="source: https://github.com/meskyanichi/backup
-和 God 一樣是一個獨立的 gem，因此也可用於其他語言 backup 的特色: 可備份 Redis、MongoDB、Mysql 等 DB
-可備份檔案、目錄
-備份可儲存於 local disk、 &hellip;">
+  <meta name="description" content="在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息 1
+Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/page/5">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,12 +78,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">用 backup gem 做自動化備份</h1>
+      <h1 class="entry-title"><a href="/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/">Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</a></h1>
     
     
       <p class="meta">
@@ -101,204 +102,42 @@
   
 
 
-<time datetime="2012-03-08T11:57:00+08:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+<time datetime="2011-12-23T21:01:00+08:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2011</time>
         
-         | <a href="#disqus_thread">Comments</a>
+         | <a href="/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
-和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
+  <div class="entry-content"><p>在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息</p>
 
-<!-- more -->
-
-
-<p><code>backup</code> 的特色:</p>
-
-<ol>
-<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
-<li>可備份檔案、目錄</li>
-<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
-</ol>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8</span></code></pre></td></tr></table></div></figure>
 
 
-<p>範例檔的備份標的:</p>
 
-<ol>
-<li><code>Mysql</code></li>
-<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
-<li>備份檔案上傳至 <code>Amazon S3</code></li>
-</ol>
-
-
-<h4>安裝</h4>
-
-<p><code>gem install backup</code></p>
-
-<h4>範例</h4>
-
-<p>打開空檔案即可使用</p>
-
-<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Backup</span><span class="o">::</span><span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:my_app</span><span class="p">,</span> <span class="s1">&#39;db data of my app&#39;</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>  <span class="c1"># mysql 備份</span>
-</span><span class='line'>  <span class="n">database</span> <span class="no">MySQL</span> <span class="k">do</span> <span class="o">|</span><span class="n">db</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="s2">&quot;my_app_db&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">password</span>           <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">host</span>               <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">port</span>               <span class="o">=</span> <span class="mi">3306</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">socket</span>             <span class="o">=</span> <span class="s2">&quot;/tmp/mysql.sock&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># user 頭像檔案  </span>
-</span><span class='line'>  <span class="n">archive</span> <span class="ss">:uploads</span> <span class="k">do</span> <span class="o">|</span><span class="n">archive</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">archive</span><span class="o">.</span><span class="n">add</span> <span class="s2">&quot;/path/to/my_app/public/uploads&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 上傳至 S3  </span>
-</span><span class='line'>  <span class="n">store_with</span> <span class="no">S3</span> <span class="k">do</span> <span class="o">|</span><span class="n">s3</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">access_key_id</span>      <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">secret_access_key</span>  <span class="o">=</span> <span class="s2">&quot;!@#$%^&amp;*(&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">region</span>             <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">bucket</span>             <span class="o">=</span> <span class="s2">&quot;my_app_backup&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">path</span>               <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">keep</span>               <span class="o">=</span> <span class="mi">50</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 壓縮打包設定</span>
-</span><span class='line'>  <span class="n">compress_with</span> <span class="no">Gzip</span> <span class="k">do</span> <span class="o">|</span><span class="n">compression</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">fast</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>執行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">backup</span> <span class="n">perform</span> <span class="o">-</span><span class="n">t</span> <span class="n">my_app</span> <span class="o">-</span><span class="n">c</span> <span class="n">backup_config</span><span class="o">.</span><span class="n">rb</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>就可進行備份</p>
-
-<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
-另外再提供儲存於 local disk 的範例</p>
-
-<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">store_with</span> <span class="no">Local</span> <span class="k">do</span> <span class="o">|</span><span class="n">local</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/to/back/dir&quot;</span>
-</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">keep</span> <span class="o">=</span> <span class="mi">50</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
 
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
-
-      
-
-
-
-
-
-
-
-
+  
+    <footer>
+      <a rel="full-article" href="/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/">Read on &rarr;</a>
+    </footer>
   
 
 
-<time datetime="2012-03-08T11:57:00+08:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/backup/'>Backup</a>, <a class='category' href='/blog/categories/rubygems/'>Rubygems</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012-03-06/rspec-render-views/" title="Previous Post: Rspec 設定 request 或 controller 的 spec 中 render view">&laquo; Rspec 設定 request 或 controller 的 spec 中 render view</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012-05-14/reading-deliberate-practice-1/" title="next Post: 讀書心得: 刻意練習(1)">讀書心得: 刻意練習(1) &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -366,7 +205,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -407,13 +246,12 @@
     <li class="link">
       <a href="" target="_blank"></a>
     </li>
-    -->
+    &#8211;>
   </ul>
 </section>
 
   
 </aside>
-
 
     </div>
   </div>
@@ -429,10 +267,7 @@
       var disqus_shortname = 'rubyist-marsz';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

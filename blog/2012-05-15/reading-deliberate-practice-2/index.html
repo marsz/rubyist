@@ -5,14 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>用 backup gem 做自動化備份 - 黃金俠</title>
+  <title>讀書心得: 刻意練習(2) - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="source: https://github.com/meskyanichi/backup
-和 God 一樣是一個獨立的 gem，因此也可用於其他語言 backup 的特色: 可備份 Redis、MongoDB、Mysql 等 DB
-可備份檔案、目錄
-備份可儲存於 local disk、 &hellip;">
+  <meta name="description" content="所謂的刻意練習有別於我們一般所認知的練習，而是一套以系統化方法有效的進行自我訓練，以邁向卓越之路。書中所提到的要素如下: 專為提昇表現而設計 通常有指導者 幾乎在任何領域的初期中，有個教練在旁指導不僅能縮短時間，更重要的是他能從你自己看不到的角度觀察你，給予建議指正， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -85,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">用 backup gem 做自動化備份</h1>
+      <h1 class="entry-title">讀書心得: 刻意練習(2)</h1>
     
     
       <p class="meta">
@@ -101,7 +98,7 @@
   
 
 
-<time datetime="2012-03-08T11:57:00+08:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+<time datetime="2012-05-15T13:54:00+08:00" pubdate data-updated="true">May 15<span>th</span>, 2012</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -110,131 +107,44 @@
   </header>
 
 
-<div class="entry-content"><p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
-和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
+<div class="entry-content"><p>所謂的<code>刻意練習</code>有別於我們一般所認知的<code>練習</code>，而是一套以系統化方法有效的進行自我訓練，以邁向卓越之路。書中所提到的要素如下:</p>
 
 <!-- more -->
 
 
-<p><code>backup</code> 的特色:</p>
+<h4>專為提昇表現而設計  通常有指導者</h4>
 
-<ol>
-<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
-<li>可備份檔案、目錄</li>
-<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
-</ol>
+<p>幾乎在<code>任何領域的初期</code>中，有個教練在旁指導不僅能縮短時間，更重要的是他能從你自己看不到的角度觀察你，給予建議指正，讓你不會在初期就養成的不是很正確的觀念或習慣，減少你在未來修正時所花的成本。</p>
 
+<h4>對練習成果持續反饋</h4>
 
-<p>範例檔的備份標的:</p>
+<p>如果看不到自己的練習成果時: 1.你不會進步 2.你也不會再意。自然而然的就會失去練習的意願，因此指導者在此扮演了重要的角色。但多數情況下，指導者並不能全面的協助你進行反饋，你必須想辦法建立一套可以進行自我評估的機制。</p>
 
-<ol>
-<li><code>Mysql</code></li>
-<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
-<li>備份檔案上傳至 <code>Amazon S3</code></li>
-</ol>
+<p>每個人的反饋評估標準都是不一樣的，因為這是針對自己的程度，為找出改善項目而設計的。厲害的人會分析自己的行為，切割出極為具體的層面，然後專注於琢磨某個項目直到改善為止，接著就再繼續琢磨下一個項目。</p>
 
+<p>舉例來說，籃球員一般會上健身房鍛鍊某部位的肌力，而優秀的籃球員會想辦法了解自己哪部位的肌力待改進，詢問教練最適當的器材選擇，然後自行開始進行鍛鍊，接著再從球場上的表現進行自我評估。</p>
 
-<h4>安裝</h4>
+<h4>在&#8221;學習區&#8221;多次且反覆的進行練習</h4>
 
-<p><code>gem install backup</code></p>
+<p>理論將表現層面，以三個同心圓說明: <code>舒適區</code>、<code>學習區</code>、<code>恐慌區</code>。以開車為例，在駕訓班期間可稱之為學習區，我們的<code>心智處在全神貫注的狀態</code>，感受每一次換檔、油門、煞車的經驗。上路一段時間後我們脫離了全神貫注，可以一邊開車一邊思考別的事情(當然這不是對的:p)，可稱之為舒適區，而恐慌區則是難到我們連怎麼著手都不知道。</p>
 
-<h4>範例</h4>
+<p>假如我們想要更精進開車技術，就必須將心智帶往學習區，例如在停車場建立練習環境或平常開車時讓自己的心智脫離&#8221;自動導航&#8221;狀態，隨時注意每一瞬間的細節。人必須處在學習區才能保持進步。</p>
 
-<p>打開空檔案即可使用</p>
+<p>因此<code>找出學習區</code>(通常不太容易)，然後隨著學習區的變化，強迫自己持續待在學習區反覆練習(這更難)，過程中肯定是苦在其中、乏味無趣，並且不斷尋找自己不擅長的事，這就是刻意練習最重要的一環!!!</p>
 
-<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Backup</span><span class="o">::</span><span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:my_app</span><span class="p">,</span> <span class="s1">&#39;db data of my app&#39;</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>  <span class="c1"># mysql 備份</span>
-</span><span class='line'>  <span class="n">database</span> <span class="no">MySQL</span> <span class="k">do</span> <span class="o">|</span><span class="n">db</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="s2">&quot;my_app_db&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">password</span>           <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">host</span>               <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">port</span>               <span class="o">=</span> <span class="mi">3306</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">socket</span>             <span class="o">=</span> <span class="s2">&quot;/tmp/mysql.sock&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># user 頭像檔案  </span>
-</span><span class='line'>  <span class="n">archive</span> <span class="ss">:uploads</span> <span class="k">do</span> <span class="o">|</span><span class="n">archive</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">archive</span><span class="o">.</span><span class="n">add</span> <span class="s2">&quot;/path/to/my_app/public/uploads&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 上傳至 S3  </span>
-</span><span class='line'>  <span class="n">store_with</span> <span class="no">S3</span> <span class="k">do</span> <span class="o">|</span><span class="n">s3</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">access_key_id</span>      <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">secret_access_key</span>  <span class="o">=</span> <span class="s2">&quot;!@#$%^&amp;*(&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">region</span>             <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">bucket</span>             <span class="o">=</span> <span class="s2">&quot;my_app_backup&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">path</span>               <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">keep</span>               <span class="o">=</span> <span class="mi">50</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 壓縮打包設定</span>
-</span><span class='line'>  <span class="n">compress_with</span> <span class="no">Gzip</span> <span class="k">do</span> <span class="o">|</span><span class="n">compression</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">fast</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<h4>心力交瘁</h4>
 
+<p>如同前述開車的例子，練習過程是保持全神貫注的，因此肯定無法連續長時間如此。不管在哪個領域，<code>一天 4~5 小時是刻意練習的上限</code>，而過程中又會<code>分成幾個不超過 60~90 分鐘的時段</code>，沒有人能夠持續練習一整天的，因為專注力會減退。我想這也算是一個好消息吧 :p</p>
 
-<p>執行</p>
+<p>而卓越者絕對不允許自己在專精領域中受到自動化綁架，除了平時刻意練習要避免自動化之外，一旦發現自己因為練習到心力交瘁而進入自動化狀態時，就應該停止練習，直到恢復專注力為止。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">backup</span> <span class="n">perform</span> <span class="o">-</span><span class="n">t</span> <span class="n">my_app</span> <span class="o">-</span><span class="n">c</span> <span class="n">backup_config</span><span class="o">.</span><span class="n">rb</span>
-</span></code></pre></td></tr></table></div></figure>
+<hr />
 
+<p>再整理一下刻意練習的特點: <code>通常有指導者</code>、<code>持續反饋</code>、<code>待在學習區反覆練習</code>、<code>全神貫注直到心力交瘁</code></p>
 
-<p></p>
+<p>這些特點有助於你設計自己的練習架構，但書中仍一再提到，不管練習是經過多縝密的設計，另一項重要的變數是<code>個人努力程度</code>，包括你如何安排自己的練習時間、花了多久的時間進行刻意練習，這些才是成為頂尖最重要的因素。</p>
 
-<p>就可進行備份</p>
-
-<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
-另外再提供儲存於 local disk 的範例</p>
-
-<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">store_with</span> <span class="no">Local</span> <span class="k">do</span> <span class="o">|</span><span class="n">local</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/to/back/dir&quot;</span>
-</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">keep</span> <span class="o">=</span> <span class="mi">50</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>接下來將會說明刻意練習運作的原理，深入了解卓越者為何能夠和一般人不同之處!!!當你了解之後，便會明白你和卓越人士之間的差距不再遙不可及或無從理解起。</p>
 </div>
 
 
@@ -257,12 +167,12 @@
   
 
 
-<time datetime="2012-03-08T11:57:00+08:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+<time datetime="2012-05-15T13:54:00+08:00" pubdate data-updated="true">May 15<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/backup/'>Backup</a>, <a class='category' href='/blog/categories/rubygems/'>Rubygems</a>
+    <a class='category' href='/blog/categories/reading/'>Reading</a>
   
 </span>
 
@@ -271,7 +181,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2/" >Tweet</a>
   
   
   
@@ -282,10 +192,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012-03-06/rspec-render-views/" title="Previous Post: Rspec 設定 request 或 controller 的 spec 中 render view">&laquo; Rspec 設定 request 或 controller 的 spec 中 render view</a>
+        <a class="basic-alignment left" href="/blog/2012-05-14/reading-deliberate-practice-1/" title="Previous Post: 讀書心得: 刻意練習(1)">&laquo; 讀書心得: 刻意練習(1)</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012-05-14/reading-deliberate-practice-1/" title="next Post: 讀書心得: 刻意練習(1)">讀書心得: 刻意練習(1) &raquo;</a>
       
     </p>
   </footer>
@@ -430,8 +338,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2/';
         var disqus_script = 'embed.js';
       
     (function () {
