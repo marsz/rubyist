@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: JSON - 黃金俠</title>
+  <title>取得 Facebook 地點的打卡數 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="Category: JSON">
+  <meta name="description" content="參考 Facebook Graph Api 文件 透過關鍵字搜尋某個地點 1
+https://graph.facebook.com/search?q=[關鍵字]&type=place&access_token=[ur access token] 透過經緯度搜尋某個點範圍內的地點 1
+https &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/json">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -78,36 +80,202 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: JSON</h1>
+    
+      <h1 class="entry-title">取得 Facebook 地點的打卡數</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T15:14:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>參考 <a href="http://developers.facebook.com/docs/reference/api/" target="_blank">Facebook Graph Api 文件</a></p>
 
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011-12-23/nested-to_json-and-to_xml/">巢狀 (nested) to_json / to_xml 應用</a></h1>
-<time datetime="2011-12-23T21:40:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>23</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/activerecord/'>ActiveRecord</a>, <a class='category' href='/blog/categories/json/'>JSON</a>, <a class='category' href='/blog/categories/xml/'>XML</a></span>
-</footer>
+<!-- more -->
 
 
-</article>
+<h4>透過關鍵字搜尋某個地點</h4>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>https://graph.facebook.com/search?q=[關鍵字]&type=place&access_token=[ur access token]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>透過經緯度搜尋某個點範圍內的地點</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>https://graph.facebook.com/search?q=[關鍵字]&type=place&center=37.76,-122.427&distance=1000&access_token=[ur access token]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>搜尋結果的 JSON 範例</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>   "data": [
+</span><span class='line'>      {
+</span><span class='line'>         "name": "Q Square \u4eac\u7ad9\u6642\u5c1a\u5ee3\u5834",
+</span><span class='line'>         "category": "Local business",
+</span><span class='line'>         "location": {
+</span><span class='line'>            "street": "\u53f0\u5317\u5e02\u5927\u540c\u5340\u627f\u5fb7\u8def\u4e00\u6bb5\u4e00\u865f",
+</span><span class='line'>            "city": "Taipei",
+</span><span class='line'>            "country": "Taiwan",
+</span><span class='line'>            "zip": "103",
+</span><span class='line'>            "latitude": 25.049230908176,
+</span><span class='line'>            "longitude": 121.51719644493
+</span><span class='line'>         },
+</span><span class='line'>         "id": "195588960470358"
+</span><span class='line'>      },
+</span><span class='line'>   ]
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>以 place id 查詢詳細資料</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>https://graph.facebook.com/195588960470358</span></code></pre></td></tr></table></div></figure>
+
+
+<p>取得</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>   "id": "195588960470358",
+</span><span class='line'>   "name": "\u677f\u6a4b\u6797\u5bb6\u82b1\u5712",
+</span><span class='line'>   "picture": "http://profile.ak.fbcdn.net/static-ak/rsrc.php/v2/yN/r/cDKJtvtlYv5.png",
+</span><span class='line'>   "link": "http://www.facebook.com/pages/\u0025E6\u00259D\u0025BF\u0025E6\u0025A9\u00258B\u0025E6\u00259E\u002597\u0025E5\u0025AE\u0025B6\u0025E8\u00258A\u0025B1\u0025E5\u00259C\u002592/195588960470358",
+</span><span class='line'>   "likes": 141,
+</span><span class='line'>   "category": "Local business",
+</span><span class='line'>   "is_published": true,
+</span><span class='line'>   "is_community_page": true,
+</span><span class='line'>   "location": {
+</span><span class='line'>      "street": "\u65b0\u5317\u5e02\u677f\u6a4b\u5340\u897f\u9580\u88579\u865f",
+</span><span class='line'>      "city": "Taipei",
+</span><span class='line'>      "country": "Taiwan",
+</span><span class='line'>      "zip": "22056",
+</span><span class='line'>      "latitude": 25.011011386339,
+</span><span class='line'>      "longitude": 121.45513650235
+</span><span class='line'>   },
+</span><span class='line'>   "phone": "02-2965-3061",
+</span><span class='line'>   "checkins": 2745,
+</span><span class='line'>   "talking_about_count": 106
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>checkins</code> 為打卡數</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T15:14:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/facebook/'>Facebook</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-05-15/reading-deliberate-practice-2/" title="Previous Post: 讀書心得: 刻意練習(2)">&laquo; 讀書心得: 刻意練習(2)</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -241,7 +409,10 @@
       var disqus_shortname = 'rubyist-marsz';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

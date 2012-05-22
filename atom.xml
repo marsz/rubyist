@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-05-15T16:57:35+08:00</updated>
+  <updated>2012-05-22T15:24:01+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,122 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[取得 Facebook 地點的打卡數]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count/"/>
+    <updated>2012-05-22T15:14:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-05-22/fetch-facebook-place-checkins-count</id>
+    <content type="html"><![CDATA[<p>參考 <a href="http://developers.facebook.com/docs/reference/api/" target="_blank">Facebook Graph Api 文件</a></p>
+
+<!-- more -->
+
+
+<h4>透過關鍵字搜尋某個地點</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>https://graph.facebook.com/search?q=[關鍵字]&type=place&access_token=[ur access token]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>透過經緯度搜尋某個點範圍內的地點</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>https://graph.facebook.com/search?q=[關鍵字]&type=place&center=37.76,-122.427&distance=1000&access_token=[ur access token]</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>搜尋結果的 JSON 範例</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>   "data": [
+</span><span class='line'>      {
+</span><span class='line'>         "name": "Q Square \u4eac\u7ad9\u6642\u5c1a\u5ee3\u5834",
+</span><span class='line'>         "category": "Local business",
+</span><span class='line'>         "location": {
+</span><span class='line'>            "street": "\u53f0\u5317\u5e02\u5927\u540c\u5340\u627f\u5fb7\u8def\u4e00\u6bb5\u4e00\u865f",
+</span><span class='line'>            "city": "Taipei",
+</span><span class='line'>            "country": "Taiwan",
+</span><span class='line'>            "zip": "103",
+</span><span class='line'>            "latitude": 25.049230908176,
+</span><span class='line'>            "longitude": 121.51719644493
+</span><span class='line'>         },
+</span><span class='line'>         "id": "195588960470358"
+</span><span class='line'>      },
+</span><span class='line'>   ]
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>以 place id 查詢詳細資料</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>https://graph.facebook.com/195588960470358</span></code></pre></td></tr></table></div></figure>
+
+
+<p>取得</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>   "id": "195588960470358",
+</span><span class='line'>   "name": "\u677f\u6a4b\u6797\u5bb6\u82b1\u5712",
+</span><span class='line'>   "picture": "http://profile.ak.fbcdn.net/static-ak/rsrc.php/v2/yN/r/cDKJtvtlYv5.png",
+</span><span class='line'>   "link": "http://www.facebook.com/pages/\u0025E6\u00259D\u0025BF\u0025E6\u0025A9\u00258B\u0025E6\u00259E\u002597\u0025E5\u0025AE\u0025B6\u0025E8\u00258A\u0025B1\u0025E5\u00259C\u002592/195588960470358",
+</span><span class='line'>   "likes": 141,
+</span><span class='line'>   "category": "Local business",
+</span><span class='line'>   "is_published": true,
+</span><span class='line'>   "is_community_page": true,
+</span><span class='line'>   "location": {
+</span><span class='line'>      "street": "\u65b0\u5317\u5e02\u677f\u6a4b\u5340\u897f\u9580\u88579\u865f",
+</span><span class='line'>      "city": "Taipei",
+</span><span class='line'>      "country": "Taiwan",
+</span><span class='line'>      "zip": "22056",
+</span><span class='line'>      "latitude": 25.011011386339,
+</span><span class='line'>      "longitude": 121.45513650235
+</span><span class='line'>   },
+</span><span class='line'>   "phone": "02-2965-3061",
+</span><span class='line'>   "checkins": 2745,
+</span><span class='line'>   "talking_about_count": 106
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>checkins</code> 為打卡數</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[讀書心得: 刻意練習(2)]]></title>
@@ -1831,115 +1947,6 @@ be_false</p>
 <p>當然上述的範例中除了麻煩之外, 當然 User 有追加了新的 validation 時, before 的 User.new 也要跟著對應, 倘若有很多需要 create user model 的 spec 時, 改起來就會很痛苦</p>
 
 <p>因此上述的兩個 issue, 將會在下兩篇將會介紹透過 factory_girl_rails 和 shoulda-matchers 這兩個 gem 解決</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails Rspec (3) pending 的使用]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/"/>
-    <updated>2012-02-03T16:06:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending</id>
-    <content type="html"><![CDATA[<p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
-一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;add some examples to (or delete) </span><span class="si">#{</span><span class="bp">__FILE__</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="mi">1</span> <span class="n">example</span><span class="p">,</span> <span class="mi">0</span> <span class="n">failures</span><span class="p">,</span> <span class="mi">1</span> <span class="n">pending</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因為不是每個專案都會讓你有時間寫 spec<br/>
-等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
-所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
-
-<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
-
-<p>pending 可分幾個層次如下&#8230;</p>
-
-<h4>整個 class 的 pending</h4>
-
-<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">FoosController</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">pending</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>某個 method 的 pending</h4>
-
-<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">pending</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>或</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">pending</span> <span class="s2">&quot;#bar&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>一般都是後者的寫法</p>
-
-<h4>method/action 內的某個 case</h4>
-
-<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">Foo</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">describe</span> <span class="s2">&quot;#bar&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">it</span> <span class="s2">&quot;should be a kind of Bar&quot;</span> <span class="k">do</span>
-</span><span class='line'>      <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">pending</span> <span class="s2">&quot;should raise error if bar_id is nil&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>另外, method 只針對 public methods 寫, 一般 protected 和 private method 都不寫 spec<br/>
-嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
-我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
 ]]></content>
   </entry>
   

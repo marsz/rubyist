@@ -9,9 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker
-因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動
-以下將介紹如何將重啟 worker 整合到 &hellip;">
+  <meta name="description" content="BigTuna 是透過 delayed_job 讓所有 build 中的 process 的能夠正常運作
+當 delayed_job 因為某種不明因素終止時, 就得再 ssh 到 server 重啟 delayed_job&#8230; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/">Bigtuna 保持 delayed_job 持續執行</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-23T08:59:00+08:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>BigTuna</code> 是透過 <a href="https://github.com/tobi/delayed_job" target="_blank">delayed_job</a> 讓所有 build 中的 process 的能夠正常運作<br/>
+當 <code>delayed_job</code> 因為某種不明因素終止時, 就得再 ssh 到 server 重啟 <code>delayed_job</code>&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -487,50 +530,6 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-03/rails-rspec-pending/">Rails Rspec (3) pending 的使用</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-03T16:06:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-03/rails-rspec-pending/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
-一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-03/rails-rspec-pending/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -576,6 +575,10 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-05-22/fetch-facebook-place-checkins-count/">取得 Facebook 地點的打卡數</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-05-15/reading-deliberate-practice-2/">讀書心得: 刻意練習(2)</a>
       </li>
     
@@ -591,16 +594,12 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
         <a href="/blog/2012-03-06/rspec-render-views/">Rspec 設定 request 或 controller 的 spec 中 render view</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-03-04/rspec-file-upload/">Rspec 檔案上傳的測試</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
 <h1>分類</h1>
-<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 111.42857142857143%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 102.85714285714286%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 105.71428571428571%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 102.85714285714286%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 114.28571428571429%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 105.71428571428571%'>Backup(2)</a>  <a href='/blog/categories/bigtuna' style='font-size: 114.28571428571429%'>Bigtuna(5)</a>  <a href='/blog/categories/capistrano' style='font-size: 108.57142857142857%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 105.71428571428571%'>Carrierwave(2)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 114.28571428571429%'>Continuous integration(5)</a>  <a href='/blog/categories/controller' style='font-size: 102.85714285714286%'>Controller(1)</a>  <a href='/blog/categories/counter' style='font-size: 102.85714285714286%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 102.85714285714286%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 102.85714285714286%'>Date(1)</a>  <a href='/blog/categories/delayed-job' style='font-size: 102.85714285714286%'>Delayed job(1)</a>  <a href='/blog/categories/deploy' style='font-size: 108.57142857142857%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 105.71428571428571%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 102.85714285714286%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 105.71428571428571%'>Facebook(2)</a>  <a href='/blog/categories/factory-girl' style='font-size: 111.42857142857143%'>Factory-girl(4)</a>  <a href='/blog/categories/file-upload' style='font-size: 102.85714285714286%'>File-upload(1)</a>  <a href='/blog/categories/fog' style='font-size: 102.85714285714286%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 105.71428571428571%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 102.85714285714286%'>Git-rebase(1)</a>  <a href='/blog/categories/god' style='font-size: 102.85714285714286%'>God(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 102.85714285714286%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 102.85714285714286%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 102.85714285714286%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 114.28571428571429%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 102.85714285714286%'>Model(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 102.85714285714286%'>Omniauth(1)</a>  <a href='/blog/categories/reading' style='font-size: 105.71428571428571%'>Reading(2)</a>  <a href='/blog/categories/regular-expression' style='font-size: 102.85714285714286%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 114.28571428571429%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 102.85714285714286%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 131.42857142857142%'>Rspec(11)</a>  <a href='/blog/categories/rspec-controllers' style='font-size: 102.85714285714286%'>Rspec-controllers(1)</a>  <a href='/blog/categories/rspec-requests' style='font-size: 102.85714285714286%'>Rspec-requests(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(21)</a>  <a href='/blog/categories/sql' style='font-size: 102.85714285714286%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 102.85714285714286%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 102.85714285714286%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 111.42857142857143%'>Testing(4)</a>  <a href='/blog/categories/url-helper' style='font-size: 102.85714285714286%'>Url-helper(1)</a>  <a href='/blog/categories/validations' style='font-size: 102.85714285714286%'>Validations(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 102.85714285714286%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 102.85714285714286%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 102.85714285714286%'>Yaml(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/activerecord' style='font-size: 111.42857142857143%'>Activerecord(4)</a>  <a href='/blog/categories/amazon-s3' style='font-size: 102.85714285714286%'>Amazon-s3(1)</a>  <a href='/blog/categories/assets' style='font-size: 105.71428571428571%'>Assets(2)</a>  <a href='/blog/categories/assets-precompile' style='font-size: 102.85714285714286%'>Assets-precompile(1)</a>  <a href='/blog/categories/background-job' style='font-size: 114.28571428571429%'>Background-job(5)</a>  <a href='/blog/categories/backup' style='font-size: 105.71428571428571%'>Backup(2)</a>  <a href='/blog/categories/bigtuna' style='font-size: 114.28571428571429%'>Bigtuna(5)</a>  <a href='/blog/categories/capistrano' style='font-size: 108.57142857142857%'>Capistrano(3)</a>  <a href='/blog/categories/carrierwave' style='font-size: 105.71428571428571%'>Carrierwave(2)</a>  <a href='/blog/categories/continuous-integration' style='font-size: 114.28571428571429%'>Continuous integration(5)</a>  <a href='/blog/categories/controller' style='font-size: 102.85714285714286%'>Controller(1)</a>  <a href='/blog/categories/counter' style='font-size: 102.85714285714286%'>Counter(1)</a>  <a href='/blog/categories/database' style='font-size: 102.85714285714286%'>Database(1)</a>  <a href='/blog/categories/date' style='font-size: 102.85714285714286%'>Date(1)</a>  <a href='/blog/categories/delayed-job' style='font-size: 102.85714285714286%'>Delayed job(1)</a>  <a href='/blog/categories/deploy' style='font-size: 108.57142857142857%'>Deploy(3)</a>  <a href='/blog/categories/devise' style='font-size: 105.71428571428571%'>Devise(2)</a>  <a href='/blog/categories/encoding' style='font-size: 102.85714285714286%'>Encoding(1)</a>  <a href='/blog/categories/facebook' style='font-size: 108.57142857142857%'>Facebook(3)</a>  <a href='/blog/categories/factory-girl' style='font-size: 111.42857142857143%'>Factory-girl(4)</a>  <a href='/blog/categories/file-upload' style='font-size: 102.85714285714286%'>File-upload(1)</a>  <a href='/blog/categories/fog' style='font-size: 102.85714285714286%'>Fog(1)</a>  <a href='/blog/categories/git' style='font-size: 105.71428571428571%'>Git(2)</a>  <a href='/blog/categories/git-rebase' style='font-size: 102.85714285714286%'>Git-rebase(1)</a>  <a href='/blog/categories/god' style='font-size: 102.85714285714286%'>God(1)</a>  <a href='/blog/categories/imagemagick' style='font-size: 102.85714285714286%'>Imagemagick(1)</a>  <a href='/blog/categories/json' style='font-size: 102.85714285714286%'>Json(1)</a>  <a href='/blog/categories/mailer' style='font-size: 102.85714285714286%'>Mailer(1)</a>  <a href='/blog/categories/message-queue' style='font-size: 114.28571428571429%'>Message-queue(5)</a>  <a href='/blog/categories/model' style='font-size: 102.85714285714286%'>Model(1)</a>  <a href='/blog/categories/omniauth' style='font-size: 102.85714285714286%'>Omniauth(1)</a>  <a href='/blog/categories/reading' style='font-size: 105.71428571428571%'>Reading(2)</a>  <a href='/blog/categories/regular-expression' style='font-size: 102.85714285714286%'>Regular expression(1)</a>  <a href='/blog/categories/resque' style='font-size: 114.28571428571429%'>Resque(5)</a>  <a href='/blog/categories/rmagick' style='font-size: 102.85714285714286%'>Rmagick(1)</a>  <a href='/blog/categories/rspec' style='font-size: 131.42857142857142%'>Rspec(11)</a>  <a href='/blog/categories/rspec-controllers' style='font-size: 102.85714285714286%'>Rspec-controllers(1)</a>  <a href='/blog/categories/rspec-requests' style='font-size: 102.85714285714286%'>Rspec-requests(1)</a>  <a href='/blog/categories/rubygems' style='font-size: 160.0%'>Rubygems(21)</a>  <a href='/blog/categories/sql' style='font-size: 102.85714285714286%'>Sql(1)</a>  <a href='/blog/categories/sql' style='font-size: 102.85714285714286%'>Sql(1)</a>  <a href='/blog/categories/string' style='font-size: 102.85714285714286%'>String(1)</a>  <a href='/blog/categories/testing' style='font-size: 111.42857142857143%'>Testing(4)</a>  <a href='/blog/categories/url-helper' style='font-size: 102.85714285714286%'>Url-helper(1)</a>  <a href='/blog/categories/validations' style='font-size: 102.85714285714286%'>Validations(1)</a>  <a href='/blog/categories/views-partial' style='font-size: 102.85714285714286%'>Views-partial(1)</a>  <a href='/blog/categories/xml' style='font-size: 102.85714285714286%'>Xml(1)</a>  <a href='/blog/categories/yaml' style='font-size: 102.85714285714286%'>Yaml(1)</a> </span>
 </section>
 
 
