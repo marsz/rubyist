@@ -9,7 +9,7 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="不論是 one-to-one one-to-many 或 many-to-many, 我們都希望 model 中的關連也能反應到 factory_girl 的定義中 ">
+  <meta name="description" content="在寫測試中, 有許多的情境, 可能會需要在產生測試用資料後做許多處理, 因此 Factory Girl 本身也提供了 callback 機制&#8230; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-02-29/factory-girl-callbacks/">Factory Girl 的回呼 (callbacks)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-29T10:18:00+08:00" pubdate data-updated="true">Feb 29<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-02-29/factory-girl-callbacks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在寫測試中, 有許多的情境, 可能會需要在產生測試用資料後做許多處理, 因此 <code>Factory Girl</code> 本身也提供了 <code>callback</code> 機制&#8230;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-02-29/factory-girl-callbacks/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -480,52 +523,6 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-02-06/factory-girl-rails-intro/">使用 Factory Girl 產生測試用資料</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-06T16:57:00+08:00" pubdate data-updated="true">Feb 6<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-02-06/factory-girl-rails-intro/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在寫測試的時候, 為了實際測試程式處理資料的正確性<br/>
-免不了要依據資料庫的關聯建立假資料<br/>
-但往往會因為 model 增加了一些 validation 而導致產生假資料的 code, 必須符合驗證而修改<br/>
-當測試的量日漸龐大時, 改起來就會非常麻煩</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-02-06/factory-girl-rails-intro/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -571,6 +568,10 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-08-06/reading-deliberate-practice-5/">讀書心得: 刻意練習(5)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-08-05/reading-deliberate-practice-4/">讀書心得: 刻意練習(4)</a>
       </li>
     
@@ -586,15 +587,11 @@ resque 是以 redis 做為 message queue server 的方式來進行&#8230;</p>
         <a href="/blog/2012-05-15/reading-deliberate-practice-2/">讀書心得: 刻意練習(2)</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-05-14/reading-deliberate-practice-1/">讀書心得: 刻意練習(1)</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (2)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (1)</a></li><li><a href='/blog/categories/reading'>Reading (4)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (21)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (2)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (1)</a></li><li><a href='/blog/categories/reading'>Reading (5)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (21)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
 </section>
 
 

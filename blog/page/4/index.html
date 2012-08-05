@@ -9,9 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="因為
-git pull = git fetch + git merge (remote branch merge to local branch)
-而 merge 往往會造成線圖上產生無謂的分支 (可參考 ihower 大大的 rebase 文章 ) ">
+  <meta name="description" content="上禮拜終於要把服務佈署上去了
+結果在執行 precompile 時遇到錯誤訊息如下: ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,50 @@ git pull = git fetch + git merge (remote branch merge to local branch)
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/">rake assets:precompile 時出現 stack level too deep 的訊息</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-24T19:53:00+08:00" pubdate data-updated="true">Jan 24<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上禮拜終於要把服務佈署上去了<br/>
+結果在執行 precompile 時遇到錯誤訊息如下:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-24/assets-precompile-encounter-stack-level-too-deep/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -491,55 +534,6 @@ git pull = git fetch + git merge (remote branch merge to local branch)
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011-12-30/counter-increment-with-custom-value/">實作 sql 中的數值欄位的遞增(counter increment)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-30T17:07:00+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011-12-30/counter-increment-with-custom-value/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
-即想在 sql 中實作出</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">UPDATE</span> <span class="n">users</span> <span class="k">SET</span> <span class="n">score</span> <span class="o">=</span> <span class="n">score</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011-12-30/counter-increment-with-custom-value/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -585,6 +579,10 @@ git pull = git fetch + git merge (remote branch merge to local branch)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-08-06/reading-deliberate-practice-5/">讀書心得: 刻意練習(5)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-08-05/reading-deliberate-practice-4/">讀書心得: 刻意練習(4)</a>
       </li>
     
@@ -600,15 +598,11 @@ git pull = git fetch + git merge (remote branch merge to local branch)
         <a href="/blog/2012-05-15/reading-deliberate-practice-2/">讀書心得: 刻意練習(2)</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-05-14/reading-deliberate-practice-1/">讀書心得: 刻意練習(1)</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (2)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (1)</a></li><li><a href='/blog/categories/reading'>Reading (4)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (21)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (2)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (1)</a></li><li><a href='/blog/categories/reading'>Reading (5)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (21)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
 </section>
 
 
