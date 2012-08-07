@@ -4,7 +4,6 @@ title: "讀書心得: 刻意練習(6)"
 date: 2012-08-07 13:42
 comments: true
 categories: ["Reading"]
-published: false
 ---
 
 最後一篇分享了 XD 本篇主要摘要刻意練習對創意的發展
