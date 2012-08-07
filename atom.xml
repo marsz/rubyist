@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-07T12:09:46+08:00</updated>
+  <updated>2012-08-07T12:13:29+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,61 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[讀書心得: 刻意練習(6)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-07/reading-deliberate-practice-6/"/>
+    <updated>2012-08-07T13:42:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-07/reading-deliberate-practice-6</id>
+    <content type="html"><![CDATA[<p>最後一篇分享了 XD 本篇主要摘要刻意練習對創意的發展</p>
+
+<!-- more -->
+
+
+<h3>我們對創意的誤解</h3>
+
+<p>一般我們認為創意之所以會有，乃是來自於 <code>1. 靈光乍現</code> <code>2. 置身領域之外的旁觀者</code>，
+事實上這兩點都是不太正確的。任何突破性的創意產生之前，都是當事者下了多年的苦工後才有的。研究人員找出五百多首作曲，來自於個作曲家的第一部成名作或曠世巨作，發現其中只有三件作品是在作曲家職涯的前十年完成，而這三件作品完成的時間也是在第八年和第九年。而這樣的數據足以說明前述的 <code>十年法則</code>。</p>
+
+<h3>創意的正解</h3>
+
+<h5>知識越多創新越多</h5>
+
+<p>在十年法則的漫長時間下，創作者做的活動大多是吸取專精知識，這些活動絕對是該領域密集而且深度的薰陶，即使沒有指導者，創新者本身也股強烈的動力，盡可能的學習與該領域相關的事物。</p>
+
+<h5>創意是孕育出來的</h5>
+
+<p>其實我們可以從現代科技中發現，這些創新都是既有事物的改良和延伸，透過卓越的洞見得以實現。如果不是因為了解過去的成就，這些創新肯定不可能實現。因此我們可確定<code>靈光乍現是來自多時的思索和研究</code>，絕非偶然、也不是無中生有。</p>
+
+<h3>打造創新組織四大關鍵</h3>
+
+<h5>動機與熱情</h5>
+
+<p>刻意練習不是輕鬆的過程，沒有熱情支持難以持續。因此創新者本身是熱切接受自身領域的薰陶，以及其相關的深度知識。</p>
+
+<h5>文化變革</h5>
+
+<p>只要是組織 (2人以上) 都離不開文化的議題，而文化變革必須從上位者本身做起，只要公司的&#8221;長&#8221;字輩認為公司文化沒問題，它就永遠不可能改變。</p>
+
+<h5>傳達需求</h5>
+
+<p>組織想要有所創新，就得讓其中的每個人都了解哪種創新最有價值，有了方向才能夠進行深度的心智模型建立、投入大量心力，領導者在這裡扮演重要角色。</p>
+
+<h5>賦予自由</h5>
+
+<p>當組織內的每個人都被注入動機以及明確方向時，接下來需要注意的就是給予發揮空間，刻意練習強調的是自發性，組織在此要扮演推手的角色，而非造成限制。</p>
+
+<hr />
+
+<p>身為網路工作者，又是工程師。在讀完本書後，小弟首先做的就是調整作息~XD 一改平日睡到十點後才醒來的習慣，想辦法在早上擠出 1~2 小時做最困難的工作 (通常都是 coding 或 debug)，我設定給自己的關鍵指標就是開發所花的時間: 每天早上這 1~2 小時能完成多少工作。</p>
+
+<p>在這樣的過程中剛開始是很痛苦，其實早起感覺都沒睡飽，注意力也難以集中，但震盪期大概持續一個月左右就適應了。習慣後慢慢發現另一個重要的指標: 專注力，程式開發是很注重當下的專心度，因此開始用一些方式提高專注力，關掉手機以及電腦的各種通知等，用高度的感知以及後設認知檢視自己在這段時間內的專注力是否有提昇。</p>
+
+<p>有了一定程度的專注力後，又發現了另一個指標: 英文資料理解速度。程式開發遇到問題經常要上孤狗，而資料多半是英文，因此能夠花越少的時間孤狗，相對就能夠花越多時間在開發上，效率自然會提昇。</p>
+
+<p>如此循環進行，發現不斷找到新的評估指標，然後持續提昇。目前小弟正在磨練的另一項技能是養成寫 blog 的習慣，將自己曾經解決的問題以及累積的知識得以文件保存，除此之外，身為工程師仍有許多能力必須提昇，例如和別人溝通時是否能以最精簡的方式傳達，專案執行前的目標設定是否足夠嚴謹、達成率是否足夠等。刻意練習概念所帶給我的，是變得更了解這些技能學習過程的運作原理，進而更能掌握自己各方面能力的提升。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[讀書心得: 刻意練習(5)]]></title>
@@ -1499,340 +1554,6 @@ resque 也有提供 :)</p>
 <p>redis => resuqe config => worker</p>
 
 <p>下一篇將會介紹在 rails 中的基本使用方式</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Devise + Omniauth 的 Facebook 登入範例]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/"/>
-    <updated>2012-02-11T01:20:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login</id>
-    <content type="html"><![CDATA[<p>以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2<br/>
-直接使用 devise 中的 omniauthable 有許多彈性不足的問題<br/>
-因此小弟參考了網路上的作法, 加上因應某些需求的修改&#8230;</p>
-
-<!-- more -->
-
-
-<h4>參考</h4>
-
-<p><a href="http://blog.railsrumble.com/blog/2010/10/08/intridea-omniauth" target="_blank">http://blog.railsrumble.com/blog/2010/10/08/intridea-omniauth</a></p>
-
-<h4>步驟</h4>
-
-<p>(以下範例以 user 做為 model 名稱)</p>
-
-<p>安裝 gem</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s2">&quot;devise&quot;</span><span class="p">,</span> <span class="s2">&quot;1.4.9&quot;</span>
-</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;oa-oauth&quot;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s2">&quot;omniauth/oauth&quot;</span>
-</span><span class='line'><span class="n">gem</span> <span class="s2">&quot;oa-openid&quot;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s2">&quot;omniauth/openid&quot;</span> <span class="c1"># for google 或其他 openid auth</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>devise initial setup</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">devise</span><span class="ss">:install</span>
-</span><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">devise</span> <span class="n">user</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 users 的 migration 中, 依照需求可自行選擇加入</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">create_table</span><span class="p">(</span><span class="ss">:users</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:name</span> <span class="c1"># 儲存使用者名稱</span>
-</span><span class='line'>  <span class="n">t</span><span class="o">.</span><span class="n">confirmable</span> <span class="c1"># email 認證, 若未來有提供註冊流程產生新使用者的可能性, 就加吧</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">change_column</span> <span class="ss">:users</span><span class="p">,</span><span class="ss">:email</span><span class="p">,</span> <span class="ss">:string</span><span class="p">,</span> <span class="ss">:null</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="c1"># 若登入 open id 的 provider 不提供 email, 則必須做此設定, 讓 email 可以為 null</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>建立對應 opend id 和 user 的 model - authorization</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">model</span> <span class="n">authorization</span> <span class="n">provider</span><span class="ss">:string</span> <span class="n">uid</span><span class="ss">:string</span> <span class="n">user_id</span><span class="ss">:integer</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>user model 內容<br/>
-1. devise 的 module 比預設的多了 confirmable, 主要為了提供未來也能使用站內註冊流程的可能<br/>
-2. create_from_auth 處理 omniauth 丟過來的 auth_hash 並且以 email 為 unique key 新增 user</p>
-
-<figure class='code'><figcaption><span>app/models/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">devise</span> <span class="ss">:database_authenticatable</span><span class="p">,</span> <span class="ss">:registerable</span><span class="p">,</span>
-</span><span class='line'>         <span class="ss">:recoverable</span><span class="p">,</span> <span class="ss">:rememberable</span><span class="p">,</span> <span class="ss">:trackable</span><span class="p">,</span> <span class="ss">:validatable</span><span class="p">,</span>
-</span><span class='line'>         <span class="ss">:confirmable</span> <span class="c1"># 加上 confirmable</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:authorizations</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">create_from_auth!</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">created_hash</span> <span class="o">=</span> <span class="p">{</span><span class="ss">:email</span> <span class="o">=&gt;</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:user_info</span><span class="o">][</span><span class="ss">:email</span><span class="o">]</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:user_info</span><span class="o">][</span><span class="ss">:name</span><span class="o">]</span> <span class="p">}</span>
-</span><span class='line'>    <span class="n">user</span> <span class="o">=</span> <span class="p">(</span><span class="n">created_hash</span><span class="o">[</span><span class="ss">:email</span><span class="o">].</span><span class="n">nil?</span> <span class="p">?</span> <span class="kp">nil</span> <span class="p">:</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">created_hash</span><span class="o">[</span><span class="ss">:email</span><span class="o">]</span><span class="p">))</span> <span class="o">||</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">created_hash</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
-</span><span class='line'>      <span class="n">user</span><span class="o">.</span><span class="n">confirm!</span>
-</span><span class='line'>    <span class="k">elsif</span> <span class="n">user</span>
-</span><span class='line'>      <span class="n">user</span><span class="o">.</span><span class="n">save!</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">user</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>authorization model 內容<br/>
-1. 對應 user 和 open id, 使其不重複<br/>
-2. #create_by_omniauth 處理從 omniauth 登入後的資料, 可以將 provider 的資料整合進指定的user(例如目前登入者) 或相同 email 的 user<br/>
-3. constant PROVIDERS 用以提供未來擴充 provider 的彈性</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Authorization</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="no">PROVIDERS</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:facebook</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:user</span>
-</span><span class='line'>  <span class="n">validates_presence_of</span> <span class="ss">:user_id</span><span class="p">,</span> <span class="ss">:uid</span><span class="p">,</span> <span class="ss">:provider</span>
-</span><span class='line'>  <span class="n">validates_uniqueness_of</span> <span class="ss">:uid</span><span class="p">,</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:provider</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">create_by_omniauth</span><span class="p">(</span><span class="nb">hash</span><span class="p">,</span> <span class="n">current_user</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">hash</span> <span class="o">=</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">HashWithIndifferentAccess</span><span class="o">.</span><span class="n">new</span> <span class="nb">hash</span>
-</span><span class='line'>    <span class="n">auth</span> <span class="o">=</span> <span class="n">find_from_hash</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">unless</span> <span class="n">auth</span>
-</span><span class='line'>      <span class="n">current_user</span> <span class="o">||=</span> <span class="no">User</span><span class="o">.</span><span class="n">create_from_auth!</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">auth</span> <span class="o">=</span> <span class="no">Authorization</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:user</span><span class="o">=&gt;</span><span class="n">current_user</span><span class="p">,</span><span class="ss">:uid</span><span class="o">=&gt;</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:uid</span><span class="o">]</span><span class="p">,</span><span class="ss">:provider</span><span class="o">=&gt;</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:provider</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'>      <span class="n">auth</span><span class="o">.</span><span class="n">save</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>    <span class="n">auth</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_from_hash</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:provider</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">hash</span><span class="o">[</span><span class="ss">:uid</span><span class="o">]</span>
-</span><span class='line'>      <span class="n">find_by_provider_and_uid</span><span class="p">(</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:provider</span><span class="o">]</span><span class="p">,</span><span class="nb">hash</span><span class="o">[</span><span class="ss">:uid</span><span class="o">]</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 omniauth (facebook 登入的 app data), 同時讓 /auth/facebook 的 route 可以連接 fb 的 oauth, 相關可參考 <a href="https://github.com/intridea/omniauth" target="_blank">omniauth 的說明</a></p>
-
-<figure class='code'><figcaption><span>config/initializers/omniauth.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Rails</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">use</span> <span class="no">OmniAuth</span><span class="o">::</span><span class="no">Builder</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/omniauth.yml&quot;</span><span class="p">))</span><span class="o">[</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">]</span>
-</span><span class='line'>  <span class="n">provider</span> <span class="ss">:facebook</span><span class="p">,</span> <span class="n">config</span><span class="o">[</span><span class="ss">:facebook</span><span class="o">][</span><span class="ss">:api_id</span><span class="o">]</span><span class="p">,</span> <span class="n">config</span><span class="o">[</span><span class="ss">:facebook</span><span class="o">][</span><span class="ss">:api_secret</span><span class="o">]</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>config/omniauth.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:facebook</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&quot;foo.com&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:api_id</span><span class="p-Indicator">:</span> <span class="s">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:api_secret</span><span class="p-Indicator">:</span> <span class="s">&quot;barbarbarbar&quot;</span>
-</span><span class='line'><span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:facebook</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&quot;foo.com&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:api_id</span><span class="p-Indicator">:</span> <span class="s">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:api_secret</span><span class="p-Indicator">:</span> <span class="s">&quot;barbarbarbar&quot;</span>
-</span><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">:facebook</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:domain</span><span class="p-Indicator">:</span> <span class="s">&quot;foo.com&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:api_id</span><span class="p-Indicator">:</span> <span class="s">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">:api_secret</span><span class="p-Indicator">:</span> <span class="s">&quot;barbarbarbar&quot;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如同 omniauth 的做法, 把接 facebook (或其他 provider) 的 route 和 controller 寫好</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">controller</span> <span class="n">sessions</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>有可能登入 facebook 會 fail, 所以也要把 fail 的部份寫好</p>
-
-<figure class='code'><figcaption><span>app/controllers/sessions_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">create</span>
-</span><span class='line'>    <span class="vi">@auth</span> <span class="o">=</span> <span class="no">Authorization</span><span class="o">.</span><span class="n">create_by_omniauth</span><span class="p">(</span><span class="n">auth_hash</span><span class="p">,</span> <span class="n">current_user</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">if</span> <span class="vi">@auth</span><span class="o">.</span><span class="n">user</span>
-</span><span class='line'>       <span class="n">sign_in_and_redirect</span> <span class="ss">:user</span><span class="p">,</span> <span class="vi">@auth</span><span class="o">.</span><span class="n">user</span>
-</span><span class='line'>    <span class="k">else</span>
-</span><span class='line'>      <span class="k">raise</span> <span class="k">do</span>
-</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;auth_hash: </span><span class="si">#{</span><span class="n">auth_hash</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;@auth: </span><span class="si">#{</span><span class="vi">@auth</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>        <span class="n">redirect_to</span> <span class="n">new_user_session_path</span>
-</span><span class='line'>      <span class="k">end</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">failure</span>
-</span><span class='line'>    <span class="n">flash</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:message</span><span class="o">]</span>
-</span><span class='line'>    <span class="n">redirect_to</span> <span class="n">new_user_session_path</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">auth_hash</span>
-</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;omniauth.auth&#39;</span><span class="o">]</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>設定 route, 包含 omniauth 和 devise</p>
-
-<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">match</span> <span class="s1">&#39;/auth/:provider/callback&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;sessions#create&#39;</span>
-</span><span class='line'>  <span class="n">match</span> <span class="s1">&#39;/auth/failure&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;sessions#failure&#39;</span>
-</span><span class='line'>  <span class="n">devise_for</span> <span class="ss">:users</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">get</span> <span class="s1">&#39;/users/sign_in&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;devise/sessions#new&#39;</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:new_user_session</span>
-</span><span class='line'>    <span class="n">get</span> <span class="s1">&#39;/users/sign_out&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;devise/sessions#destroy&#39;</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:user_sign_out</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>view 裡面的 Facebook 登入按鈕 (html)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;/auth/facebook&quot;</span><span class="nt">&gt;</span>Facebook 登入<span class="nt">&lt;/a&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>若希望 Facebook 登入後可以導回登入前的頁面, 則可以做以下設定<br/>
-主要參考 <a href="https://github.com/plataformatec/devise/wiki/How-To:-Redirect-to-a-specific-page-on-successful-sign-in" target="_blank">Devise Wiki</a></p>
-
-<figure class='code'><figcaption><span>app/controllers/application_controller.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="kp">private</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">after_sign_in_path_for</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;omniauth.origin&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="n">stored_location_for</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">||</span> <span class="n">users_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>目前沒有使用 devise 1.5 以上的原因是在這裡會遇到 redirect loop 的問題</p>
-
-<h4>結論</h4>
-
-<p>本篇範例主要以最常用的 facebook 登入為主<br/>
-另外也提供了整合 openid 至現有帳號的功能<br/>
-大多數的使用者帳號系統最在意的是能否拿到 email, 雖然 Facebook 是最多人使用的 open id, 但是基於網站本身的內容特性, 提供網站自己的註冊流程也是必要的<br/>
-接下來還有另一篇介紹上述範例中的 rspec 會怎麼寫</p>
 ]]></content>
   </entry>
   

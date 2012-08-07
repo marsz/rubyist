@@ -9,8 +9,11 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="上禮拜終於要把服務佈署上去了
-結果在執行 precompile 時遇到錯誤訊息如下: ">
+  <meta name="description" content="CI 全名 &#8220;Continuous Interation&#8221;
+用於開發流程中的一種管理技巧
+在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中
+相關介紹可參考 ihower 的 測試 Testing
+今天要介紹的則是用於 CI system 的 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +83,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-27/ci-system-bigtuna-install/">CI server - Bigtuna (安裝篇)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-27T11:17:00+08:00" pubdate data-updated="true">Jan 27<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-27/ci-system-bigtuna-install/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CI 全名 &#8220;Continuous Interation&#8221;<br/>
+用於開發流程中的一種管理技巧<br/>
+在每一次的修改後, 能夠自動化進行相關測試, 讓該次修改正確無誤的整合進現行系統中<br/>
+相關介紹可參考 ihower 的 <a href="http://ihower.tw/rails3/testing.html" target="_blank">測試 Testing</a><br/>
+今天要介紹的則是用於 CI system 的 Bigtuna</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-27/ci-system-bigtuna-install/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -490,50 +540,6 @@ git pull = git fetch + git merge (remote branch merge to local branch)
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-01-04/query-datetime-by-date/">如何在 datetime 的欄位中做日期的搜尋</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-04T16:54:00+08:00" pubdate data-updated="true">Jan 4<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012-01-04/query-datetime-by-date/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
-因此若我們直接下 sql 時, 必須將時區考量進去</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-01-04/query-datetime-by-date/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -579,6 +585,10 @@ git pull = git fetch + git merge (remote branch merge to local branch)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-08-07/reading-deliberate-practice-6/">讀書心得: 刻意練習(6)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-08-06/reading-deliberate-practice-5/">讀書心得: 刻意練習(5)</a>
       </li>
     
@@ -594,15 +604,11 @@ git pull = git fetch + git merge (remote branch merge to local branch)
         <a href="/blog/2012-05-22/fetch-facebook-place-checkins-count/">取得 Facebook 地點的打卡數</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-05-15/reading-deliberate-practice-2/">讀書心得: 刻意練習(2)</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (2)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (1)</a></li><li><a href='/blog/categories/reading'>Reading (5)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (21)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (2)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (1)</a></li><li><a href='/blog/categories/reading'>Reading (6)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (21)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
 </section>
 
 
