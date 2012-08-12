@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "omniauth 登入後的 redirect 設定"
-date: 2012-08-12 14:08
+date: 2012-08-10 14:08
 comments: true
 categories: [Rubygems, Omniauth] 
 ---
