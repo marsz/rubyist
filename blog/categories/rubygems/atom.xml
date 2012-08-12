@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-07T12:13:29+08:00</updated>
+  <updated>2012-08-12T14:32:56+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[omniauth 登入後的 redirect 設定]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-12/omniauth-redirect-after-login/"/>
+    <updated>2012-08-12T14:08:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-12/omniauth-redirect-after-login</id>
+    <content type="html"><![CDATA[<p>我們曾在 <a href="http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/">Devise callbacks</a> 中，描述如何在登入後自定 redirect。這次則是在 omniauth 進行 open id 驗證時就先把 redirect 當參數先丟。</p>
+
+<!-- more -->
+
+
+<p>參考 <a href="https://github.com/intridea/omniauth/issues/218">官方作法</a><br/>
+利用 <code>origin</code> 參數即可在 open id 驗證後進行 redirect</p>
+
+<p><code>ruby config/routes.rb
+match '/auth/facebook', :as =&gt; :facebook_login
+</code></p>
+
+<p>```ruby app/views/xxx.erb</p>
+
+<h1>view 或 controller 下</h1>
+
+<p>facebook_login_path(:origin => "/url/for/redirect")</p>
+
+<h1>即 "/auth/facebook?origin=/url/for/redirect"</h1>
+
+<p>```</p>
+
+<p>若 <code>devise</code> 中已經透過 application_controller.rb 的 <code>after_sign_in_path_for</code> 處理登入後的 redirect 時，則可以透過 <code>request.env['omniauth.origin']</code> 取得 origin 參數的內容。</p>
+
+<p><code>ruby app/controllers/application_controller.rb
+def after_sign_in_path_for(user)
+  return request.env['omniauth.origin'] || root_path
+end
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[devise 的 user 登入免驗證密碼]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password/"/>
+    <updated>2012-08-09T17:15:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password</id>
+    <content type="html"><![CDATA[<p><code>Devise</code> 加上 <code>Omniauth</code> (或其他 Open ID 登入機制) 時，資料庫的密碼欄位可能會需要為空值，因此可在 user 的 model 中覆寫 <code>password_required?</code> (為 public method) 即可。</p>
+
+<!-- more -->
+
+
+<p>```ruby app/models/user.rb
+  def password_required?</p>
+
+<pre><code>return (self.facebook_id ? false : true)
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>該範例之邏輯為，有 facebook id 時密碼欄位可為空值。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用 backup gem 做自動化備份]]></title>
@@ -191,82 +251,6 @@ end
 ```</p>
 
 <p>詳細使用方式可見 <a href="https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md" target="_blank">官方說明文件</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[factory_girl 中的 model 關連 (association)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations/"/>
-    <updated>2012-02-27T09:42:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations</id>
-    <content type="html"><![CDATA[<p>不論是 <code>one-to-one</code> <code>one-to-many</code> 或 <code>many-to-many</code>, 我們都希望 model 中的關連也能反應到 <code>factory_girl</code> 的定義中</p>
-
-<!-- more -->
-
-
-<p>方法如下:  (brand has many products)</p>
-
-<p>```ruby spec/factories/brands.rb
-FactoryGirl.define do
-  factory :brand do</p>
-
-<pre><code>sequence(:name) { |n| "brand name #{n}" }
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>```ruby spec/factories/products.rb
-FactoryGirl.define do
-  factory :products do</p>
-
-<pre><code>name "product name"
-brand do
-  Factory :brand
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p><code>ruby app/models/product.rb
-class Product &lt; ActiveRecord::Base
-  belongs_to :brand  # brand_id
-end
-</code></p>
-
-<p>如此只要每次 <code>Factory(:product)</code> , 該 product 的 brancd 也會透過 brancd 產生, 而不需要再每次的 factory 中去進行關連了 <code>Factory(:product, :brand =&gt; Factory(:brand))</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[factory_girl 的 validates_uniqueness_of 欄位問題]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column/"/>
-    <updated>2012-02-25T09:25:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column</id>
-    <content type="html"><![CDATA[<p><code>model</code> 中有 <code>validates_uniqueness_of</code> 的欄位, 在 <code>factory_girl</code> 中可透過 <code>sequence</code> 來避免兩次以上的 factory 因 validation 沒過而無法產生假資料的情況</p>
-
-<!-- more -->
-
-
-<p>```ruby spec/factories/users.rb
-FactoryGirl.define do
-  factory :user do</p>
-
-<pre><code>sequence(:email) do |n|
-  "foo#{n}@bar.com"
-end
-name "barbar"
-password "12341234"
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p><code>n</code> 為流水號, 因此可用於 <code>number</code> 或 <code>string</code> 類型的 column</p>
 ]]></content>
   </entry>
   

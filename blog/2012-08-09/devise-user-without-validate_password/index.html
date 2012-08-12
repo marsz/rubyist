@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>categories: Controller - 黃金俠</title>
+  <title>devise 的 user 登入免驗證密碼 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="Category: Controller">
+  <meta name="description" content="Devise 加上 Omniauth (或其他 Open ID 登入機制) 時，資料庫的密碼欄位可能會需要為空值，因此可在 user 的 model 中覆寫 password_required? (為 public method) 即可。 app/models/user.rb1
+2
+3 def &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.twblog/categories/controller">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -78,36 +80,113 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">categories: Controller</h1>
+    
+      <h1 class="entry-title">devise 的 user 登入免驗證密碼</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-09T17:15:00+08:00" pubdate data-updated="true">Aug 9<span>th</span>, 2012</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
+
+
+<div class="entry-content"><p><code>Devise</code> 加上 <code>Omniauth</code> (或其他 Open ID 登入機制) 時，資料庫的密碼欄位可能會需要為空值，因此可在 user 的 model 中覆寫 <code>password_required?</code> (為 public method) 即可。</p>
+
+<!-- more -->
 
 
 
-  
-  <h2>2012</h2>
 
-<article>
-  
-<h1><a href="/blog/2012-03-04/rspec-file-upload/">Rspec 檔案上傳的測試</a></h1>
-<time datetime="2012-03-04T10:45:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>04</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/carrierwave/'>Carrierwave</a>, <a class='category' href='/blog/categories/controller/'>Controller</a>, <a class='category' href='/blog/categories/file-upload/'>File-upload</a>, <a class='category' href='/blog/categories/rspec/'>Rspec</a></span>
-</footer>
+<figure class='code'><figcaption><span>app/models/user.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="k">def</span> <span class="nf">password_required?</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">facebook_id</span> <span class="p">?</span> <span class="kp">false</span> <span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
-
+<p>該範例之邏輯為，有 facebook id 時密碼欄位可為空值。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-09T17:15:00+08:00" pubdate data-updated="true">Aug 9<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/devise/'>Devise</a>, <a class='category' href='/blog/categories/omniauth/'>Omniauth</a>, <a class='category' href='/blog/categories/rubygems/'>Rubygems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-08-07/reading-deliberate-practice-6/" title="Previous Post: 讀書心得: 刻意練習(6)">&laquo; 讀書心得: 刻意練習(6)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012-08-12/omniauth-redirect-after-login/" title="next Post: omniauth 登入後的 redirect 設定">omniauth 登入後的 redirect 設定 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -239,7 +318,10 @@
       var disqus_shortname = 'rubyist-marsz';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
