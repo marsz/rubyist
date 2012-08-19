@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Facebook | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/facebook/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-19T23:21:43+08:00</updated>
+  <updated>2012-08-19T23:56:13+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -122,9 +122,9 @@ https://graph.facebook.com/195588960470358
 <p>安裝 gem</p>
 
 <p><code>ruby
-gem "devise", "1.4.9"
-gem "oa-oauth", :require =&gt; "omniauth/oauth"
-gem "oa-openid", :require =&gt; "omniauth/openid" # for google 或其他 openid auth
+gem "devise"
+gem 'omniauth'
+gem 'omniauth-facebook'
 </code></p>
 
 <p>devise initial setup</p>
