@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-12T14:35:37+08:00</updated>
+  <updated>2012-08-19T23:17:38+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,167 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我的 Sublime 設定]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-settings-basic/"/>
+    <updated>2012-08-19T21:46:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-settings-basic</id>
+    <content type="html"><![CDATA[<p><a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。</p>
+
+<!-- more -->
+
+
+<h3>實用快速鍵</h3>
+
+<p>參考: <a href="https://gist.github.com/1207002" target="_blank">https://gist.github.com/1207002</a></p>
+
+<h3>安裝好後設定 link</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+</span><span class='line'>
+</span><span class='line'>sudo ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" /usr/bin/subl</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>ubuntu</code> 的話可以用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo ln -s ~/Applications/Sublime\ Text\ 2/sublime_text /usr/bin/subl</span></code></pre></td></tr></table></div></figure>
+
+
+<p>shell link，編輯 <code>~/.bashrc</code> 或 <code>~/.zshrc</code> (看你用的是哪一個 shell)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export EDITOR="/usr/local/bin/subl -w"</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>setting 檔</h3>
+
+<p><code>command + ,</code> 出現的檔案</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "color_scheme": "Packages/Color Scheme - Default/Twilight.tmTheme",
+</span><span class='line'>  "font_size": 18.0,
+</span><span class='line'>  "tab_size": 2,
+</span><span class='line'>  "translate_tabs_to_spaces": true,  
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(PS: 年紀大了所以用字體 size 用 18 XD)<br/>
+(PS2: tab 設定隨個人/公司喜好)</p>
+
+<h3>安裝 sass/scss 外掛</h3>
+
+<p>記得先關掉 Sublime</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+</span><span class='line'>git clone git://github.com/n00ge/sublime-text-haml-sass.git
+</span><span class='line'>mv sublime-text-haml-sass/Ruby\ Haml ./
+</span><span class='line'>mv sublime-text-haml-sass/SASS ./
+</span><span class='line'>rm -rf sublime-text-haml-sass</span></code></pre></td></tr></table></div></figure>
+
+
+<p>更多可參考<a href="https://github.com/n00ge/sublime-text-haml-sass" target="_blank">官方連結</a></p>
+
+<h3>安裝 ERB 檔案的編輯強化</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git@github.com:eddorre/SublimeERB.git ~/.sublime_erb
+</span><span class='line'>
+</span><span class='line'>ln -fs ~/.sublime_erb/erb_block.py ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/User</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8220;Sublime Text 2&#8221; > Preferences > &#8220;Key Binding User&#8221;<br/>
+在 <code>[</code> 和 <code>]</code> 間貼上</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{ "keys": ["ctrl+shift+."], "command": "erb", "context":
+</span><span class='line'>    [
+</span><span class='line'>      { "key": "selector", "operator": "equal", "operand": "text.html.ruby, text.haml, source.yaml, source.css, source.scss, source.js, source.coffee" }
+</span><span class='line'>    ]
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在 .erb 檔案中使用 <code>Ctrl+Shift+.</code> 就可以出現 <code>&lt;%= %&gt;</code> 的內容，重複按就可以切換不同用途的 erb block</p>
+
+<p>更多可參考<a href="https://github.com/eddorre/SublimeERB" target="_blank">官方文件</a></p>
+
+<h3>安裝 RubyTest</h3>
+
+<p>透過快速鍵跑單一檔案的 <code>rspec</code> (或 rails 內建的 test)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+</span><span class='line'>git clone https://github.com/maltize/sublime-text-2-ruby-tests.git RubyTest
+</span><span class='line'>cp RubyTest/RubyTest.sublime-settings ./User</span></code></pre></td></tr></table></div></figure>
+
+
+<p>修改 <code>RubyTest.sublime-settings</code></p>
+
+<p><code>vim User/RubyTest.sublime-settings</code></p>
+
+<p>內容如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "erb_exec": "bundle exec erb",
+</span><span class='line'>  "ruby_unit_exec": "bundle exec ruby",
+</span><span class='line'>  "ruby_cucumber_exec": "bundle exec cucumber -f pretty",
+</span><span class='line'>  "ruby_rspec_exec": "bundle exec rspec",
+</span><span class='line'>
+</span><span class='line'>  "ruby_unit_folder": "test",
+</span><span class='line'>  "ruby_cucumber_folder": "features",
+</span><span class='line'>  "ruby_rspec_folder": "spec",
+</span><span class='line'>
+</span><span class='line'>  "ruby_use_scratch" : false,
+</span><span class='line'>  "save_on_run": false,
+</span><span class='line'>  "ignored_directories": [".git", "vendor", "tmp"]
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>主要是在 <code>rspec</code> 的命令前加上 <code>bundle exec</code></p>
+
+<p><code>Command-Shift-R</code> 即可直接執行該檔案的 <code>rspec</code>，更多可參考 <a href="https://github.com/maltize/sublime-text-2-ruby-tests" target="_blank">官方文件</a></p>
+
+<p><a href="http://bit.ly/Nd1TjR" target="_blank">rvm issue</a> 目前尚未解決，預設會用 rvm default 的 ruby 版本，有人<a href="http://bit.ly/Nd2dz7" target="_blank"> hack 了</a>，但不是很喜歡 :p</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[omniauth 登入後的 redirect 設定]]></title>
@@ -1221,144 +1382,6 @@ bundle resqie_mailer 後, deliver 的結果則變成送到 mq 上 (透過 Resque
 
 <p>resque_mailer 簡單, 但仍是 background job<br/>
 因此測試還是要多多寫 XD</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 resque 實作背景作業 (測試篇 - Rspec)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-17/resque-spec/"/>
-    <updated>2012-02-17T00:40:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-17/resque-spec</id>
-    <content type="html"><![CDATA[<p>不管用什麼方式實作 background job 後<br/>
-令人頭痛的是很難知道 worker 在執行工作時有沒有噴 exception<br/>
-因此測試就顯得更為重要, 每次佈署前必須做好完整的測試, 以減少 worker 出錯<br/>
-當然也可以搭配 Exceptional 或 Aribrake 之類的雲端服務來進行監控&#8230;</p>
-
-<!-- more -->
-
-
-<p>resque 的測試有專門的 gem, 用來在測試環境下模擬 message queue 和 worker</p>
-
-<p>resque_spec : <a href="https://github.com/leshill/resque_spec" target="_blank">https://github.com/leshill/resque_spec</a></p>
-
-<h4>安裝</h4>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;resque_spec&#39;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這裡要注意一點, 不要在 development 環境下 bundle resque_spec, 即 Gemfile 中的 resque_spec 只能 group 在 test 下, 否則執行 Resque.enqueue 就不會送到 redis 而是送進 resque_spec 中</p>
-
-<h4>使用</h4>
-
-<p>resque_spec 的作法是讓原本丟工作到 mq 上的 Resque.enqueue 改為丟到 resque_spec 模擬的 mq 中<br/>
-因此 Gemfile bundle 後, 就可以直接在 rspec 中使用, 以下將介紹 rspec 中常用的語法</p>
-
-<h6>清空 mq 所有的 job</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s2">&quot;#foo&quot;</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">before</span> <span class="k">do</span>
-</span><span class='line'>    <span class="no">ResqueSpec</span><span class="o">.</span><span class="n">reset!</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>檢查某個 worker 的 job 數</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">FooWorker</span><span class="o">.</span><span class="n">should</span> <span class="n">have_queue_size_of</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>檢查某個 worker 的 queue 中應該要有的 job</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="no">FooWorker</span><span class="o">.</span><span class="n">should</span> <span class="n">have_queued</span><span class="p">(</span><span class="n">foo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>foo.id, &#8220;bar&#8221; 都是 enqueue 的參數</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="c1"># some where enqueue</span>
-</span><span class='line'>  <span class="no">Resque</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="no">FooWorker</span><span class="p">,</span> <span class="n">foo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>立即執行不送 queue</h6>
-
-<p>用 &#8220;with_resque&#8221;</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="s2">&quot;should works&quot;</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">with_resque</span> <span class="k">do</span>
-</span><span class='line'>    <span class="vi">@foo</span><span class="o">.</span><span class="n">run</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>假設 run 的內容是</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">run</span>
-</span><span class='line'>  <span class="no">Resque</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="no">FooWorker</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 with_resque 內, Resque.enqueue(FooWorker, id) 相當於 FooWorker.perform(id)</p>
-
-<h6>執行 queue 裡面所有的 job</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">it</span> <span class="s2">&quot;should  works&quot;</span> <span class="k">do</span>
-</span><span class='line'>  <span class="vi">@foo</span><span class="o">.</span><span class="n">run</span>
-</span><span class='line'>  <span class="no">ResqueSpec</span><span class="o">.</span><span class="n">perform_all</span><span class="p">(</span><span class="ss">:queue_foo</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&#8220;queue_foo&#8221; 是 Worker 中定義的 queue name</p>
-
-<h4>整合 ResqueMailer</h4>
-
-<p>gem &#8220;resque_mailer&#8221; 會將 mailer 中的 deliver 行為內容改為 Resque.enqueue<br/>
-但是在 test 環境中, resque_mailer 則會還原 deliver 原本的行為<br/>
-所以為了 rspec 中也可以測試 mailer 是否 enqueu, 要在 resque_mailer 中的 config 將原本排除掉的 test 環境加入 resque_mailer 的運作中</p>
-
-<figure class='code'><figcaption><span>config/initializers/resque_mailer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">excluded_environments</span> <span class="o">=</span> <span class="o">[]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<hr />
-
-<p>一般我們都會將複雜或吃效能的工作丟到背景執行<br/>
-而複雜的工作又常常需要 debug<br/>
-因此平常應該要養成寫 spec 的習慣<br/>
-才不會讓自己跟這些複雜的功能過不去 :p</p>
 ]]></content>
   </entry>
   
