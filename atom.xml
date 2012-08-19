@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-19T23:17:38+08:00</updated>
+  <updated>2012-08-19T23:21:43+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[我的 Sublime 設定]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-settings-basic/"/>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest/"/>
     <updated>2012-08-19T21:46:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-settings-basic</id>
+    <id>http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest</id>
     <content type="html"><![CDATA[<p><a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。</p>
 
 <!-- more -->
