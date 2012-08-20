@@ -23,9 +23,9 @@ categories: ["Rubygems", "Devise", "Omniauth", "Facebook"]
 安裝 gem  
 
 ```ruby
-gem "devise", "1.4.9"
-gem "oa-oauth", :require => "omniauth/oauth"
-gem "oa-openid", :require => "omniauth/openid" # for google 或其他 openid auth
+gem "devise"
+gem 'omniauth'
+gem 'omniauth-facebook'
 ```
 
 devise initial setup
