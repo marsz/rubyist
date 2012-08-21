@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-19T23:56:13+08:00</updated>
+  <updated>2012-08-21T15:21:56+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[layout 檔案的命名]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-21/rails-layout-file-naming/"/>
+    <updated>2012-08-21T15:16:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-21/rails-layout-file-naming</id>
+    <content type="html"><![CDATA[<p>今天發現 <code>layout</code> 檔 (views/layouts) 的命名是不能亂來的 ~XD<br/>
+嘗試用 dash 命名 (例如 foo-bar.html.haml) 的結果造成 haml 無法被 parsing<br/>
+所以還是乖一點用小寫英文和 underline 吧 :p</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的 Sublime 設定]]></title>
@@ -1289,99 +1300,6 @@
 相關可參考 <a href="https://github.com/defunkt/resque/blob/master/examples/god/resque.god" target="_blank">官方範例</a><br/>
 god 也可以用來解決 worker 掛掉的問題<br/>
 有關 god 的整合, 有空再分享 :p</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 resque 實作背景作業 ( mailer 篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-19/resque-mailer/"/>
-    <updated>2012-02-19T01:36:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-19/resque-mailer</id>
-    <content type="html"><![CDATA[<p>寄信的工作是最必要丟背景的。在 web 前端使用的過程中，若要等待 server 產生 email 內容、和 smtp 連線、然後再把信送出去，這樣的過程肯定讓使用品質大大扣分&#8230;<br/>
-因此 gem &#8220;resque_mailer&#8221; 將 resque 的 enqueue 和 perform 實作到 ActionMailer::Base 中</p>
-
-<!-- more -->
-
-
-<p>即原本的 deliver 應該是要根據 app 的 mailer 設定 (smtp或sendmail等) 把信送出<br/>
-bundle resqie_mailer 後, deliver 的結果則變成送到 mq 上 (透過 Resque.enqueue)</p>
-
-<h4>安裝</h4>
-
-<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;resque&#39;</span>
-</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;resque_mailer&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>設定</h4>
-
-<figure class='code'><figcaption><span>config/initializers/resque_mailer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># queue 的名稱</span>
-</span><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">default_queue_name</span> <span class="o">=</span> <span class="s2">&quot;foo_mailer&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># 有 resque_spec</span>
-</span><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">excluded_environments</span> <span class="o">=</span> <span class="o">[]</span>
-</span><span class='line'><span class="c1"># 無 resque_spec</span>
-</span><span class='line'><span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span><span class="o">.</span><span class="n">excluded_environments</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:test</span><span class="p">,</span> <span class="ss">:cucumber</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>使用</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">MyMailer</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="no">Resque</span><span class="o">::</span><span class="no">Mailer</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
-</span><span class='line'>    <span class="c1"># .....</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>寄信 (送到 mq)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">MyMailer</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>寄信 (直接寄出不送 mq)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">MyMailer</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">deliver!</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>這裡要注意!!!!! 因為 resque 會將參數內容送到 mq 上, 而 redis 無法處理 number, string, array, hash 以外的變數, 所以在定義 mailer action 時, 參數務必限制在上述這些變數類型的範圍內</p>
-
-<h4>worker 的執行</h4>
-
-<p>一般 mailer 的 worker 建議獨立一條 queue 執行, 效率會比較好 :p</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUE</span><span class="o">=</span><span class="n">foo_mailer</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">resque</span><span class="ss">:work</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<hr />
-
-<p>resque_mailer 簡單, 但仍是 background job<br/>
-因此測試還是要多多寫 XD</p>
 ]]></content>
   </entry>
   
