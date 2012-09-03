@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-08-21T15:21:56+08:00</updated>
+  <updated>2012-09-03T15:57:13+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[rake db 的 tasks 整理]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-09-03/about-rake-db-tasks/"/>
+    <updated>2012-09-03T15:38:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-09-03/about-rake-db-tasks</id>
+    <content type="html"><![CDATA[<p>善用 rails rake 內建的 DB tasks 進行資料庫操作</p>
+
+<!-- more -->
+
+
+<p><code>rake db:migrate</code> - 執行 db/migrate 中還沒跑過的 migrations<br/>
+<code>rake db:migrate VERSION=12341234</code> - 針對設定的 migrations 版本執行<br/>
+<code>rake db:migrate:redo</code> - 重跑目前最新的 migration<br/>
+<code>rake db:migrate:redo STEP=3</code> - 重跑目前最新的三個 migration<br/>
+<code>rake db:rollback</code> - 還原跑過最新的 migration<br/>
+<code>rake db:rollback STEP=3</code> - 還原跑過最新三個的 migration<br/>
+<code>rake db:create</code> - 建立 database<br/>
+<code>rake db:drop</code> - 刪除整個 database<br/>
+<code>rake db:schema:dump</code> - 從目前 database 中實際的 schema 建立 db/schema.rb<br/>
+<code>rake db:schema:load</code> - 從 db/schema.rb 中把 schema 建立到 databse 中<br/>
+<code>rake db:structure:dump</code> - 從目前 database 中實際的 schema 輸出到 db/structure.sql<br/>
+<code>rake db:reset</code> - 合體的 task ( db:drop => db:create => db:schema:load)</p>
+
+<p>另外安裝了 <a href="https://github.com/ludicast/yaml_db" target="_blank"><code>yaml_db</code></a> 後，可以透過以下兩個指令把資料庫的資料做 export/import (不包含 schema)</p>
+
+<p><code>rake db:data:dump</code> - 把資料輸出到 db/data.yml<br/>
+<code>rake db:data:load</code> - 把資料從 db/data.yml 輸入到 database 中</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[layout 檔案的命名]]></title>
@@ -1182,124 +1212,6 @@
 
 
 <p>執行後可透過 <code>ps axu|grep "god"</code> 或 <code>ps axu|grep "delayed_job"</code> 看到 <code>god</code> 啟動 <code>delayed_job</code> 的相關 process</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 resque 實作背景作業 ( 佈署篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker/"/>
-    <updated>2012-02-21T01:56:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-21/resque-deploy-worker</id>
-    <content type="html"><![CDATA[<p>透過 capistrano 佈署到 server 時，除了需要啟動 worker 之外，也會希望在每次佈署後，也重新啟動 worker<br/>
-因為 worker 是透過 rake 啟動的，所以當 perform 相關的程式有修改時，worker 也必須重新啟動<br/>
-以下將介紹如何將重啟 worker 整合到 capistrano 中</p>
-
-<!-- more -->
-
-
-<h4>將 worker 丟背景執行的方法</h4>
-
-<p>resque 1.9 以上有提供參數 :)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work</span></code></pre></td></tr></table></div></figure>
-
-
-<p>背景的 worker 要留一下 pid file, 以方便 kill</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>PIDFILE=./resque.pid BACKGROUND=yes QUEUE=foo_queue bundle exec rake environment resque:work</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>整合 capistrano</h4>
-
-<p>deploy 中加 restart_resque 的 task</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
-</span><span class='line'>  <span class="c1"># .....</span>
-</span><span class='line'>  <span class="n">task</span> <span class="ss">:restart_resque</span><span class="p">,</span> <span class="ss">:roles</span> <span class="o">=&gt;</span> <span class="ss">:app</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">queues</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:foo_queue</span><span class="p">,</span> <span class="ss">:barbar</span><span class="o">]</span>
-</span><span class='line'>    <span class="n">queues</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">queue</span><span class="o">|</span>
-</span><span class='line'>      <span class="n">pid_file</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">/tmp/pids/resque-</span><span class="si">#{</span><span class="n">queue</span><span class="si">}</span><span class="s2">.pid&quot;</span>
-</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;test -f </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2"> &amp;&amp; cd </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2"> &amp;&amp; kill -s QUIT `cat </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2">` || rm -f </span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span class='line'>      <span class="n">run</span> <span class="s2">&quot;cd </span><span class="si">#{</span><span class="n">current_path</span><span class="si">}</span><span class="s2"> &amp;&amp; PIDFILE=</span><span class="si">#{</span><span class="n">pid_file</span><span class="si">}</span><span class="s2"> RAILS_ENV=</span><span class="si">#{</span><span class="n">rails_env</span><span class="si">}</span><span class="s2"> BACKGROUND=yes QUEUE=</span><span class="si">#{</span><span class="n">queue</span><span class="si">}</span><span class="s2"> bundle exec rake environment resque:work&quot;</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>  <span class="c1">#...</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的例子是以一條 queue 配一個 worker 的方式執行，若要通通塞一個 worker 就 QUEUE=* 吧 XD</p>
-
-<p>restart app 後就 restart resque worker 吧!!</p>
-
-<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">after</span> <span class="s1">&#39;deploy:restart&#39;</span><span class="p">,</span> <span class="s1">&#39;deploy:restart_resque&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>有關啟動 worker 的參數</h4>
-
-<p>resque 提供了許多參數，讓你可以依照不同的需求執行worker，底下將介紹</p>
-
-<h6>將 worker 執行的結果輸出</h6>
-
-<p>debug 很好用，但個人還是推薦用 rspec 去 debug 吧 XD</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">VVERBOSE</span><span class="o">=</span><span class="mi">1</span> <span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>指定 queue (一條或多條)</h6>
-
-<p>多條可以逗號隔開</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUES</span><span class="o">=</span><span class="n">file_serve</span><span class="p">,</span><span class="n">warm_cache</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>* 則是所有的 queue</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">QUEUES</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>polling 的頻率</h6>
-
-<p>針對即時性高的需求,以秒計,預設為 5 秒</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">INTERVAL</span><span class="o">=</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="no">QUEUE</span><span class="o">=</span><span class="n">foo</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:work</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>多個 worker 同步執行</h6>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">COUNT</span><span class="o">=</span><span class="mi">5</span> <span class="no">QUEUE</span><span class="o">=*</span> <span class="n">bundle</span> <span class="nb">exec</span> <span class="n">rake</span> <span class="n">environment</span> <span class="n">resque</span><span class="ss">:workers</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但官方推薦用 gem &#8220;god&#8221; 來執行多個 worker<br/>
-相關可參考 <a href="https://github.com/defunkt/resque/blob/master/examples/god/resque.god" target="_blank">官方範例</a><br/>
-god 也可以用來解決 worker 掛掉的問題<br/>
-有關 god 的整合, 有空再分享 :p</p>
 ]]></content>
   </entry>
   
