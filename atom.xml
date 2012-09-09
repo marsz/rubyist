@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-09-03T15:57:13+08:00</updated>
+  <updated>2012-09-09T11:34:42+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,20 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[取得獨一無二的 session id]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-09-09/unique-session-id/"/>
+    <updated>2012-09-09T11:32:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-09-09/unique-session-id</id>
+    <content type="html"><![CDATA[<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">request</span><span class="o">.</span><span class="n">session_options</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>參考連結: <a href="http://stackoverflow.com/questions/4824829/finding-the-session-id-in-rails-3" target="_blank">http://stackoverflow.com/questions/4824829/finding-the-session-id-in-rails-3</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[rake db 的 tasks 整理]]></title>
@@ -1157,61 +1171,6 @@
 
 
 <p><code>n</code> 為流水號, 因此可用於 <code>number</code> 或 <code>string</code> 類型的 column</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Bigtuna 保持 delayed_job 持續執行]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god/"/>
-    <updated>2012-02-23T08:59:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-23/bigtuna-delayedjob-persistant-by-god</id>
-    <content type="html"><![CDATA[<p><code>BigTuna</code> 是透過 <a href="https://github.com/tobi/delayed_job" target="_blank">delayed_job</a> 讓所有 build 中的 process 的能夠正常運作<br/>
-當 <code>delayed_job</code> 因為某種不明因素終止時, 就得再 ssh 到 server 重啟 <code>delayed_job</code>&#8230;</p>
-
-<!-- more -->
-
-
-<p><a href="http://godrb.com/" target="_blank">God</a> 是一套獨立的 <code>rubygems</code> <br/>
-可以讓你在 <code>linux</code> 環境下監控某 process, 並且保持其持續且正常運作<br/>
-因此我們可透過 <code>God</code> 來使 <code>delayed_job</code> 不被意外終止</p>
-
-<h4>安裝</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sudo su -
-</span><span class='line'>gem install god</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>BigTuna 的 god-ruby 範例檔</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">God</span><span class="o">.</span><span class="n">watch</span> <span class="k">do</span> <span class="o">|</span><span class="n">w</span><span class="o">|</span>
-</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="s2">&quot;passenger&quot;</span>  <span class="c1"># bigtuna 在 linux 下的 user id</span>
-</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">gid</span> <span class="o">=</span> <span class="s2">&quot;passenger&quot;</span>  <span class="c1"># bigtuna 在 linux 下的 group id</span>
-</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;bigtuna-delayed_job&quot;</span>  <span class="c1"># 在 god 中的名稱</span>
-</span><span class='line'>  <span class="c1"># 執行 delayed_job 的指令</span>
-</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="s2">&quot;cd /path/to/bigtuna &amp;&amp; RAILS_ENV=production ./script/delayed_job start&quot;</span>
-</span><span class='line'>  <span class="n">w</span><span class="o">.</span><span class="n">keepalive</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>以 root 身分執行 god</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">god</span> <span class="o">-</span><span class="n">c</span> <span class="n">delayed_job</span><span class="o">.</span><span class="n">rb</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>執行後可透過 <code>ps axu|grep "god"</code> 或 <code>ps axu|grep "delayed_job"</code> 看到 <code>god</code> 啟動 <code>delayed_job</code> 的相關 process</p>
 ]]></content>
   </entry>
   

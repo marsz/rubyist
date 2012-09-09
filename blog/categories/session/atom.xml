@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Session | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/session/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-09-09T11:34:42+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[取得獨一無二的 session id]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-09-09/unique-session-id/"/>
+    <updated>2012-09-09T11:32:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-09-09/unique-session-id</id>
+    <content type="html"><![CDATA[<p><code>ruby
+request.session_options[:id]
+</code></p>
+
+<p>參考連結: <a href="http://stackoverflow.com/questions/4824829/finding-the-session-id-in-rails-3" target="_blank">http://stackoverflow.com/questions/4824829/finding-the-session-id-in-rails-3</a></p>
+]]></content>
+  </entry>
+  
+</feed>
