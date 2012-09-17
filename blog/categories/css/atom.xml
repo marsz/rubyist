@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: CSS | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/css/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-09-16T23:55:06+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[IE 瀏覽器讀取 css 檔案的 selector (4096)限制]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-09-16/ie-css-selector-limitation-4096/"/>
+    <updated>2012-09-16T23:24:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-09-16/ie-css-selector-limitation-4096</id>
+    <content type="html"><![CDATA[<p>IE 瀏覽器在讀取每個 css 檔案時，不能超過 4096 個 selector，超過的都會被忽略</p>
+
+<!-- more -->
+
+
+<p>註: <code>.foo .bar { .... }</code> 代表一個 selector<br/>
+<code>stackoverflow</code> 也有相關問題: <a href="http://bit.ly/QiuvNC" target="_blank">http://bit.ly/QiuvNC</a></p>
+
+<p>由於 <code>twitter boostrap</code> 以及其應用外掛的流行，要破 4096 個 selector 是輕而易舉的事，要測試你所使用的瀏覽器有沒有支援超過，可以<a href="http://marc.baffl.co.uk/browser_bugs/css-selector-limit/" target="_blank">看這個網頁</a>，若顯示的背景為紅色代表不支援，綠色表示沒問題。</p>
+
+<p>解決此問題最快的辦法就是把 css 分檔案就行了，rails 的 assets precompile 的 css 中若混雜著 bootstrap 之類的套件就會很容易超過此限制，只要把這些不會被修改的套件掛上 CDN 或分不同檔案 precompile 就可以處理了。</p>
+]]></content>
+  </entry>
+  
+</feed>

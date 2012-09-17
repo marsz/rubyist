@@ -9,8 +9,9 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法 commit 如下 1
-A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback) ">
+  <meta name="description" content="因為
+git pull = git fetch + git merge (remote branch merge to local branch)
+而 merge 往往會造成線圖上產生無謂的分支 (可參考 ihower 大大的 rebase 文章 ) ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +81,51 @@ A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-20/git-pull-with-rebase/">git pull 時請愛用 rebase</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-20T19:44:00+08:00" pubdate data-updated="true">Jan 20<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-20/git-pull-with-rebase/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>因為
+git pull = git fetch + git merge (remote branch merge to local branch)
+而 merge 往往會造成線圖上產生無謂的分支 (可參考 <a href="http://ihower.tw/blog/archives/3843" target="_blank">ihower 大大的 rebase 文章</a> )</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-20/git-pull-with-rebase/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -494,54 +540,6 @@ A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">databse 資料以 yaml 格式匯入/匯出</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-28T14:07:00+08:00" pubdate data-updated="true">Dec 28<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在備份資料的過程中常用到的一個 gem
-可透過 rake 指令將 db 資料以 yaml 格式進行匯出與匯入</p>
-
-<h2>yaml_db</h2>
-
-<p>github: <a href="https://github.com/ludicast/yaml_db" target="_blank">https://github.com/ludicast/yaml_db</a></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011-12-28/rake-data-dump-and-load-by-yaml/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -587,6 +585,10 @@ A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012-09-16/ie-css-selector-limitation-4096/">IE 瀏覽器讀取 css 檔案的 selector (4096)限制</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-09-09/hide-address-bar-iphone-safari/">自動隱藏 iPhone safari 的網址列</a>
       </li>
     
@@ -602,15 +604,11 @@ A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也�
         <a href="/blog/2012-08-21/rails-layout-file-naming/">layout 檔案的命名</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest/">我的 Sublime 設定</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (3)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/html'>HTML (1)</a></li><li><a href='/blog/categories/ide'>IDE (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iphone'>iPhone (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/rails-bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/rake'>Rake (1)</a></li><li><a href='/blog/categories/reading'>Reading (6)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (24)</a></li><li><a href='/blog/categories/safari'>Safari (1)</a></li><li><a href='/blog/categories/session'>Session (1)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/sublime'>Sublime (1)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/activerecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/amazon-s3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/assets'>Assets (2)</a></li><li><a href='/blog/categories/assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/background-job'>Background-job (5)</a></li><li><a href='/blog/categories/backup'>Backup (2)</a></li><li><a href='/blog/categories/bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/continuous-integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/controller'>Controller (1)</a></li><li><a href='/blog/categories/counter'>Counter (1)</a></li><li><a href='/blog/categories/css'>CSS (1)</a></li><li><a href='/blog/categories/database'>Database (1)</a></li><li><a href='/blog/categories/date'>Date (1)</a></li><li><a href='/blog/categories/delayed-job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deploy'>Deploy (3)</a></li><li><a href='/blog/categories/devise'>Devise (3)</a></li><li><a href='/blog/categories/encoding'>Encoding (1)</a></li><li><a href='/blog/categories/facebook'>Facebook (3)</a></li><li><a href='/blog/categories/factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/file-upload'>File-upload (1)</a></li><li><a href='/blog/categories/fog'>Fog (1)</a></li><li><a href='/blog/categories/git'>Git (2)</a></li><li><a href='/blog/categories/git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/god'>God (1)</a></li><li><a href='/blog/categories/html'>HTML (1)</a></li><li><a href='/blog/categories/ide'>IDE (1)</a></li><li><a href='/blog/categories/imagemagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iphone'>iPhone (1)</a></li><li><a href='/blog/categories/json'>JSON (1)</a></li><li><a href='/blog/categories/mailer'>Mailer (1)</a></li><li><a href='/blog/categories/message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/model'>Model (1)</a></li><li><a href='/blog/categories/omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/rails-bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/rake'>Rake (1)</a></li><li><a href='/blog/categories/reading'>Reading (6)</a></li><li><a href='/blog/categories/regular-expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/resque'>Resque (5)</a></li><li><a href='/blog/categories/rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/rspec'>Rspec (11)</a></li><li><a href='/blog/categories/rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/rubygems'>Rubygems (24)</a></li><li><a href='/blog/categories/safari'>Safari (1)</a></li><li><a href='/blog/categories/session'>Session (1)</a></li><li><a href='/blog/categories/sql'>SQL (2)</a></li><li><a href='/blog/categories/stupid-ie'>stupid IE (1)</a></li><li><a href='/blog/categories/sublime'>Sublime (1)</a></li><li><a href='/blog/categories/testing'>Testing (4)</a></li><li><a href='/blog/categories/url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/validations'>Validations (1)</a></li><li><a href='/blog/categories/views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/xml'>XML (1)</a></li><li><a href='/blog/categories/yaml'>YAML (1)</a></li></ul>
 </section>
 
 

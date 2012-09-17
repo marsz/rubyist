@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-09-09T13:49:51+08:00</updated>
+  <updated>2012-09-16T23:55:06+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[IE 瀏覽器讀取 css 檔案的 selector (4096)限制]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-09-16/ie-css-selector-limitation-4096/"/>
+    <updated>2012-09-16T23:24:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-09-16/ie-css-selector-limitation-4096</id>
+    <content type="html"><![CDATA[<p>IE 瀏覽器在讀取每個 css 檔案時，不能超過 4096 個 selector，超過的都會被忽略</p>
+
+<!-- more -->
+
+
+<p>註: <code>.foo .bar { .... }</code> 代表一個 selector<br/>
+<code>stackoverflow</code> 也有相關問題: <a href="http://bit.ly/QiuvNC" target="_blank">http://bit.ly/QiuvNC</a></p>
+
+<p>由於 <code>twitter boostrap</code> 以及其應用外掛的流行，要破 4096 個 selector 是輕而易舉的事，要測試你所使用的瀏覽器有沒有支援超過，可以<a href="http://marc.baffl.co.uk/browser_bugs/css-selector-limit/" target="_blank">看這個網頁</a>，若顯示的背景為紅色代表不支援，綠色表示沒問題。</p>
+
+<p>解決此問題最快的辦法就是把 css 分檔案就行了，rails 的 assets precompile 的 css 中若混雜著 bootstrap 之類的套件就會很容易超過此限制，只要把這些不會被修改的套件掛上 CDN 或分不同檔案 precompile 就可以處理了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[自動隱藏 iPhone safari 的網址列]]></title>
@@ -1093,67 +1112,6 @@
 
 
 <p>詳細使用方式可見 <a href="https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md" target="_blank">官方說明文件</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[factory_girl 中的 model 關連 (association)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations/"/>
-    <updated>2012-02-27T09:42:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations</id>
-    <content type="html"><![CDATA[<p>不論是 <code>one-to-one</code> <code>one-to-many</code> 或 <code>many-to-many</code>, 我們都希望 model 中的關連也能反應到 <code>factory_girl</code> 的定義中</p>
-
-<!-- more -->
-
-
-<p>方法如下:  (brand has many products)</p>
-
-<figure class='code'><figcaption><span>spec/factories/brands.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">factory</span> <span class="ss">:brand</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;brand name </span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>spec/factories/products.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">factory</span> <span class="ss">:products</span> <span class="k">do</span>
-</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;product name&quot;</span>
-</span><span class='line'>    <span class="n">brand</span> <span class="k">do</span>
-</span><span class='line'>      <span class="no">Factory</span> <span class="ss">:brand</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span>app/models/product.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:brand</span>  <span class="c1"># brand_id</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如此只要每次 <code>Factory(:product)</code> , 該 product 的 brancd 也會透過 brancd 產生, 而不需要再每次的 factory 中去進行關連了 <code>Factory(:product, :brand =&gt; Factory(:brand))</code></p>
 ]]></content>
   </entry>
   
