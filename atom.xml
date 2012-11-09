@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-09-16T23:55:06+08:00</updated>
+  <updated>2012-11-09T14:38:43+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,160 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubygems 處理 Amazon Web Service (AWS) EC2]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-11-09/rubygeems-for-aws-ec2/"/>
+    <updated>2012-11-09T13:55:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-11-09/rubygeems-for-aws-ec2</id>
+    <content type="html"><![CDATA[<p>參考: <a href="https://github.com/grempe/amazon-ec2" target="_blank">https://github.com/grempe/amazon-ec2</a></p>
+
+<!-- more -->
+
+
+<h3>安裝設定</h3>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;amazon-ec2&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="s2">&quot;AWS&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/aws.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span> <span class="nl">&amp;default</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:access_key_id</span><span class="p-Indicator">:</span> <span class="s">&quot;abcdabcd&quot;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:secret_access_key</span><span class="p-Indicator">:</span> <span class="s">&quot;abcdabcd&quot;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:host</span><span class="p-Indicator">:</span> <span class="s">&quot;ap-southeast-1.ec2.amazonaws.com&quot;</span>
+</span><span class='line'><span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">&lt;&lt;</span><span class="p-Indicator">:</span> <span class="nv">*default</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>access_key_id</code> 和 <code>secret_access_key</code> 可至 <a href="https://portal.aws.amazon.com/gp/aws/developer/account/index.html?action=access-key" target="_blank">AWS Security Credentials</a> 查看<br/>
+<code>host</code> 則是目標 region 所對應的 endpoint，對應表可至 <a href="https://github.com/garnaat/missingcloud/blob/master/aws.json#L372" target="_blank">https://github.com/garnaat/missingcloud/blob/master/aws.json#L372</a> 查看</p>
+
+<p>養成好習慣, 請勿將 yaml 檔 commit 進去&#8230;</p>
+
+<figure class='code'><figcaption><span>.gitignore</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">aws</span><span class="o">.</span><span class="n">yml</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/aws.yml.example</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="c1"># to see region and host mapping :</span>
+</span><span class='line'><span class="c1">#   https://github.com/garnaat/missingcloud/blob/master/aws.json#L372</span>
+</span><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span> <span class="nl">&amp;default</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:access_key_id</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:secret_access_key</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:host</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'><span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">&lt;&lt;</span><span class="p-Indicator">:</span> <span class="nv">*default</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用方法</h3>
+
+<ul>
+<li>初始化</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>example.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">::</span><span class="nb">load</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/config/aws.yml&quot;</span><span class="p">))</span><span class="o">[</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="o">]</span>
+</span><span class='line'><span class="n">ec2</span> <span class="o">=</span> <span class="no">AWS</span><span class="o">::</span><span class="no">EC2</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:access_key_id</span> <span class="o">=&gt;</span> <span class="n">config</span><span class="o">[</span><span class="ss">:access_key_id</span><span class="o">]</span><span class="p">,</span> <span class="ss">:secret_access_key</span> <span class="o">=&gt;</span> <span class="n">config</span><span class="o">[</span><span class="ss">:secret_access_key</span><span class="o">]</span><span class="p">,</span> <span class="ss">:server</span> <span class="o">=&gt;</span> <span class="n">config</span><span class="o">[</span><span class="ss">:host</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>取得 instance 列表</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>exmaple.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">instances</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_instances</span>
+</span><span class='line'><span class="c1"># instances[&quot;reservationSet&quot;][&quot;item&quot;] 才會取得 array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>取得所有 snapshots (自己 create 的)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>exmaple.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">snapshots</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_snapshots</span><span class="p">(</span><span class="ss">:owner</span> <span class="o">=&gt;</span> <span class="s2">&quot;self&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># snapshots[&quot;snapshotSet&quot;][&quot;item&quot;] 才會取得 array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>取得所有 volumes</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>exmaple.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">volumes</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_volumes</span>
+</span><span class='line'><span class="c1"># volumes[&quot;volumeSet&quot;][&quot;item&quot;] 才會取得 array</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>建立 snapshot, 必須先取得 volume id</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>example.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">volume_id</span> <span class="o">=</span> <span class="n">volumes</span><span class="o">[</span><span class="s2">&quot;volumeSet&quot;</span><span class="o">][</span><span class="s2">&quot;item&quot;</span><span class="o">].</span><span class="n">first</span><span class="o">[</span><span class="s2">&quot;volumeId&quot;</span><span class="o">]</span>
+</span><span class='line'><span class="n">ec2</span><span class="o">.</span><span class="n">create_snapshot</span><span class="p">(</span><span class="ss">:volume_id</span> <span class="o">=&gt;</span> <span class="n">volume_id</span><span class="p">,</span> <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="s2">&quot;my snapshot&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>建立某個 instance 的 snapshot, 有 instance id 的情況下</li>
+</ul>
+
+
+<figure class='code'><figcaption><span>example.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">instance_id</span> <span class="o">=</span> <span class="s2">&quot;i-abcd&quot;</span>
+</span><span class='line'><span class="n">volume_id</span> <span class="o">=</span> <span class="p">(((</span><span class="n">ec2</span><span class="o">.</span><span class="n">describe_volumes</span><span class="o">[</span><span class="s2">&quot;volumeSet&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="p">{})</span><span class="o">[</span><span class="s2">&quot;item&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="o">[]</span><span class="p">)</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">volume</span><span class="o">|</span>
+</span><span class='line'>  <span class="p">(</span><span class="n">volume</span><span class="o">[</span><span class="s2">&quot;attachmentSet&quot;</span><span class="o">][</span><span class="s2">&quot;item&quot;</span><span class="o">].</span><span class="n">select</span><span class="p">{</span> <span class="o">|</span><span class="n">ins</span><span class="o">|</span> <span class="n">ins</span><span class="o">[</span><span class="s2">&quot;instanceId&quot;</span><span class="o">]</span> <span class="o">==</span> <span class="n">instance_id</span> <span class="p">}</span><span class="o">.</span><span class="n">first</span> <span class="o">||</span> <span class="p">{})</span><span class="o">[</span><span class="s2">&quot;instanceId&quot;</span><span class="o">]</span> <span class="o">==</span> <span class="n">instance_id</span>
+</span><span class='line'><span class="p">}</span><span class="o">.</span><span class="n">first</span> <span class="o">||</span> <span class="p">{})</span><span class="o">[</span><span class="s2">&quot;volumeId&quot;</span><span class="o">]</span>
+</span><span class='line'><span class="n">result</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">create_snapshot</span><span class="p">(</span><span class="ss">:volume_id</span> <span class="o">=&gt;</span> <span class="n">volume_id</span><span class="p">,</span> <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="s2">&quot;foo bar&quot;</span><span class="p">)</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">result</span><span class="o">[</span><span class="s2">&quot;snapshotId&quot;</span><span class="o">]</span> <span class="c1"># 新的 snapshot id</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>更多可參考 API: <a href="https://github.com/grempe/amazon-ec2/tree/master/lib/AWS/EC2" target="_blank">https://github.com/grempe/amazon-ec2/tree/master/lib/AWS/EC2</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[IE 瀏覽器讀取 css 檔案的 selector (4096)限制]]></title>
@@ -1073,45 +1227,6 @@
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Factory Girl 的回呼 (callbacks)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks/"/>
-    <updated>2012-02-29T10:18:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks</id>
-    <content type="html"><![CDATA[<p>在寫測試中, 有許多的情境, 可能會需要在產生測試用資料後做許多處理, 因此 <code>Factory Girl</code> 本身也提供了 <code>callback</code> 機制&#8230;</p>
-
-<!-- more -->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:email</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;foo</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">@bar.com&quot;</span> <span class="p">}</span>
-</span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;barbar&quot;</span>
-</span><span class='line'>    <span class="n">password</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">after_create</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
-</span><span class='line'>      <span class="c1"># callback code block here</span>
-</span><span class='line'>    <span class="k">end</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>詳細使用方式可見 <a href="https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md" target="_blank">官方說明文件</a></p>
 ]]></content>
   </entry>
   
