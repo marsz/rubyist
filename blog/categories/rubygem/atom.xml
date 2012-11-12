@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Rubygem | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/rubygem/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-13T06:22:11+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[自動化產生 ER 圖的 rubygem]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-11-13/auto-generate-erd-graph/"/>
+    <updated>2012-11-13T05:39:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-11-13/auto-generate-erd-graph</id>
+    <content type="html"><![CDATA[<p>參考連結:<br/>
+1. 官網 : <a href="http://rails-erd.rubyforge.org/" target="_blank">http://rails-erd.rubyforge.org/</a><br/>
+2. 相關教學 : <a href="http://zool.me/rails/2010/12/29/Rails-generate-entity-relationship-diagram-projects/" target="_blank">http://zool.me/rails/2010/12/29/Rails-generate-entity-relationship-diagram-projects/</a></p>
+
+<!-- more -->
+
+
+<h3>系統需求</h3>
+
+<p>MAC OS 請先安裝 <code>brew</code></p>
+
+<h3>安裝 Graphviz</h3>
+
+<h5>MAC OS</h5>
+
+<p><code>
+brew install cairo pango graphviz
+</code></p>
+
+<p>若無法順利安裝可至 <a href="http://www.graphviz.org/Download_macos.php" target="_blank">graphviz for MAC OS download</a> 頁面下載對應的系統，直接打開 finder 以 window 介面安裝</p>
+
+<h5>Ubuntu</h5>
+
+<p><code>
+sudo aptitude install graphviz
+</code></p>
+
+<h3>Rails 設定</h3>
+
+<h5>Gemfile</h5>
+
+<p><code>ruby
+group :development do
+  gem "rails-erd"
+end
+</code></p>
+
+<p><code>
+bundle install
+</code></p>
+
+<h3>生成 ERD</h3>
+
+<p><code>
+bundle exec rake erd
+</code></p>
+
+<p>生成的 ERD 會在專案目錄下的 erd.pdf</p>
+]]></content>
+  </entry>
+  
+</feed>
