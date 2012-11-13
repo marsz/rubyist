@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-11-13T06:33:20+08:00</updated>
+  <updated>2012-11-13T10:23:28+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -370,17 +370,34 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>{
 </span><span class='line'>  "color_scheme": "Packages/Color Scheme - Default/Twilight.tmTheme",
 </span><span class='line'>  "font_size": 18.0,
 </span><span class='line'>  "tab_size": 2,
 </span><span class='line'>  "translate_tabs_to_spaces": true,  
+</span><span class='line'>  "highlight_line": true,
+</span><span class='line'>  "highlight_modified_tabs": true
 </span><span class='line'>}
 </span></code></pre></td></tr></table></div></figure>
 
 
 <p>(PS: 年紀大了所以用字體 size 用 18 XD)<br/>
 (PS2: tab 設定隨個人/公司喜好)</p>
+
+<h3>安裝 package control</h3>
+
+<p>用於快速安裝其他 package 的好工具</p>
+
+<p>參考 <a href="http://wbond.net/sublime_packages/package_control/installation" target="_blank">http://wbond.net/sublime_packages/package_control/installation</a><br/>
+`ctrl+&#8220; 開啟 command line 後輸入:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print 'Please restart Sublime Text to finish installation'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>重啟 sublime, <code>command+shift+p</code> 輸入 install 看到 <code>Package Control: Install Package</code> 即可透過此功能安裝其他 package</p>
 
 <h3>安裝 sass/scss 外掛</h3>
 
