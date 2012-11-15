@@ -3,7 +3,7 @@ layout: post
 title: "讀書心得: 刻意練習(4)"
 date: 2012-08-05 13:42
 comments: true
-categories: ["Reading"]
+categories: ["Reading", "刻意練習"]
 ---
 刻意練習概念在生活及工作上的應用，可以分為幾個議題探討: `知道練習目標`、`直接練習的方式`、`在實戰中練習`
 

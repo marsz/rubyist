@@ -44,6 +44,8 @@ export EDITOR="/usr/local/bin/subl -w"
 	"font_size": 18.0,
 	"tab_size": 2,
 	"translate_tabs_to_spaces": true,  
+  "highlight_line": true,
+  "highlight_modified_tabs": true
 }
 
 ```
@@ -51,6 +53,16 @@ export EDITOR="/usr/local/bin/subl -w"
 (PS: 年紀大了所以用字體 size 用 18 XD)  
 (PS2: tab 設定隨個人/公司喜好)
 
+### 安裝 package control
+
+用於快速安裝其他 package 的好工具
+
+參考 <a href="http://wbond.net/sublime_packages/package_control/installation" target="_blank">http://wbond.net/sublime_packages/package_control/installation</a>  
+`ctrl+\`` 開啟 command line 後輸入:  
+```
+import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print 'Please restart Sublime Text to finish installation'
+```
+重啟 sublime, `command+shift+p` 輸入 install 看到 `Package Control: Install Package` 即可透過此功能安裝其他 package
 
 ### 安裝 sass/scss 外掛
 

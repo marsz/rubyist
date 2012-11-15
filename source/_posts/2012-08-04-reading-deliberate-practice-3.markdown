@@ -3,7 +3,7 @@ layout: post
 title: "讀書心得: 刻意練習(3)"
 date: 2012-08-04 10:57
 comments: true
-categories: ["Reading"]
+categories: ["Reading", "刻意練習"]
 ---
 這篇主要說明有關刻意練習的運作原理，於各種專業領域皆適用
 

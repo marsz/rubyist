@@ -3,7 +3,7 @@ layout: post
 title: "讀書心得: 刻意練習(5)"
 date: 2012-08-06 13:42
 comments: true
-categories: ["Reading"]
+categories: ["Reading", "刻意練習"]
 ---
 
 刻意練習的觀念除了用於個人之外，也可應用於組織。但多數企業的文化是與刻意練習的原則衝突，這本書提出了組織進行刻意練習的 9 項守則以及 5 項應避免不利於刻意練習的潛在問題。

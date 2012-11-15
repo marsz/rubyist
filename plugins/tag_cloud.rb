@@ -40,6 +40,7 @@
 # 
 # [MIT]: http://www.opensource.org/licenses/mit-license.php
 # 
+require 'open-uri'
 module Jekyll
 
   class TagCloud < Liquid::Tag
@@ -96,7 +97,8 @@ module Jekyll
       category_dir = config['root'] + config['category_dir'] + '/'
       categories = context.registers[:site].categories
       categories.keys.sort_by{ |str| str.downcase }.each do |category|
-        url = category_dir + category.gsub(/_|\P{Word}/, '-').gsub(/-{2,}/, '-').downcase
+        category = category.dup.force_encoding("utf-8")
+        url = category_dir + URI::encode(category)
         html << "<li><a href='#{url}'>#{category}"
         if @opts['counter']
           html << " (#{categories[category].count})"
