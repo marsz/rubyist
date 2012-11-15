@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/Rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-11-16T02:04:04+08:00</updated>
+  <updated>2012-11-16T02:11:52+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,62 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[自動化產生 ER 圖的 rubygem]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-11-13/auto-generate-erd-graph/"/>
+    <updated>2012-11-13T05:39:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-11-13/auto-generate-erd-graph</id>
+    <content type="html"><![CDATA[<p>參考連結:<br/>
+1. 官網 : <a href="http://rails-erd.rubyforge.org/" target="_blank">http://rails-erd.rubyforge.org/</a><br/>
+2. 相關教學 : <a href="http://zool.me/rails/2010/12/29/Rails-generate-entity-relationship-diagram-projects/" target="_blank">http://zool.me/rails/2010/12/29/Rails-generate-entity-relationship-diagram-projects/</a></p>
+
+<!-- more -->
+
+
+<h3>系統需求</h3>
+
+<p>MAC OS 請先安裝 <code>brew</code></p>
+
+<h3>安裝 Graphviz</h3>
+
+<h5>MAC OS</h5>
+
+<p><code>
+brew install cairo pango graphviz
+</code></p>
+
+<p>若無法順利安裝可至 <a href="http://www.graphviz.org/Download_macos.php" target="_blank">graphviz for MAC OS download</a> 頁面下載對應的系統，直接打開 finder 以 window 介面安裝</p>
+
+<h5>Ubuntu</h5>
+
+<p><code>
+sudo aptitude install graphviz
+</code></p>
+
+<h3>Rails 設定</h3>
+
+<h5>Gemfile</h5>
+
+<p><code>ruby
+group :development do
+  gem "rails-erd"
+end
+</code></p>
+
+<p><code>
+bundle install
+</code></p>
+
+<h3>生成 ERD</h3>
+
+<p><code>
+bundle exec rake erd
+</code></p>
+
+<p>生成的 ERD 會在專案目錄下的 erd.pdf</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubygems 處理 Amazon Web Service (AWS) EC2]]></title>
@@ -227,114 +283,6 @@ end
 ```</p>
 
 <p>該範例之邏輯為，有 facebook id 時密碼欄位可為空值。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 backup gem 做自動化備份]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/"/>
-    <updated>2012-03-08T11:57:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-03-08/backup-gem</id>
-    <content type="html"><![CDATA[<p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
-和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
-
-<!-- more -->
-
-
-<p><code>backup</code> 的特色:</p>
-
-<ol>
-<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
-<li>可備份檔案、目錄</li>
-<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
-</ol>
-
-
-<p>範例檔的備份標的:</p>
-
-<ol>
-<li><code>Mysql</code></li>
-<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
-<li>備份檔案上傳至 <code>Amazon S3</code></li>
-</ol>
-
-
-<h4>安裝</h4>
-
-<p><code>gem install backup</code></p>
-
-<h4>範例</h4>
-
-<p>打開空檔案即可使用</p>
-
-<p>```ruby backup_config.rb
-Backup::Model.new(:my_app, 'db data of my app') do
-  # mysql 備份
-  database MySQL do |db|</p>
-
-<pre><code>db.name               = "my_app_db"
-db.username           = "root"
-db.password           = "12341234"
-db.host               = "127.0.0.1"
-db.port               = 3306
-db.socket             = "/tmp/mysql.sock"
-</code></pre>
-
-<p>  end</p>
-
-<p>  # user 頭像檔案<br/>
-  archive :uploads do |archive|</p>
-
-<pre><code>archive.add "/path/to/my_app/public/uploads"
-</code></pre>
-
-<p>  end</p>
-
-<p>  # 上傳至 S3<br/>
-  store_with S3 do |s3|</p>
-
-<pre><code>s3.access_key_id      = "12341234"
-s3.secret_access_key  = "!@#$%^&amp;*("
-s3.region             = "us-east-1"
-s3.bucket             = "my_app_backup"
-s3.path               = '/'
-s3.keep               = 50
-</code></pre>
-
-<p>  end</p>
-
-<p>  # 壓縮打包設定
-  compress_with Gzip do |compression|</p>
-
-<pre><code>compression.best = true
-compression.fast = false
-</code></pre>
-
-<p>  end</p>
-
-<p>end
-```</p>
-
-<p>執行</p>
-
-<p><code>ruby
-backup perform -t my_app -c backup_config.rb
-</code></p>
-
-<p>就可進行備份</p>
-
-<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
-另外再提供儲存於 local disk 的範例</p>
-
-<p>```ruby backup_config.rb
-  store_with Local do |local|</p>
-
-<pre><code>local.path = "/path/to/back/dir"
-local.keep = 50
-</code></pre>
-
-<p>  end
-```</p>
 ]]></content>
   </entry>
   
