@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[categories: Rake | 黃金俠]]></title>
-  <link href="http://rubyist.marsz.tw/blog/categories/rake/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/blog/categories/Rake/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-11-13T10:23:28+08:00</updated>
+  <updated>2012-11-16T01:36:06+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
