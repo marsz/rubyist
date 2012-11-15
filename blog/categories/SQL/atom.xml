@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: SQL | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/SQL/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[如何在 datetime 的欄位中做日期的搜尋]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/"/>
+    <updated>2012-01-04T16:54:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date</id>
+    <content type="html"><![CDATA[<p>rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
+因此若我們直接下 sql 時, 必須將時區考量進去</p>
+
+<!-- more -->
+
+
+<p>例如我們想要找欄位 created_at 在 2012-01-01 00:00:00 到 2012-01-03 23:59:59 的資料
+以台灣 +8 時區為例, 我們應該找資料庫中 2011-12-31 16:00:00 到 2012-01-03 15:59:59 的資料
+以下範例可直接達到所想要的 sql</p>
+
+<p><code>ruby
+date_start = "2012-01-01"
+date_end = "2012-01-03"
+range = date_start.to_date.beginning_of_day..date_end.to_date.end_of_day
+User.where(:created_at =&gt; range)
+</code></p>
+
+<p><a href="http://api.rubyonrails.org/classes/Date.html" target="_blank">Date</a>中有 "beginning_of_day" 和 "end_of_day" 兩個 method 將 Date 轉換為 Datetime 並且使時間落在當天的開始與結束, 透過 ActiveRecord 以 hash 方式作為 query interface, 時區才會自動轉換</p>
+
+<p>同樣在 Date 中還有 beginning_of_month, beginning_of_quarter, beginning_of_week, beginning_of_year 可用</p>
+
+<h6>補充</h6>
+
+<p>有關時區設定可參考 config/application.rb</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[實作 sql 中的數值欄位的遞增(counter increment)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/"/>
+    <updated>2011-12-30T17:07:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value</id>
+    <content type="html"><![CDATA[<p>針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
+即想在 sql 中實作出
+<code>sql
+UPDATE users SET score = score + 1 WHERE id = 1
+</code></p>
+
+<!-- more -->
+
+
+<p>rails 在實作 counter cache 中有 api 可用
+<code>ruby
+User.increment_counter "score", user.id
+</code></p>
+
+<p>對應 sql:
+<code>sql
+UPDATE users SET score = score + 1 WHERE id = 1
+</code></p>
+
+<h6>參考</h6>
+
+<p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/increment_counter" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/increment_counter</a></p>
+
+<p>當然, 遞減的 method 相對是 decrement_counter</p>
+
+<p>若增減值大於 1 的話, 則可用 update_counters 來實作
+<code>ruby
+User.update_counters user.id, :score =&gt; 3
+</code></p>
+
+<p>輸出 sql
+<code>sql
+UPDATE users SET score = score + 3 WHERE id = 1
+</code></p>
+
+<p>update_counters 可以一次對多個欄位做增減
+<code>ruby
+User.update_counters user.id, :score =&gt; 3, :karma =&gt; 6
+</code></p>
+
+<h6>參考</h6>
+
+<p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/update_counters" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/update_counters</a></p>
+]]></content>
+  </entry>
+  
+</feed>

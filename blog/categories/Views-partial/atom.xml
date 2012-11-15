@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Views-partial | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Views-partial/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在partial中取得完整的locals(當Hash用)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-10/get-locals-whole-variables-as-hash-in-partial/"/>
+    <updated>2012-01-10T22:50:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-10/get-locals-whole-variables-as-hash-in-partial</id>
+    <content type="html"><![CDATA[<p>我們都知道在一般的 view 下,即使在 controller 沒有指定 @foo 的值, view 直接讀取 @foo 也不會噴 Exception. 可是同樣的情況到了 partial 就會噴 Exception</p>
+
+<!-- more -->
+
+
+<p>render_partial 沒有只指定該變數的key到locals中</p>
+
+<p><code>erb app/views/bar/index.erb
+&lt;%= render_partial :foo, :locals =&gt; { :id =&gt; 1 }
+</code></p>
+
+<p>在 partial 中直接讀取變數會噴 Exception</p>
+
+<p><code>erb app/views/bar/_foo.erb
+&lt;% if !foo %&gt;
+  not assign foo to locals
+&lt;% end %&gt;
+</code></p>
+
+<p>透過 local_assigns 便可將整個 locals 當 hash 用</p>
+
+<p><code>erb app/views/bar/_foo.erb
+&lt;% if !local_assigns[:foo] %&gt;
+  not assign foo to locals
+&lt;% end %&gt;
+</code></p>
+
+<p>haml 版</p>
+
+<p><code>haml app/views/bar/_foo.haml
+- if !local_assigns[:foo]
+  = "not assign foo to locals"
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

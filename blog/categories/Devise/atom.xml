@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Devise | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Devise/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[devise 的 user 登入免驗證密碼]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password/"/>
+    <updated>2012-08-09T17:15:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-09/devise-user-without-validate_password</id>
+    <content type="html"><![CDATA[<p><code>Devise</code> 加上 <code>Omniauth</code> (或其他 Open ID 登入機制) 時，資料庫的密碼欄位可能會需要為空值，因此可在 user 的 model 中覆寫 <code>password_required?</code> (為 public method) 即可。</p>
+
+<!-- more -->
+
+
+<p>```ruby app/models/user.rb
+  def password_required?</p>
+
+<pre><code>return (self.facebook_id ? false : true)
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>該範例之邏輯為，有 facebook id 時密碼欄位可為空值。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Devise + Omniauth 的 Facebook 登入範例]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login/"/>
+    <updated>2012-02-11T01:20:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-11/devise-omniauth-for-facebook-login</id>
+    <content type="html"><![CDATA[<p>以下範例應用於 rails 3.1.3 + devise 1.4.9 + oa-oauth 0.3.2<br/>
+直接使用 devise 中的 omniauthable 有許多彈性不足的問題<br/>
+因此小弟參考了網路上的作法, 加上因應某些需求的修改...</p>
+
+<!-- more -->
+
+
+<h4>參考</h4>
+
+<p><a href="http://blog.railsrumble.com/blog/2010/10/08/intridea-omniauth" target="_blank">http://blog.railsrumble.com/blog/2010/10/08/intridea-omniauth</a></p>
+
+<h4>步驟</h4>
+
+<p>(以下範例以 user 做為 model 名稱)</p>
+
+<p>安裝 gem</p>
+
+<p><code>ruby
+gem "devise"
+gem 'omniauth'
+gem 'omniauth-facebook'
+</code></p>
+
+<p>devise initial setup</p>
+
+<p><code>
+rails g devise:install
+rails g devise user
+</code></p>
+
+<p>在 users 的 migration 中, 依照需求可自行選擇加入</p>
+
+<p>```ruby
+create_table(:users) do |t|
+  t.string :name # 儲存使用者名稱
+  t.confirmable # email 認證, 若未來有提供註冊流程產生新使用者的可能性, 就加吧
+  ...
+end</p>
+
+<p>change_column :users,:email, :string, :null => true # 若登入 open id 的 provider 不提供 email, 則必須做此設定, 讓 email 可以為 null
+```</p>
+
+<p>建立對應 opend id 和 user 的 model - authorization</p>
+
+<p><code>
+rails g model authorization provider:string uid:string user_id:integer
+</code></p>
+
+<p>user model 內容<br/>
+1. devise 的 module 比預設的多了 confirmable, 主要為了提供未來也能使用站內註冊流程的可能<br/>
+2. create_from_auth 處理 omniauth 丟過來的 auth_hash 並且以 email 為 unique key 新增 user</p>
+
+<p>```ruby app/models/user.rb
+class User &lt; ActiveRecord::Base
+  devise :database_authenticatable, :registerable,</p>
+
+<pre><code>     :recoverable, :rememberable, :trackable, :validatable,
+     :confirmable # 加上 confirmable
+</code></pre>
+
+<p>  has_many :authorizations</p>
+
+<p>  def self.create_from_auth!(hash)</p>
+
+<pre><code>created_hash = {:email =&gt; hash[:user_info][:email], :name =&gt; hash[:user_info][:name] }
+user = (created_hash[:email].nil? ? nil : User.find_by_email(created_hash[:email])) || User.new(created_hash)
+if user.email
+  user.confirm!
+elsif user
+  user.save!
+end
+user
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>authorization model 內容<br/>
+1. 對應 user 和 open id, 使其不重複<br/>
+2. #create_by_omniauth 處理從 omniauth 登入後的資料, 可以將 provider 的資料整合進指定的user(例如目前登入者) 或相同 email 的 user<br/>
+3. constant PROVIDERS 用以提供未來擴充 provider 的彈性</p>
+
+<p>```ruby
+class Authorization &lt; ActiveRecord::Base
+  PROVIDERS = [:facebook]</p>
+
+<p>  belongs_to :user
+  validates_presence_of :user_id, :uid, :provider
+  validates_uniqueness_of :uid, :scope => :provider</p>
+
+<p>  def self.create_by_omniauth(hash, current_user = nil)</p>
+
+<pre><code>hash = ActiveSupport::HashWithIndifferentAccess.new hash
+auth = find_from_hash(hash)
+unless auth
+  current_user ||= User.create_from_auth!(hash)
+  auth = Authorization.new(:user=&gt;current_user,:uid=&gt;hash[:uid],:provider=&gt;hash[:provider])
+  auth.save
+end
+auth
+</code></pre>
+
+<p>  end</p>
+
+<p>  private</p>
+
+<p>  def self.find_from_hash(hash)</p>
+
+<pre><code>if hash[:provider] &amp;&amp; hash[:uid]
+  find_by_provider_and_uid(hash[:provider],hash[:uid])
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>設定 omniauth (facebook 登入的 app data), 同時讓 /auth/facebook 的 route 可以連接 fb 的 oauth, 相關可參考 <a href="https://github.com/intridea/omniauth" target="_blank">omniauth 的說明</a></p>
+
+<p><code>ruby config/initializers/omniauth.rb
+Rails.application.config.middleware.use OmniAuth::Builder do
+  config = YAML.load(File.open("#{Rails.root}/config/omniauth.yml"))[Rails.env]
+  provider :facebook, config[:facebook][:api_id], config[:facebook][:api_secret]
+end
+</code></p>
+
+<p>```yml config/omniauth.yml
+development:
+  :facebook:</p>
+
+<pre><code>:domain: "foo.com"
+:api_id: "12341234"
+:api_secret: "barbarbarbar"
+</code></pre>
+
+<p>test:
+  :facebook:</p>
+
+<pre><code>:domain: "foo.com"
+:api_id: "12341234"
+:api_secret: "barbarbarbar"
+</code></pre>
+
+<p>production:
+  :facebook:</p>
+
+<pre><code>:domain: "foo.com"
+:api_id: "12341234"
+:api_secret: "barbarbarbar"
+</code></pre>
+
+<p>```</p>
+
+<p>如同 omniauth 的做法, 把接 facebook (或其他 provider) 的 route 和 controller 寫好</p>
+
+<p><code>ruby
+rails g controller sessions
+</code></p>
+
+<p>有可能登入 facebook 會 fail, 所以也要把 fail 的部份寫好</p>
+
+<p>```ruby app/controllers/sessions_controller.rb
+class SessionsController &lt; ApplicationController
+  def create</p>
+
+<pre><code>@auth = Authorization.create_by_omniauth(auth_hash, current_user)
+if @auth.user
+   sign_in_and_redirect :user, @auth.user
+else
+  raise do
+    logger.info "auth_hash: #{auth_hash.inspect}"
+    logger.info "@auth: #{@auth.errors.inspect}"
+    redirect_to new_user_session_path
+  end
+end  
+</code></pre>
+
+<p>  end</p>
+
+<p>  def failure</p>
+
+<pre><code>flash[:error] = params[:message]
+redirect_to new_user_session_path
+</code></pre>
+
+<p>  end</p>
+
+<p>  private</p>
+
+<p>  def auth_hash</p>
+
+<pre><code>request.env['omniauth.auth']
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>設定 route, 包含 omniauth 和 devise</p>
+
+<p>```ruby config/routes.rb
+  match '/auth/:provider/callback', :to => 'sessions#create'
+  match '/auth/failure' => 'sessions#failure'
+  devise_for :users do</p>
+
+<pre><code>get '/users/sign_in', :to =&gt; 'devise/sessions#new', :as =&gt; :new_user_session
+get '/users/sign_out' =&gt; 'devise/sessions#destroy', :as =&gt; :user_sign_out
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>view 裡面的 Facebook 登入按鈕 (html)</p>
+
+<p><code>html
+&lt;a href="http://rubyist.marsz.tw/auth/facebook"&gt;Facebook 登入&lt;/a&gt;
+</code></p>
+
+<p>若希望 Facebook 登入後可以導回登入前的頁面, 則可以做以下設定<br/>
+主要參考 <a href="https://github.com/plataformatec/devise/wiki/How-To:-Redirect-to-a-specific-page-on-successful-sign-in" target="_blank">Devise Wiki</a></p>
+
+<p>```ruby app/controllers/application_controller.rb
+class ApplicationController &lt; ActionController::Base
+  private</p>
+
+<p>  def after_sign_in_path_for(user)</p>
+
+<pre><code>request.env['omniauth.origin'] || stored_location_for(user) || users_path(user)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>目前沒有使用 devise 1.5 以上的原因是在這裡會遇到 redirect loop 的問題</p>
+
+<h4>結論</h4>
+
+<p>本篇範例主要以最常用的 facebook 登入為主<br/>
+另外也提供了整合 openid 至現有帳號的功能<br/>
+大多數的使用者帳號系統最在意的是能否拿到 email, 雖然 Facebook 是最多人使用的 open id, 但是基於網站本身的內容特性, 提供網站自己的註冊流程也是必要的<br/>
+接下來還有另一篇介紹上述範例中的 rspec 會怎麼寫</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Devise 在登入或登出之後執行回乎]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out/"/>
+    <updated>2012-01-10T23:11:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-10/callbacks-of-devise-after-sign-in-or-sign-out</id>
+    <content type="html"><![CDATA[<h4>需求</h4>
+
+<p>想要在登入或登出後執行指定的行為</p>
+
+<!-- more -->
+
+
+<h4>官方 wiki</h4>
+
+<p><a href="https://github.com/plataformatec/devise/wiki/How-To:-Change-the-redirect-path-after-destroying-a-session-i.e.-signing-out" target="_blank">How To: Change the redirect path after destroying a session i.e. signing out</a></p>
+
+<h4>說明</h4>
+
+<ul>
+<li>從 <a href="https://github.com/plataformatec/devise/blob/master/app/controllers/devise/sessions_controller.rb" target="_blank">SessionsController</a> 可得知每次登入後會 redirect 到 after_sign_in_path_for 這個 helper method 所回傳的路徑, 登出則是 after_sign_out_path_for</li>
+<li>找到 <a href="https://github.com/plataformatec/devise/blob/master/lib/devise/controllers/helpers.rb#L207" target="_blank">Controller::Helper</a> 定義了  after_sign_in_path_for 和 after_sign_out_path_for</li>
+<li>針對這兩個 method 進行覆寫</li>
+</ul>
+
+
+<h4>範例</h4>
+
+<p>注意要用 private, 並且傳進一參數為 model instance
+```ruby app/controllers/application_controller.rb
+class ApplicationController &lt; ActionController::Base
+  private</p>
+
+<p>  # Overwriting the sign_in redirect path method
+  def after_sign_in_path_for(resource_or_scope)</p>
+
+<pre><code>root_path
+</code></pre>
+
+<p>  end
+end
+```</p>
+]]></content>
+  </entry>
+  
+</feed>

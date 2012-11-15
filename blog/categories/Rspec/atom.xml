@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Rspec | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Rspec/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec 設定 request 或 controller 的 spec 中 render view]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views/"/>
+    <updated>2012-03-06T11:05:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views</id>
+    <content type="html"><![CDATA[<p><code>rspec rails</code> 中預設是不會 render view 的, 因此 <code>response.body</code> 的內容會是空字串</p>
+
+<!-- more -->
+
+
+<p>為了讓 response.body 能實際的把 view render 出來, 可以有個別或預設的作法</p>
+
+<p>個別</p>
+
+<p>```ruby
+describe UsersController do
+  render_views
+  it "GET #index" do</p>
+
+<pre><code>get :index
+response.body.should match("foo")
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>預設</p>
+
+<p><code>ruby spec/spec_helper.rb
+RSpec.configure do |config|
+  ....
+  config.render_views
+  ....
+end
+</code></p>
+
+<p>小弟個人較偏好每個 request / controller 的 spec 都要 render_view<br/>
+一方面可以檢驗 view 的正確性<br/>
+若 view 中有使用 helper method, 也可以順便檢驗</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rspec 檔案上傳的測試]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload/"/>
+    <updated>2012-03-04T10:45:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload</id>
+    <content type="html"><![CDATA[<p><code>controller</code> 的測試中, 總是免不了要處理檔案上傳, rails 中的測試環境當然也提供了這樣的機制</p>
+
+<!-- more -->
+
+
+<h4>範例</h4>
+
+<p>假設要模擬 view 中 <code>&lt;input type="file" name="user[avatar]" /&gt;</code> 的檔案上傳</p>
+
+<p><code>ruby spec/requests/users_controller_spec.rb
+querys = { :user =&gt; { :avatar =&gt; fixture_file_upload("/example.jpg","image/jpeg") } }
+post :create, querys
+response.should be_success
+</code></p>
+
+<p><code>/example.jpg</code> 會抓 <code>spec/fixtures/example.jpg</code> 做為上傳用的範例圖檔<br/>
+<code>image/jpeg</code> 則是 <code>MIME type</code></p>
+
+<p>亦可寫在 <code>factory</code> 中</p>
+
+<p>```ruby
+Factory :video_file do
+  file { fixture_file_upload '/test.png', 'image/png' }</p>
+
+<p>  after_create do |video, proxy|</p>
+
+<pre><code>proxy.file.close
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>相關可參考<a href="http://apidock.com/rails/ActionDispatch/TestProcess/fixture_file_upload" target="_blank">Api Dock</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Factory Girl 的回呼 (callbacks)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks/"/>
+    <updated>2012-02-29T10:18:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-29/factory-girl-callbacks</id>
+    <content type="html"><![CDATA[<p>在寫測試中, 有許多的情境, 可能會需要在產生測試用資料後做許多處理, 因此 <code>Factory Girl</code> 本身也提供了 <code>callback</code> 機制...</p>
+
+<!-- more -->
+
+
+<p>```ruby
+FactoryGirl.define do
+  factory :user do</p>
+
+<pre><code>sequence(:email) { |n| "foo#{n}@bar.com" }
+name "barbar"
+password "12341234"
+after_create do |user|
+  # callback code block here
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>詳細使用方式可見 <a href="https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md" target="_blank">官方說明文件</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[factory_girl 中的 model 關連 (association)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations/"/>
+    <updated>2012-02-27T09:42:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-27/factory-girl-for-associations</id>
+    <content type="html"><![CDATA[<p>不論是 <code>one-to-one</code> <code>one-to-many</code> 或 <code>many-to-many</code>, 我們都希望 model 中的關連也能反應到 <code>factory_girl</code> 的定義中</p>
+
+<!-- more -->
+
+
+<p>方法如下:  (brand has many products)</p>
+
+<p>```ruby spec/factories/brands.rb
+FactoryGirl.define do
+  factory :brand do</p>
+
+<pre><code>sequence(:name) { |n| "brand name #{n}" }
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>```ruby spec/factories/products.rb
+FactoryGirl.define do
+  factory :products do</p>
+
+<pre><code>name "product name"
+brand do
+  Factory :brand
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>ruby app/models/product.rb
+class Product &lt; ActiveRecord::Base
+  belongs_to :brand  # brand_id
+end
+</code></p>
+
+<p>如此只要每次 <code>Factory(:product)</code> , 該 product 的 brancd 也會透過 brancd 產生, 而不需要再每次的 factory 中去進行關連了 <code>Factory(:product, :brand =&gt; Factory(:brand))</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[factory_girl 的 validates_uniqueness_of 欄位問題]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column/"/>
+    <updated>2012-02-25T09:25:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-25/factory-girl-for-uniqueness-column</id>
+    <content type="html"><![CDATA[<p><code>model</code> 中有 <code>validates_uniqueness_of</code> 的欄位, 在 <code>factory_girl</code> 中可透過 <code>sequence</code> 來避免兩次以上的 factory 因 validation 沒過而無法產生假資料的情況</p>
+
+<!-- more -->
+
+
+<p>```ruby spec/factories/users.rb
+FactoryGirl.define do
+  factory :user do</p>
+
+<pre><code>sequence(:email) do |n|
+  "foo#{n}@bar.com"
+end
+name "barbar"
+password "12341234"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p><code>n</code> 為流水號, 因此可用於 <code>number</code> 或 <code>string</code> 類型的 column</p>
+]]></content>
+  </entry>
+  
+</feed>

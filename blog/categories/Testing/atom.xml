@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Testing | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Testing/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Spec (4) model validations 的 spec]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/"/>
+    <updated>2012-02-04T16:45:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec</id>
+    <content type="html"><![CDATA[<p>本篇將介紹以最原始, 沒有用任何外掛下的 model validation spec 寫法<br/>
+若覺得小弟有更好的寫法, 也歡迎不吝指教 :)</p>
+
+<!-- more -->
+
+
+<p>範例中所使用的 matchers:</p>
+
+<p>be_valid<br/>
+be_true<br/>
+be_false</p>
+
+<p>model檔: User</p>
+
+<p><code>ruby
+class User &lt; ActiveRecord::Base
+  validates_presence_of :name
+  validates_length_of :name, :in =&gt; 1..20
+  validates_uniqueness_of :email
+end
+</code></p>
+
+<p>spec 寫法 (spec/models/user_spec.rb)</p>
+
+<p>```ruby
+describe User do
+  describe "validations" do</p>
+
+<pre><code>before do
+  @user = User.new :name =&gt; "foo", :email =&gt; "bar@foo.com"
+end
+it "should be valid" do
+  @user.should be_valid
+end
+it "should not validate presence of :name" do
+  @user.name = nil
+  @user.should_not be_valid
+end
+it "should not validate length of :name" do
+  @user.name = "foo" * 20
+  @user.should_not be_valid
+end
+it "should not validate uniqueness of :email" do
+  @user.save
+  User.new(@user.attributes).should_not be_valid
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>be_valid 可以讓 @user 先把 save 以前的 validation 都跑過, 並且預期 return true<br/>
+當然若要直接 save 以預期結果的話, 可以改寫成</p>
+
+<p><code>ruby
+@user.save.should == true
+@user.save.should == false
+</code></p>
+
+<p>或(可讀性較佳的寫法)</p>
+
+<p><code>ruby
+@user.save.should be_true
+@user.save.should be_false
+</code></p>
+
+<p>謎之聲: 每個 validation 都要這樣寫好累 XD</p>
+
+<p>當然上述的範例中除了麻煩之外, 當然 User 有追加了新的 validation 時, before 的 User.new 也要跟著對應, 倘若有很多需要 create user model 的 spec 時, 改起來就會很痛苦</p>
+
+<p>因此上述的兩個 issue, 將會在下兩篇將會介紹透過 factory_girl_rails 和 shoulda-matchers 這兩個 gem 解決</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Rspec (3) pending 的使用]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending/"/>
+    <updated>2012-02-03T16:06:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-03/rails-rspec-pending</id>
+    <content type="html"><![CDATA[<p>pending 的使用可先參考 <a href="https://github.com/dchelimsky/rspec/wiki/Pending-Examples" target="_blank">官方文件</a><br/>
+一般 generator 產生的 spec 檔都會先幫你把 pending 加好</p>
+
+<!-- more -->
+
+
+<p><code>ruby
+describe Foo do
+  pending "add some examples to (or delete) #{__FILE__}"
+end
+</code></p>
+
+<p>如此便可在你跑 spec 後, 顯示有幾個 pending 尚未實作</p>
+
+<p><code>
+1 example, 0 failures, 1 pending
+</code></p>
+
+<p>因為不是每個專案都會讓你有時間寫 spec<br/>
+等到有時間寫的時候, 可能會因為累積了太多而不知該從何寫起<br/>
+所以 pending 的功用可讓你在未來能透過 pending 的麵包屑回頭逐一把 spec 補上</p>
+
+<p>因此無論再怎麼趕怎麼忙, 也必須先將 pending 寫上</p>
+
+<p>pending 可分幾個層次如下...</p>
+
+<h4>整個 class 的 pending</h4>
+
+<p>用於 lib class 較多, 當然遇到超趕的時候 controller, model 也都會整個 pending ~ XD</p>
+
+<p><code>ruby
+describe FoosController do
+  pending
+end
+</code></p>
+
+<h4>某個 method 的 pending</h4>
+
+<p>新加的 method, 或 method 改寫了, 原先的 spec 不敷使用</p>
+
+<p>```ruby
+describe Foo do
+  describe "#bar" do</p>
+
+<pre><code>pending
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>或</p>
+
+<p><code>ruby
+describe Foo do
+  pending "#bar"
+end
+</code></p>
+
+<p>一般都是後者的寫法</p>
+
+<h4>method/action 內的某個 case</h4>
+
+<p>針對單一 method/action 寫測試, test case 數通常取決於有多少 if else 在裡頭, 當然遇到比較特殊的 method/action 時, 可能也會有幾個 test case 是為預期錯誤而做的</p>
+
+<p>```ruby
+describe Foo do
+  describe "#bar" do</p>
+
+<pre><code>it "should be a kind of Bar" do
+  ....
+end
+pending "should raise error if bar_id is nil"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>另外, method 只針對 public methods 寫, 一般 protected 和 private method 都不寫 spec<br/>
+嚴謹的專案, 對於 model 的 association, validation, callbacks, scope 也都會寫對應的 spec<br/>
+我的習慣是, 在每次 commit 前檢查本此修改是否需要補 spec 或 pending, 補完後才一起 commit</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Rspec (2) 基本語法與執行]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax/"/>
+    <updated>2012-02-02T14:35:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-02/rails-rspec-basic-syntax</id>
+    <content type="html"><![CDATA[<p>建議在開始本系列文以前先讀過, 以下參考文件與資源</p>
+
+<!-- more -->
+
+
+<p><a href="http://www.slideshare.net/ihower/rspec-7394497" target="_blank">ihower 投影片</a> - 必看!!!!!<br/>
+<a href="http://rubydoc.info/gems/rspec-core/2.8.0/file/README.md#" target="_blank">Rspec-core Rdoc</a> - 架構必看!!!<br/>
+<a href="https://github.com/rspec/rspec-rails" target="_blank">Rspec Rails</a> - 官方提供的簡單範例 for models, controllers, routes, helpers 等</p>
+
+<h4>describe 與 it + should</h4>
+
+<p>最簡單的 rspec 可由 describe 和 it 組成<br/>
+it 裡面必須有 should (或其他 match 語法) 才會構成測試</p>
+
+<p>小弟在初學 rspec 的時候, 大多透過 should == 和 should_not == 就吃遍天下了 :p<br/>
+一般在初學 rspec 時, 需要多注意 describe 和 it 的階層關係, 才會讓你的 spec 可讀性較高</p>
+
+<p>有規劃的 spec</p>
+
+<p>```ruby
+describe Foo do
+  describe "#get_bar" do</p>
+
+<pre><code>it "should be nil" do
+  Foo.new.get_bar.should == nil
+end
+it "should be Bar" do
+  Foo.first.get_bar.class.should == Bar
+end
+</code></pre>
+
+<p>  end
+```</p>
+
+<p>沒有規劃的 spec</p>
+
+<p>```ruby
+describe Foo do
+  it "#get_bar" do</p>
+
+<pre><code>Foo.new.get_bar.should == nil # 當這行的測試沒過時, 下面的測試便不會再執行
+Foo.first.get_bar.class.should == Bar
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>盡可能讓每個 it 都是針對一種結果進行測試<br/>
+描述中用 # 開頭的就表示是 method name</p>
+
+<p>當漸漸學會其他的 match 語法時, 可讀性就去更高了
+例如 <a href="http://apidock.com/rspec/Spec/Matchers/be_a_kind_of" target="_blank">be_a_kind_of</a> 可用於做 is_a_kind_of 的 match</p>
+
+<p><code>ruby
+Foo.first.get_bar.should be_a_kind_of(Bar)
+</code></p>
+
+<p>相當於</p>
+
+<p><code>ruby
+Foo.first.get_bar.class.should == Bar
+</code></p>
+
+<p>前者的可讀性是比較高的</p>
+
+<h4>before 與 it</h4>
+
+<p>before 必定是在某個 describe 下, 而 before 內的行為會在每個 it 以前執行<br/>
+而善用 instance 變數, 可以將 before 產生的變數傳遞給底下每個 it 用</p>
+
+<p>```ruby
+describe Foo do
+  before do</p>
+
+<pre><code>@foo = Foo.create!
+</code></pre>
+
+<p>  end
+  describe "#bar" do</p>
+
+<pre><code>before do
+  @bar = Bar.create!
+  @foo.bar = @bar
+  @foo.save
+end
+it "should be Bar" do
+   @foo.bar.should be_a_kind_of(Bar) # 可以拿到 @foo
+end
+it "should be equeal to @bar" do
+   @foo.bar.id.should == @bar.id # 也可以拿到 @bar
+end
+</code></pre>
+
+<p>  end
+  it "be a kind of Foo" do</p>
+
+<pre><code>@foo.should be_a_kind_of(Foo) # 只能拿到 @foo
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>此外每個 it 結束後, 都會將此 it (含 before) 內對 test db 的修改通通 rollback, 因此我們可視為每個 it 執行前 (before 前), test db 都會是空的</p>
+
+<h4>執行測試</h4>
+
+<p>必須注意:</p>
+
+<ol>
+<li>config/database.yml 必須要有 test env 的設定, 且 database 不能和 migrate 一樣</li>
+<li>執行前若 development 有 migrations 沒跑的話, 必須先跑完</li>
+</ol>
+
+
+<p>跑 spec/ 下的所有測試</p>
+
+<p><code>
+bundle exec rake spec
+</code></p>
+
+<p>跑單一檔案的 spec</p>
+
+<p><code>
+bundle exec rspec spec/models/foo_spec.rb
+</code></p>
+
+<p>跑單一檔案時, 不會先重新 load db schema, 因此若有新的 migrations 在 development 跑過後, 必須先 rake spec 後才能跑單一檔案的 rspec</p>
+
+<p>更多 rspec 指令的應用</p>
+
+<p><code>
+bundle exec rspec -h
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Rspec (1) 介紹與設定]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-01/rails-rspec-intro-and-setup/"/>
+    <updated>2012-02-01T14:00:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-01/rails-rspec-intro-and-setup</id>
+    <content type="html"><![CDATA[<p>有關寫測試的重要性, 本文不再贅述<br/>
+觀念性文章可參考以下大大們的見解...</p>
+
+<!-- more -->
+
+
+<p><a href="http://mrjamie.cc/2011/09/01/test-code/" target="_blank">Coding: 寫 Test 還是不寫 Test?</a> - Mr. Jamie<br/>
+<a href="http://ihower.tw/rails3/testing.html" target="_blank">Rails 3 實戰聖經: 測試 Testing</a> - ihower<br/>
+<a href="http://www.slideshare.net/ihower/rspec-7394497?from=ss_embed">Rspec 讓你愛上寫測試</a> - ihower</p>
+
+<h5>安裝</h5>
+
+<p>參考官方文件: <a href="https://github.com/rspec/rspec-rails" target="_blank">https://github.com/rspec/rspec-rails</a></p>
+
+<p>Gemfile</p>
+
+<p><code>ruby
+group :test, :development do
+  gem "rspec"
+  gem "rspec-rails"
+  gem "factory_girl_rails" # 用於產生資料, 後面的文章將會介紹
+  gem "shoulda-matchers" # 用於簡化寫 rspec 的工具, 後面的文章將會介紹
+end
+</code></p>
+
+<p><code>
+bundle install
+</code></p>
+
+<p>產生檔案</p>
+
+<p><code>
+rails generate rspec:install
+</code></p>
+
+<p>移除舊的 test, 可視需求執行, 一般有了 rspec 就不會想再用舊的 test 框架啦 XD</p>
+
+<p><code>
+rm -rf test/
+</code></p>
+
+<p>此時專案下會多了 spec 目錄, 以及 spec/spec_helper.rb<br/>
+另外透過 rails g 產生 model 或 controller 時, spec 目錄下也會產生對應的 spec 檔<br/>
+如</p>
+
+<p>```
+rails g model foo</p>
+
+<p>```</p>
+
+<p>```</p>
+
+<pre><code>  invoke  active_record
+  create    db/migrate/20120204063026_create_foos.rb
+  create    app/models/foo.rb
+  invoke    rspec
+  create      spec/models/foo_spec.rb
+</code></pre>
+
+<p>```</p>
+
+<p>同理, rails destroy 也會對應刪除</p>
+
+<p>下一篇將會介紹基本語法以及跑測試的方法</p>
+]]></content>
+  </entry>
+  
+</feed>

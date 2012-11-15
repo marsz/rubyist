@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Encoding | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Encoding/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit/"/>
+    <updated>2011-12-23T21:01:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-23/encoding-error-utf8-and-ascii-8bit</id>
+    <content type="html"><![CDATA[<p>在進行 regular expression 或其他字串處理時, 出現以下錯誤訊息</p>
+
+<p><code>
+Encoding::CompatibilityError: incompatible character encodings: ASCII-8BIT and UTF-8
+</code></p>
+
+<!-- more -->
+
+
+<h6>來源</h6>
+
+<p><a href="https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors" target="_blank">https://rails.lighthouseapp.com/projects/8994/tickets/4336-ruby19-submitted-string-form-parameters-with-non-ascii-characters-cause-encoding-errors</a></p>
+
+<h6>解決</h6>
+
+<p><code>ruby
+mystring.force_encoding("UTF-8")
+</code></p>
+
+<p>總之就是把所有的字串都 force_encoding :p</p>
+]]></content>
+  </entry>
+  
+</feed>

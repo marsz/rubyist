@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: ActiveRecord | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/ActiveRecord/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在 validates_format_of 中使用正規表示法(Regular Expression)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-04/regexp-in-validates-format-of/"/>
+    <updated>2012-01-04T17:43:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-04/regexp-in-validates-format-of</id>
+    <content type="html"><![CDATA[<p>在 model 的 validates_format_of 中, 有 with/without 可以透過正規表示法(Regular Expression) 來驗證欄位資料的格式是否正確</p>
+
+<p>因此小弟不疑有他, 於是...</p>
+
+<!-- more -->
+
+
+<p><code>ruby
+validates_format_of :name, :with =&gt; /[a-z\-]+/
+</code></p>
+
+<p>讓 name 只能存小寫英文以及 dash(-) 值</p>
+
+<p>結果...
+name = "ab-ac $@#" # 可存
+name = "@#$%^ " # 不可存
+預期應兩者皆不可存</p>
+
+<p>後來去找了 <a href="http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each" target="_blank">api source</a> 發現是透過 string =~ regexp 做驗證</p>
+
+<p>但小弟很不用功, 不知道 =~ 和 !~ 是什麼, 所以又再回去找<a href="http://guides.ruby.tw/ruby/regexp.html" target="_blank">以前學習的資料</a>...</p>
+
+<p>於是終於明白...<br />
+=~ 用在正規表示法的意思是回傳字串中符合此表示法的位置<br />
+而上述的範例中, 因為正規表示法是 /[a-z-]+/<br />
+"ab-ac $@#" 有 ab-ac 所以匹配<br />
+"@#$%^ " 沒有任何字串匹配<br />
+若希望正規表示法可以比對整個字串, 讓 "ab-ac $@#" 也不匹配<br />
+則必須善用正規表示法中的<a href="http://www.regular-expressions.info/reference.html" target="_blank">特殊語法</a></p>
+
+<p><code>ruby
+validates_format_of :name, :with =&gt; /\A[a-z\-]+\Z/
+</code></p>
+
+<p>其中 \A 是字串開頭 \Z 是字串結尾, 也可以用 ^ 和 $ 分別表示單行開頭與結尾<br />
+這樣就可以啦!!!</p>
+
+<h5>參考</h5>
+
+<p>api source: <a href="http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each" target="_blank">http://api.rubyonrails.org/classes/ActiveModel/Validations/FormatValidator.html#method-i-validate_each</a></p>
+
+<p>regular expression: <a href="http://www.regular-expressions.info/reference.html" target="_blank">http://www.regular-expressions.info/reference.html</a></p>
+
+<p>ruby: <a href="http://guides.ruby.tw/ruby/regexp.html" target="_blank">http://guides.ruby.tw/ruby/regexp.html</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[如何在 datetime 的欄位中做日期的搜尋]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date/"/>
+    <updated>2012-01-04T16:54:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-04/query-datetime-by-date</id>
+    <content type="html"><![CDATA[<p>rails 在儲存 datetime 時,會先去除時區,然後才把 +0 的原始時間存到資料庫中
+因此若我們直接下 sql 時, 必須將時區考量進去</p>
+
+<!-- more -->
+
+
+<p>例如我們想要找欄位 created_at 在 2012-01-01 00:00:00 到 2012-01-03 23:59:59 的資料
+以台灣 +8 時區為例, 我們應該找資料庫中 2011-12-31 16:00:00 到 2012-01-03 15:59:59 的資料
+以下範例可直接達到所想要的 sql</p>
+
+<p><code>ruby
+date_start = "2012-01-01"
+date_end = "2012-01-03"
+range = date_start.to_date.beginning_of_day..date_end.to_date.end_of_day
+User.where(:created_at =&gt; range)
+</code></p>
+
+<p><a href="http://api.rubyonrails.org/classes/Date.html" target="_blank">Date</a>中有 "beginning_of_day" 和 "end_of_day" 兩個 method 將 Date 轉換為 Datetime 並且使時間落在當天的開始與結束, 透過 ActiveRecord 以 hash 方式作為 query interface, 時區才會自動轉換</p>
+
+<p>同樣在 Date 中還有 beginning_of_month, beginning_of_quarter, beginning_of_week, beginning_of_year 可用</p>
+
+<h6>補充</h6>
+
+<p>有關時區設定可參考 config/application.rb</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[實作 sql 中的數值欄位的遞增(counter increment)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value/"/>
+    <updated>2011-12-30T17:07:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-30/counter-increment-with-custom-value</id>
+    <content type="html"><![CDATA[<p>針對 db 的數值欄位做直接加減以避免 inconsistent update 問題
+即想在 sql 中實作出
+<code>sql
+UPDATE users SET score = score + 1 WHERE id = 1
+</code></p>
+
+<!-- more -->
+
+
+<p>rails 在實作 counter cache 中有 api 可用
+<code>ruby
+User.increment_counter "score", user.id
+</code></p>
+
+<p>對應 sql:
+<code>sql
+UPDATE users SET score = score + 1 WHERE id = 1
+</code></p>
+
+<h6>參考</h6>
+
+<p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/increment_counter" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/increment_counter</a></p>
+
+<p>當然, 遞減的 method 相對是 decrement_counter</p>
+
+<p>若增減值大於 1 的話, 則可用 update_counters 來實作
+<code>ruby
+User.update_counters user.id, :score =&gt; 3
+</code></p>
+
+<p>輸出 sql
+<code>sql
+UPDATE users SET score = score + 3 WHERE id = 1
+</code></p>
+
+<p>update_counters 可以一次對多個欄位做增減
+<code>ruby
+User.update_counters user.id, :score =&gt; 3, :karma =&gt; 6
+</code></p>
+
+<h6>參考</h6>
+
+<p><a href="http://apidock.com/rails/ActiveRecord/CounterCache/update_counters" target="_blank">http://apidock.com/rails/ActiveRecord/CounterCache/update_counters</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[巢狀 (nested) to_json / to_xml 應用]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml/"/>
+    <updated>2011-12-23T21:40:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2011-12-23/nested-to_json-and-to_xml</id>
+    <content type="html"><![CDATA[<p>在做 api 輸出(json,xml等)時, 想要將 model 中的某些 attribute 或關連的其他 model 一起輸出, rails 中的 to_json 或 to_xml 更可以針對 method 做輸出!</p>
+
+<!-- more -->
+
+
+<h2>參考</h2>
+
+<ul>
+<li>ApiDock</li>
+</ul>
+
+
+<p><a href="http://apidock.com/rails/ActiveRecord/Serialization/to_json" target="_blank">http://apidock.com/rails/ActiveRecord/Serialization/to_json</a></p>
+
+<ul>
+<li>Stackoverflow</li>
+</ul>
+
+
+<p><a href="http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json" target="_blank">http://stackoverflow.com/questions/4443218/ror-nested-include-to-include-sub-resources-in-to-xml-to-json</a></p>
+
+<h2>說明</h2>
+
+<ul>
+<li>參數為 include</li>
+<li>可以搭配 only, methods 做部分 attribute 或 method 的輸出</li>
+</ul>
+
+
+<h2>範例</h2>
+
+<p>```ruby
+foo.to_json(:include =></p>
+
+<pre><code>           { :emails =&gt; { :only =&gt; :address }, 
+             :friends =&gt; { :only =&gt; :name, 
+               :include =&gt; { :emails =&gt; { :only =&gt; :address } } 
+             }
+           })
+</code></pre>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>

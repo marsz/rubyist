@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Rails Bug | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Rails%20Bug/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[layout 檔案的命名]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-08-21/rails-layout-file-naming/"/>
+    <updated>2012-08-21T15:16:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-08-21/rails-layout-file-naming</id>
+    <content type="html"><![CDATA[<p>今天發現 <code>layout</code> 檔 (views/layouts) 的命名是不能亂來的 ~XD<br/>
+嘗試用 dash 命名 (例如 foo-bar.html.haml) 的結果造成 haml 無法被 parsing<br/>
+所以還是乖一點用小寫英文和 underline 吧 :p</p>
+]]></content>
+  </entry>
+  
+</feed>

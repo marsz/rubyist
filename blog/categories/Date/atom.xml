@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Date | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Date/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[輸出除去0的日期格式]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-10/date_format_without_zero/"/>
+    <updated>2012-01-10T22:34:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-10/date_format_without_zero</id>
+    <content type="html"><![CDATA[<p>ruby 中 Date 或 Datetime 都有 <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" taget="_blank">#srtftime</a> 可以用來作自定格式的日期輸出<br/>
+若我們希望輸出的日期或時間能夠去除多餘的0, 或者輸入的月份英文可以全部大寫<br/>
+以下範例 (Date, Datetime均適用) 擷取自官方文件可作為參考</p>
+
+<!-- more -->
+
+
+<p><code>ruby
+date = "2012-01-01".to_date
+date.strftime("%m/%d") # 01/01
+date.strftime("%-m/%-d") # 1/1
+date.strftime("%d %b") # 1 Jan
+date.strftime("%d %^b") # 1 JAN
+</code></p>
+
+<p>完整細節可以參考<a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/date/rdoc/Date.html#method-i-strftime" target="_blank">官方文件</a></p>
+]]></content>
+  </entry>
+  
+</feed>

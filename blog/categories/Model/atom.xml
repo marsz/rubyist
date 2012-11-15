@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Model | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Model/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails Spec (4) model validations 的 spec]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec/"/>
+    <updated>2012-02-04T16:45:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-02-04/rails-rspec-model-spec</id>
+    <content type="html"><![CDATA[<p>本篇將介紹以最原始, 沒有用任何外掛下的 model validation spec 寫法<br/>
+若覺得小弟有更好的寫法, 也歡迎不吝指教 :)</p>
+
+<!-- more -->
+
+
+<p>範例中所使用的 matchers:</p>
+
+<p>be_valid<br/>
+be_true<br/>
+be_false</p>
+
+<p>model檔: User</p>
+
+<p><code>ruby
+class User &lt; ActiveRecord::Base
+  validates_presence_of :name
+  validates_length_of :name, :in =&gt; 1..20
+  validates_uniqueness_of :email
+end
+</code></p>
+
+<p>spec 寫法 (spec/models/user_spec.rb)</p>
+
+<p>```ruby
+describe User do
+  describe "validations" do</p>
+
+<pre><code>before do
+  @user = User.new :name =&gt; "foo", :email =&gt; "bar@foo.com"
+end
+it "should be valid" do
+  @user.should be_valid
+end
+it "should not validate presence of :name" do
+  @user.name = nil
+  @user.should_not be_valid
+end
+it "should not validate length of :name" do
+  @user.name = "foo" * 20
+  @user.should_not be_valid
+end
+it "should not validate uniqueness of :email" do
+  @user.save
+  User.new(@user.attributes).should_not be_valid
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>be_valid 可以讓 @user 先把 save 以前的 validation 都跑過, 並且預期 return true<br/>
+當然若要直接 save 以預期結果的話, 可以改寫成</p>
+
+<p><code>ruby
+@user.save.should == true
+@user.save.should == false
+</code></p>
+
+<p>或(可讀性較佳的寫法)</p>
+
+<p><code>ruby
+@user.save.should be_true
+@user.save.should be_false
+</code></p>
+
+<p>謎之聲: 每個 validation 都要這樣寫好累 XD</p>
+
+<p>當然上述的範例中除了麻煩之外, 當然 User 有追加了新的 validation 時, before 的 User.new 也要跟著對應, 倘若有很多需要 create user model 的 spec 時, 改起來就會很痛苦</p>
+
+<p>因此上述的兩個 issue, 將會在下兩篇將會介紹透過 factory_girl_rails 和 shoulda-matchers 這兩個 gem 解決</p>
+]]></content>
+  </entry>
+  
+</feed>

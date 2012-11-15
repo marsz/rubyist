@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: Git-rebase | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/Git-rebase/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2012-11-16T02:04:04+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git pull 時請愛用 rebase]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase/"/>
+    <updated>2012-01-20T19:44:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2012-01-20/git-pull-with-rebase</id>
+    <content type="html"><![CDATA[<p>因為
+git pull = git fetch + git merge (remote branch merge to local branch)
+而 merge 往往會造成線圖上產生無謂的分支 (可參考 <a href="http://ihower.tw/blog/archives/3843" target="_blank">ihower 大大的 rebase 文章</a> )</p>
+
+<!-- more -->
+
+
+<p>因此除了一般的 feture branch merge 時透過 rebase 外<br/>
+我們對內也會要求 pull 時用 rebase</p>
+
+<p><code>
+git pull --rebase
+</code></p>
+
+<p>若覺得每次加都很麻煩可以在專案的 .git/config 加上</p>
+
+<p><code>ruby .git/config
+[branch "master"]
+  remote = origin
+  merge = refs/heads/master
+  rebase = true # 這行
+</code></p>
+
+<p>若覺得每個專案都要加很麻煩, 可以在 ~/.gitconfig 加上</p>
+
+<p><code>ruby  ~/.gitconfig
+[branch]
+  autosetuprebase = always
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>
