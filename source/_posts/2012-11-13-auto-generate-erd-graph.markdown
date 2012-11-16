@@ -3,7 +3,7 @@ layout: post
 title: "自動化產生 ER 圖的 rubygem"
 date: 2012-11-13 05:39
 comments: true
-categories: [Rubygem, ERD]
+categories: [Rubygems, ERD]
 ---
 參考連結:  
 1. 官網 : <a href="http://rails-erd.rubyforge.org/" target="_blank">http://rails-erd.rubyforge.org/</a>  

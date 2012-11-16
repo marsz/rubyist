@@ -3,7 +3,7 @@ layout: post
 title: "讀書心得: 刻意練習(2)"
 date: 2012-05-15 13:54
 comments: true
-categories: ["Reading", "刻意練習"]
+categories: ["Reading", "deliberate-practice"]
 ---
 所謂的`刻意練習`有別於我們一般所認知的`練習`，而是一套以系統化方法有效的進行自我訓練，以邁向卓越之路。書中所提到的要素如下:  
 

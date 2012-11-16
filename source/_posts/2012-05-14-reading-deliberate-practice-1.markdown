@@ -3,7 +3,7 @@ layout: post
 title: "讀書心得: 刻意練習(1)"
 date: 2012-05-14 12:28
 comments: true
-categories: ["Reading", "刻意練習"] 
+categories: ["Reading", "deliberate-practice"] 
 ---
 博客來: <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601" target="_blank">http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601</a>  
 原書名為 `我比別人更認真`, 標題下 `刻意練習` 是因為這是本書的主軸  

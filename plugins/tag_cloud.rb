@@ -68,7 +68,8 @@ module Jekyll
 
       html = ''
       lists.each do | category, counter |
-        url = category_dir + category.gsub(/_|\P{Word}/, '-').gsub(/-{2,}/, '-').downcase
+        category = category.dup.force_encoding("utf-8")
+        url = category_dir + URI::encode(category)
         style = "font-size: #{100 + (60 * Float(counter)/max)}%"
         html << "<a href='#{url}' style='#{style}'>#{category}"
         if @opts['counter']
