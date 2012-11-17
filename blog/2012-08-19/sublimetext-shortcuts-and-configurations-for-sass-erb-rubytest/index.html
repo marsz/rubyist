@@ -172,7 +172,7 @@ ln -s "/Applications/Sublime &hellip;">
 <p>用於快速安裝其他 package 的好工具</p>
 
 <p>參考 <a href="http://wbond.net/sublime_packages/package_control/installation" target="_blank">http://wbond.net/sublime_packages/package_control/installation</a><br/>
-`ctrl+&#8220; 開啟 command line 後輸入:</p>
+ctrl+` 開啟 command line 後輸入:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print 'Please restart Sublime Text to finish installation'</span></code></pre></td></tr></table></div></figure>
