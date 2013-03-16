@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>讀書心得: 刻意練習(1) - 黃金俠</title>
+  <title>我寫的 gem - venus 簡介 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="博客來: http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601
-原書名為 我比別人更認真, 標題下 刻意練習 是因為這是本書的主軸
-我大約在 2010 年中買來看完, 覺得和 Rework 一樣都是值得一讀再讀的好書 :) &hellip;">
+  <meta name="description" content="因受到了 rails composor 的影響，決定也來寫一個客製化的 rails generator。
+但後來又覺得只能在開新專案用的話，使用頻率也不太高&#8230; 鑿於在許多專案中，總是為了要安裝某些 gem 而必須再回去翻寫過專案中的 code 或上官網找範例 code 做 copy/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1">
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -84,7 +83,7 @@
   
   <header>
     
-      <h1 class="entry-title">讀書心得: 刻意練習(1)</h1>
+      <h1 class="entry-title">我寫的 gem - venus 簡介</h1>
     
     
       <p class="meta">
@@ -100,7 +99,7 @@
   
 
 
-<time datetime="2012-05-14T12:28:00+08:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+<time datetime="2013-03-13T13:12:00+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -109,42 +108,87 @@
   </header>
 
 
-<div class="entry-content"><p>博客來: <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601" target="_blank">http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601</a><br/>
-原書名為 <code>我比別人更認真</code>, 標題下 <code>刻意練習</code> 是因為這是本書的主軸<br/>
-我大約在 2010 年中買來看完, 覺得和 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010482162" target="_blank"><code>Rework</code></a> 一樣都是值得一讀再讀的好書 :)</p>
+<div class="entry-content"><p>因受到了<a href="http://railsapps.github.com/rails-composer/" target="_blank"> rails composor </a> 的影響，決定也來寫一個客製化的 rails generator。<br/>
+但後來又覺得只能在開新專案用的話，使用頻率也不太高&#8230;</p>
 
 <!-- more -->
 
 
-<h3>前言</h3>
+<p>鑿於在許多專案中，總是為了要安裝某些 gem 而必須再回去翻寫過專案中的 code 或上官網找範例 code 做 copy/paste + 修改，於是我決定寫一個 generator 來設定這些常用的 gem，僅需要如同 rails composor 一樣回答一些問題就可以把所有的設定弄到好。</p>
 
-<p>一~三章舉證不少卓越人士和一般人之間的差異，天賦的因素幾乎是微乎其微，影響最深遠的差異在於 <code>你花了多少時間努力</code></p>
+<p>因此 venus 因應而生</p>
 
-<p>第四章則是本書重點的開始，以一位著名的足球運動員為例，說明努力是如何扭轉態勢&#8230;</p>
+<p>安裝: <a href="https://rubygems.org/gems/venus" target="_blank">https://rubygems.org/gems/venus</a>  <br/>
+源碼: <a href="https://github.com/marsz/venus" target="_blank">https://github.com/marsz/venus</a></p>
 
-<h5>努力通常不是卓越的保證</h5>
+<p>以下逐一介紹各個指令</p>
 
-<p>因此本書大量研究了各種卓越人士的案例，嘗試從其中找出 &#8220;努力的方法&#8221;，因為不努力是絕對無法邁向頂尖的!!</p>
+<p><code>rails generate venus:init</code></p>
 
-<h5>自發練習</h5>
+<p>專案初始化設定，例如移除 public/index.html，安裝必要的 gem 例如分頁用的 <code>kminari</code>，剛 new 好的 rails 專案適合執行此指令。</p>
 
-<p>大量的統計報告指出，卓越人士和一般人接受訓練的時間是差不多的，智商.環境.生活也都沒有顯著差異。而要提昇表現水準，<code>自發練習</code> 占了最重要的因素。以書中為例，卓越的小提琴家平均獨自練習的時間遠遠多於一般的小提琴家。</p>
+<p><code>rails generate venus:mysql</code></p>
 
-<h5>自發練習多半集中在上午</h5>
+<p>設定 mysql，包含從 <code>Gemfile</code> 安裝 mysql2，設定 <code>database.yml</code> 以及 <code>database.yml.example</code>，最後再將 <code>config/database.yml</code> 加到 .gitignore 中。</p>
 
-<p>為了成為頂尖，必須安排固定的時間才能做大量練習，因此多半會選擇在&#8221;精神狀況較佳&#8221;的狀態下進行自發練習。而我個人對此的解讀是 <code>剛睡醒的2 ~ 3小時內</code>，這段時間身心都處在最佳狀態，沒有任何時間比這時候做自發練習更好了。這也可以解釋為什麼成功人士都在早上六起點起床(甚至更早)，利用早晨這 1~2 小時完成當天最重要的工作，然後才準備去上班。</p>
+<p><code>rails generate venus:paginate</code></p>
 
-<h5>睡得比較多</h5>
+<p>單獨安裝分頁用的 gem - <code>kminari</code>，也會問你要不要產生客製化的 view 出來。</p>
 
-<p>因為投入於自發練習的時間較長較集中，因此卓越人士也比平常人更耗費心力，所以為了保持在最佳狀態下做練習，自然睡得就比較多啦</p>
+<p><code>rails generate venus:simple_form</code></p>
 
-<h5>十年法則</h5>
+<p>view 使用 form 必備的 <a href="https://github.com/plataformatec/simple_form" target="_blank">simple_form</a>，預設會產生 bootstrap wrapper 的設定檔。也會詢問是否要順便安裝 <a href="https://github.com/ryanb/nested_form" target="_blank">nested_form</a>，安裝 nested_form 需要在 js 中 require gem 裡面包好的 JS，所以也會詢問 require code 和 example code 要放的檔案路徑。</p>
 
-<p>頂尖表現者的研究發現一個基調: 不管這些人是誰，也不管他們表現如此精進的原因為何，<code>他們都是經過多年</code>才變得如此出眾，無一例外。也因此說明了許多科學家或作家偉大的成果或作品都是在二十年以上的潛心努力後才問世。這和不久前看到的 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010516443" target="_blank"><code>一萬小時法則</code></a> 呼應。</p>
+<p><code>rails generate venus:settingslogic</code></p>
 
-<h5>刻意練習</h5>
+<p>gem - <a href="https://github.com/binarylogic/settingslogic" target="_blank"><code>settingslogic</code></a>。可以將多個 yml 的設定檔放在此 gem 所讀取的 yaml 下，使其能夠容易管理。此 generator 同時也會產生 .example 檔以及加入 .yml 到 .gitignore 下。</p>
 
-<p>矛盾的是，花在自發練習的時間長並不代表一定能有卓越表現，而這問題在於 <code>對練習定義的模糊</code>，所謂的練習並非是我們所想的&#8221;熟能生巧&#8221;這麼簡單，而是一套更為具體更有架構的 <code>刻意練習</code>，這也是本書從第五章開始所帶出的重點.</p>
+<p><code>rails generate venus:rspec</code></p>
+
+<p>安裝並且設定 <code>rspec</code>，並且移除 test 目錄，在 <code>config/application.rb</code> 中設定 generate controller 時，不自動產生 assets files 和 helper。</p>
+
+<p><code>rails generate venus:devise</code></p>
+
+<p>安裝並且設定 scope 為 user 的 devise gem。</p>
+
+<p><code>rails generate venus:omniauth</code></p>
+
+<p>會先檢查是否有安裝 settingslogic 以及 devise，然後再安裝 omniauth，過程中會詢問 facebook / twitter / github 登入的安裝與否。</p>
+
+<p><code>rails generate venus:redis</code></p>
+
+<p>安裝並且設定 redis client gem <a href="https://github.com/redis/redis-rb" target="_blank">redis-rb</a> 。</p>
+
+<p><code>rails generate venus:aws</code></p>
+
+<p>安裝並且設定 Amazon <a href="https://github.com/aws/aws-sdk-ruby" target="_blank">官方的 ruby client </a>。過程中會先檢查 settingslogic，並且將 api key 和 secret 存到其中。最後也會詢問否需要順便安裝 Amazon Simple Email Service (SES)，用來發 email。</p>
+
+<p><code>rails generate venus:carrierwave</code></p>
+
+<p>安裝並且設定 carrierwave，其中包含 rmagick 進行縮圖，以及 fog 將檔案上傳至S3。過程中會安裝 aws-sdk，所以也會順便詢問 SES 的設定 :p。最後會產生一個 <code>venus_uploader.rb</code> 做為範例。</p>
+
+<p><code>rails generate venus:jqueryui</code></p>
+
+<p>安裝 jquery ui 的 gem。其中會詢問是否要安裝 datepicker，包含產生 trigger 用的 js 範例 code。gem 的 參考連結 => <a href="https://github.com/joliss/jquery-ui-rails" target="_blank">https://github.com/joliss/jquery-ui-rails</a>。 (若有要安裝 datepicker 的話，也會詢問語系)</p>
+
+<p><code>rails generate venus:chosen</code></p>
+
+<p>安裝 <a href="https://github.com/tsechingho/chosen-rails" target="_blank">chosen-rails</a> 並且提供 trigger chosen 的範例 js code。</p>
+
+<p><code>rails generate venus:bootstrap</code></p>
+
+<p>安裝 <code>twitter bootstrap</code> ，包含 gem 設定、 assets require，最後產生範例 layout 檔於 <code>app/views/layouts/</code> 下。內建提供 <a href="http://wrapbootstrap.com/preview/WB0F35928" target="_blank">unicorn admin</a> 的版型套用，蓋後台超爽 XD</p>
+
+<h1>TODOs</h1>
+
+<p>對於此 gem 未來將會逐漸加入我自己寫的 best practice :p 也望各位大大能不吝指教或回報 bug :D</p>
+
+<ul>
+<li>sidekiq : 強大的 background job gem</li>
+<li>unicorn : 配合 capistrano 讓佈署時可以 zero down time</li>
+<li><a href="https://github.com/airblade/paper_trail" target="_blank">paper_trail</a> : 對 model 進行版本控制的 gem</li>
+</ul>
+
 </div>
 
 
@@ -167,12 +211,12 @@
   
 
 
-<time datetime="2012-05-14T12:28:00+08:00" pubdate data-updated="true">May 14<span>th</span>, 2012</time>
+<time datetime="2013-03-13T13:12:00+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/Reading/'>Reading</a>, <a class='category' href='/blog/categories/deliberate-practice/'>deliberate-practice</a>
+    <a class='category' href='/blog/categories/Rubygems/'>Rubygems</a>
   
 </span>
 
@@ -181,7 +225,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus/" >Tweet</a>
   
   
   
@@ -192,10 +236,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012-03-08/backup-gem/" title="Previous Post: 用 backup gem 做自動化備份">&laquo; 用 backup gem 做自動化備份</a>
+        <a class="basic-alignment left" href="/blog/2012-11-13/auto-generate-erd-graph/" title="Previous Post: 自動化產生 ER 圖的 rubygem">&laquo; 自動化產生 ER 圖的 rubygem</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012-05-15/reading-deliberate-practice-2/" title="next Post: 讀書心得: 刻意練習(2)">讀書心得: 刻意練習(2) &raquo;</a>
       
     </p>
   </footer>
@@ -338,8 +380,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1/';
-        var disqus_url = 'http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1/';
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus/';
         var disqus_script = 'embed.js';
       
     (function () {

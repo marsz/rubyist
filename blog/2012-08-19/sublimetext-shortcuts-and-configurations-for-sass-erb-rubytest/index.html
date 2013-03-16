@@ -9,10 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="Sublime 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。 實用快速鍵 參考: https://gist.github.com/1207002 安裝好後設定 link 1
-2
-3
-ln -s "/Applications/Sublime &hellip;">
+  <meta name="description" content="最後更新: 2013/3/16 Sublime 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD
+以下是我的設定範例。 實用快速鍵 參考: https://gist.github.com/1207002 自定快速鍵 以下視個人喜好而定: 上方選單 -> &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,16 +108,42 @@ ln -s "/Applications/Sublime &hellip;">
   </header>
 
 
-<div class="entry-content"><p><a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。</p>
+<div class="entry-content"><p>最後更新: 2013/3/16 <br/>
+<a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD<br/>
+以下是我的設定範例。</p>
 
 <!-- more -->
 
 
-<h3>實用快速鍵</h3>
+<h1>實用快速鍵</h1>
 
 <p>參考: <a href="https://gist.github.com/1207002" target="_blank">https://gist.github.com/1207002</a></p>
 
-<h3>安裝好後設定 link</h3>
+<h1>自定快速鍵</h1>
+
+<p>以下視個人喜好而定:</p>
+
+<p>上方選單 -> Sublime Text 2 -> Preferences -> Key Bindings Default</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  // 找 swap_line_up 出來改, 可以換置上下行
+</span><span class='line'>  { "keys": ["alt+up"], "command": "swap_line_up" },
+</span><span class='line'>  { "keys": ["alt+down"], "command": "swap_line_down" },
+</span><span class='line'>  // 找 duplicate_line 出來改, 可以快速複製一行
+</span><span class='line'>  { "keys": ["super+alt+down"], "command": "duplicate_line" },
+</span><span class='line'>  { "keys": ["super+alt+up"], "command": "duplicate_line" },
+</span><span class='line'>  // 找 auto_complete 出來改
+</span><span class='line'>  { "keys": ["super+."], "command": "auto_complete" },</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>安裝好後設定 link</h1>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -141,7 +165,7 @@ ln -s "/Applications/Sublime &hellip;">
 </pre></td><td class='code'><pre><code class=''><span class='line'>export EDITOR="/usr/local/bin/subl -w"</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>setting 檔</h3>
+<h1>setting 檔 </h1>
 
 <p><code>command + ,</code> 出現的檔案</p>
 
@@ -167,7 +191,7 @@ ln -s "/Applications/Sublime &hellip;">
 <p>(PS: 年紀大了所以用字體 size 用 18 XD)<br/>
 (PS2: tab 設定隨個人/公司喜好)</p>
 
-<h3>安裝 package control</h3>
+<h1>安裝 package control</h1>
 
 <p>用於快速安裝其他 package 的好工具</p>
 
@@ -180,106 +204,28 @@ ctrl+` 開啟 command line 後輸入:</p>
 
 <p>重啟 sublime, <code>command+shift+p</code> 輸入 install 看到 <code>Package Control: Install Package</code> 即可透過此功能安裝其他 package</p>
 
-<h3>安裝 sass/scss 外掛</h3>
+<h1>安裝 sass/scss/haml 檔案支援</h1>
 
-<p>記得先關掉 Sublime</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-</span><span class='line'>git clone git://github.com/n00ge/sublime-text-haml-sass.git
-</span><span class='line'>mv sublime-text-haml-sass/Ruby\ Haml ./
-</span><span class='line'>mv sublime-text-haml-sass/SASS ./
-</span><span class='line'>rm -rf sublime-text-haml-sass</span></code></pre></td></tr></table></div></figure>
+<ol>
+<li>安裝 <code>package control</code></li>
+<li><code>command+shift+p</code> 輸入 <code>install</code> 選 <code>Package Control: Install Package</code></li>
+<li>鍵入 <code>sass</code> 選第一個安裝即可</li>
+<li>重複 <code>2.</code>, 鍵入 <code>haml</code> 選第一個安裝即可</li>
+</ol>
 
 
-<p>更多可參考<a href="https://github.com/n00ge/sublime-text-haml-sass" target="_blank">官方連結</a></p>
+<h1>安裝 ERB 檔案的編輯強化</h1>
 
-<h3>安裝 ERB 檔案的編輯強化</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git@github.com:eddorre/SublimeERB.git ~/.sublime_erb
-</span><span class='line'>
-</span><span class='line'>ln -fs ~/.sublime_erb/erb_block.py ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/User</span></code></pre></td></tr></table></div></figure>
+<ol>
+<li>安裝 <code>package control</code></li>
+<li><code>command+shift+p</code> 輸入 <code>install</code> 選 <code>Package Control: Install Package</code></li>
+<li>鍵入 <code>erb snippets</code> 選第一個安裝即可</li>
+</ol>
 
 
-<p>&#8220;Sublime Text 2&#8221; > Preferences > &#8220;Key Binding User&#8221;<br/>
-在 <code>[</code> 和 <code>]</code> 間貼上</p>
+<p>參考<a href="https://github.com/matthewrobertson/ERB-Sublime-Snippets" target="_blank">官方文件</a> 有快速 block template 可產生。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{ "keys": ["ctrl+shift+."], "command": "erb", "context":
-</span><span class='line'>    [
-</span><span class='line'>      { "key": "selector", "operator": "equal", "operand": "text.html.ruby, text.haml, source.yaml, source.css, source.scss, source.js, source.coffee" }
-</span><span class='line'>    ]
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 .erb 檔案中使用 <code>Ctrl+Shift+.</code> 就可以出現 <code>&lt;%= %&gt;</code> 的內容，重複按就可以切換不同用途的 erb block</p>
-
-<p>更多可參考<a href="https://github.com/eddorre/SublimeERB" target="_blank">官方文件</a></p>
-
-<h3>安裝 RubyTest</h3>
-
-<p>透過快速鍵跑單一檔案的 <code>rspec</code> (或 rails 內建的 test)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-</span><span class='line'>git clone https://github.com/maltize/sublime-text-2-ruby-tests.git RubyTest
-</span><span class='line'>cp RubyTest/RubyTest.sublime-settings ./User</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改 <code>RubyTest.sublime-settings</code></p>
-
-<p><code>vim User/RubyTest.sublime-settings</code></p>
-
-<p>內容如下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{
-</span><span class='line'>  "erb_exec": "bundle exec erb",
-</span><span class='line'>  "ruby_unit_exec": "bundle exec ruby",
-</span><span class='line'>  "ruby_cucumber_exec": "bundle exec cucumber -f pretty",
-</span><span class='line'>  "ruby_rspec_exec": "bundle exec rspec",
-</span><span class='line'>
-</span><span class='line'>  "ruby_unit_folder": "test",
-</span><span class='line'>  "ruby_cucumber_folder": "features",
-</span><span class='line'>  "ruby_rspec_folder": "spec",
-</span><span class='line'>
-</span><span class='line'>  "ruby_use_scratch" : false,
-</span><span class='line'>  "save_on_run": false,
-</span><span class='line'>  "ignored_directories": [".git", "vendor", "tmp"]
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>主要是在 <code>rspec</code> 的命令前加上 <code>bundle exec</code></p>
-
-<p><code>Command-Shift-R</code> 即可直接執行該檔案的 <code>rspec</code>，更多可參考 <a href="https://github.com/maltize/sublime-text-2-ruby-tests" target="_blank">官方文件</a></p>
-
-<p><a href="http://bit.ly/Nd1TjR" target="_blank">rvm issue</a> 目前尚未解決，預設會用 rvm default 的 ruby 版本，有人<a href="http://bit.ly/Nd2dz7" target="_blank"> hack 了</a>，但不是很喜歡 :p</p>
+<p>例如在 .erb 檔中，打 <code>er</code> 然後再按 <code>tab</code> 鍵就會生成 <code>&lt;% %&gt;</code>。</p>
 </div>
 
 
@@ -307,7 +253,7 @@ ctrl+` 開啟 command line 後輸入:</p>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/IDE/'>IDE</a>, <a class='category' href='/blog/categories/Sublime/'>Sublime</a>
+    <a class='category' href='/blog/categories/Sublime/'>Sublime</a>
   
 </span>
 
@@ -379,6 +325,10 @@ ctrl+` 開啟 command line 後輸入:</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013-03-13/rubygems-venus/">我寫的 gem - venus 簡介</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012-11-13/auto-generate-erd-graph/">自動化產生 ER 圖的 rubygem</a>
       </li>
     
@@ -394,15 +344,11 @@ ctrl+` 開啟 command line 後輸入:</p>
         <a href="/blog/2012-09-09/hide-address-bar-iphone-safari/">自動隱藏 iPhone safari 的網址列</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-09-09/unique-session-id/">取得獨一無二的 session id</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (2)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IDE'>IDE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (26)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (2)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (27)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
 </section>
 
 
@@ -461,7 +407,7 @@ ctrl+` 開啟 command line 後輸入:</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - MarsZ -
+  Copyright &copy; 2013 - MarsZ -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

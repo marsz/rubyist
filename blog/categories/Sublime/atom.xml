@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Sublime | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/Sublime/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-11-17T15:30:15+08:00</updated>
+  <updated>2013-03-16T23:04:34+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -18,16 +18,35 @@
     <link href="http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest/"/>
     <updated>2012-08-19T21:46:00+08:00</updated>
     <id>http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest</id>
-    <content type="html"><![CDATA[<p><a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。</p>
+    <content type="html"><![CDATA[<p>最後更新: 2013/3/16 <br/>
+<a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD<br/>
+以下是我的設定範例。</p>
 
 <!-- more -->
 
 
-<h3>實用快速鍵</h3>
+<h1>實用快速鍵</h1>
 
 <p>參考: <a href="https://gist.github.com/1207002" target="_blank">https://gist.github.com/1207002</a></p>
 
-<h3>安裝好後設定 link</h3>
+<h1>自定快速鍵</h1>
+
+<p>以下視個人喜好而定:</p>
+
+<p>上方選單 -> Sublime Text 2 -> Preferences -> Key Bindings Default</p>
+
+<p><code>
+  // 找 swap_line_up 出來改, 可以換置上下行
+  { "keys": ["alt+up"], "command": "swap_line_up" },
+  { "keys": ["alt+down"], "command": "swap_line_down" },
+  // 找 duplicate_line 出來改, 可以快速複製一行
+  { "keys": ["super+alt+down"], "command": "duplicate_line" },
+  { "keys": ["super+alt+up"], "command": "duplicate_line" },
+  // 找 auto_complete 出來改
+  { "keys": ["super+."], "command": "auto_complete" },
+</code></p>
+
+<h1>安裝好後設定 link</h1>
 
 <p>```
 ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl</p>
@@ -47,7 +66,7 @@ sudo ln -s ~/Applications/Sublime\ Text\ 2/sublime_text /usr/bin/subl
 export EDITOR="/usr/local/bin/subl -w"
 </code></p>
 
-<h3>setting 檔</h3>
+<h1>setting 檔 </h1>
 
 <p><code>command + ,</code> 出現的檔案</p>
 
@@ -69,7 +88,7 @@ export EDITOR="/usr/local/bin/subl -w"
 <p>(PS: 年紀大了所以用字體 size 用 18 XD)<br/>
 (PS2: tab 設定隨個人/公司喜好)</p>
 
-<h3>安裝 package control</h3>
+<h1>安裝 package control</h1>
 
 <p>用於快速安裝其他 package 的好工具</p>
 
@@ -82,84 +101,28 @@ import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_p
 
 <p>重啟 sublime, <code>command+shift+p</code> 輸入 install 看到 <code>Package Control: Install Package</code> 即可透過此功能安裝其他 package</p>
 
-<h3>安裝 sass/scss 外掛</h3>
+<h1>安裝 sass/scss/haml 檔案支援</h1>
 
-<p>記得先關掉 Sublime</p>
+<ol>
+<li>安裝 <code>package control</code></li>
+<li><code>command+shift+p</code> 輸入 <code>install</code> 選 <code>Package Control: Install Package</code></li>
+<li>鍵入 <code>sass</code> 選第一個安裝即可</li>
+<li>重複 <code>2.</code>, 鍵入 <code>haml</code> 選第一個安裝即可</li>
+</ol>
 
-<p><code>
-cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-git clone git://github.com/n00ge/sublime-text-haml-sass.git
-mv sublime-text-haml-sass/Ruby\ Haml ./
-mv sublime-text-haml-sass/SASS ./
-rm -rf sublime-text-haml-sass
-</code></p>
 
-<p>更多可參考<a href="https://github.com/n00ge/sublime-text-haml-sass" target="_blank">官方連結</a></p>
+<h1>安裝 ERB 檔案的編輯強化</h1>
 
-<h3>安裝 ERB 檔案的編輯強化</h3>
+<ol>
+<li>安裝 <code>package control</code></li>
+<li><code>command+shift+p</code> 輸入 <code>install</code> 選 <code>Package Control: Install Package</code></li>
+<li>鍵入 <code>erb snippets</code> 選第一個安裝即可</li>
+</ol>
 
-<p>```
-git clone git@github.com:eddorre/SublimeERB.git ~/.sublime_erb</p>
 
-<p>ln -fs ~/.sublime_erb/erb_block.py ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/User
-```</p>
+<p>參考<a href="https://github.com/matthewrobertson/ERB-Sublime-Snippets" target="_blank">官方文件</a> 有快速 block template 可產生。</p>
 
-<p>"Sublime Text 2" > Preferences > "Key Binding User"<br/>
-在 <code>[</code> 和 <code>]</code> 間貼上</p>
-
-<p>```
-{ "keys": ["ctrl+shift+."], "command": "erb", "context":</p>
-
-<pre><code>[
-  { "key": "selector", "operator": "equal", "operand": "text.html.ruby, text.haml, source.yaml, source.css, source.scss, source.js, source.coffee" }
-]
-</code></pre>
-
-<p>}
-```</p>
-
-<p>在 .erb 檔案中使用 <code>Ctrl+Shift+.</code> 就可以出現 <code>&lt;%= %&gt;</code> 的內容，重複按就可以切換不同用途的 erb block</p>
-
-<p>更多可參考<a href="https://github.com/eddorre/SublimeERB" target="_blank">官方文件</a></p>
-
-<h3>安裝 RubyTest</h3>
-
-<p>透過快速鍵跑單一檔案的 <code>rspec</code> (或 rails 內建的 test)</p>
-
-<p><code>
-cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-git clone https://github.com/maltize/sublime-text-2-ruby-tests.git RubyTest
-cp RubyTest/RubyTest.sublime-settings ./User
-</code></p>
-
-<p>修改 <code>RubyTest.sublime-settings</code></p>
-
-<p><code>vim User/RubyTest.sublime-settings</code></p>
-
-<p>內容如下</p>
-
-<p>```
-{
-  "erb_exec": "bundle exec erb",
-  "ruby_unit_exec": "bundle exec ruby",
-  "ruby_cucumber_exec": "bundle exec cucumber -f pretty",
-  "ruby_rspec_exec": "bundle exec rspec",</p>
-
-<p>  "ruby_unit_folder": "test",
-  "ruby_cucumber_folder": "features",
-  "ruby_rspec_folder": "spec",</p>
-
-<p>  "ruby_use_scratch" : false,
-  "save_on_run": false,
-  "ignored_directories": [".git", "vendor", "tmp"]
-}
-```</p>
-
-<p>主要是在 <code>rspec</code> 的命令前加上 <code>bundle exec</code></p>
-
-<p><code>Command-Shift-R</code> 即可直接執行該檔案的 <code>rspec</code>，更多可參考 <a href="https://github.com/maltize/sublime-text-2-ruby-tests" target="_blank">官方文件</a></p>
-
-<p><a href="http://bit.ly/Nd1TjR" target="_blank">rvm issue</a> 目前尚未解決，預設會用 rvm default 的 ruby 版本，有人<a href="http://bit.ly/Nd2dz7" target="_blank"> hack 了</a>，但不是很喜歡 :p</p>
+<p>例如在 .erb 檔中，打 <code>er</code> 然後再按 <code>tab</code> 鍵就會生成 <code>&lt;% %&gt;</code>。</p>
 ]]></content>
   </entry>
   

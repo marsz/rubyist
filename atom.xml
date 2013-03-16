@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2012-11-17T15:30:15+08:00</updated>
+  <updated>2013-03-16T23:04:34+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,95 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我寫的 gem - venus 簡介]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus/"/>
+    <updated>2013-03-13T13:12:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-03-13/rubygems-venus</id>
+    <content type="html"><![CDATA[<p>因受到了<a href="http://railsapps.github.com/rails-composer/" target="_blank"> rails composor </a> 的影響，決定也來寫一個客製化的 rails generator。<br/>
+但後來又覺得只能在開新專案用的話，使用頻率也不太高&#8230;</p>
+
+<!-- more -->
+
+
+<p>鑿於在許多專案中，總是為了要安裝某些 gem 而必須再回去翻寫過專案中的 code 或上官網找範例 code 做 copy/paste + 修改，於是我決定寫一個 generator 來設定這些常用的 gem，僅需要如同 rails composor 一樣回答一些問題就可以把所有的設定弄到好。</p>
+
+<p>因此 venus 因應而生</p>
+
+<p>安裝: <a href="https://rubygems.org/gems/venus" target="_blank">https://rubygems.org/gems/venus</a>  <br/>
+源碼: <a href="https://github.com/marsz/venus" target="_blank">https://github.com/marsz/venus</a></p>
+
+<p>以下逐一介紹各個指令</p>
+
+<p><code>rails generate venus:init</code></p>
+
+<p>專案初始化設定，例如移除 public/index.html，安裝必要的 gem 例如分頁用的 <code>kminari</code>，剛 new 好的 rails 專案適合執行此指令。</p>
+
+<p><code>rails generate venus:mysql</code></p>
+
+<p>設定 mysql，包含從 <code>Gemfile</code> 安裝 mysql2，設定 <code>database.yml</code> 以及 <code>database.yml.example</code>，最後再將 <code>config/database.yml</code> 加到 .gitignore 中。</p>
+
+<p><code>rails generate venus:paginate</code></p>
+
+<p>單獨安裝分頁用的 gem - <code>kminari</code>，也會問你要不要產生客製化的 view 出來。</p>
+
+<p><code>rails generate venus:simple_form</code></p>
+
+<p>view 使用 form 必備的 <a href="https://github.com/plataformatec/simple_form" target="_blank">simple_form</a>，預設會產生 bootstrap wrapper 的設定檔。也會詢問是否要順便安裝 <a href="https://github.com/ryanb/nested_form" target="_blank">nested_form</a>，安裝 nested_form 需要在 js 中 require gem 裡面包好的 JS，所以也會詢問 require code 和 example code 要放的檔案路徑。</p>
+
+<p><code>rails generate venus:settingslogic</code></p>
+
+<p>gem - <a href="https://github.com/binarylogic/settingslogic" target="_blank"><code>settingslogic</code></a>。可以將多個 yml 的設定檔放在此 gem 所讀取的 yaml 下，使其能夠容易管理。此 generator 同時也會產生 .example 檔以及加入 .yml 到 .gitignore 下。</p>
+
+<p><code>rails generate venus:rspec</code></p>
+
+<p>安裝並且設定 <code>rspec</code>，並且移除 test 目錄，在 <code>config/application.rb</code> 中設定 generate controller 時，不自動產生 assets files 和 helper。</p>
+
+<p><code>rails generate venus:devise</code></p>
+
+<p>安裝並且設定 scope 為 user 的 devise gem。</p>
+
+<p><code>rails generate venus:omniauth</code></p>
+
+<p>會先檢查是否有安裝 settingslogic 以及 devise，然後再安裝 omniauth，過程中會詢問 facebook / twitter / github 登入的安裝與否。</p>
+
+<p><code>rails generate venus:redis</code></p>
+
+<p>安裝並且設定 redis client gem <a href="https://github.com/redis/redis-rb" target="_blank">redis-rb</a> 。</p>
+
+<p><code>rails generate venus:aws</code></p>
+
+<p>安裝並且設定 Amazon <a href="https://github.com/aws/aws-sdk-ruby" target="_blank">官方的 ruby client </a>。過程中會先檢查 settingslogic，並且將 api key 和 secret 存到其中。最後也會詢問否需要順便安裝 Amazon Simple Email Service (SES)，用來發 email。</p>
+
+<p><code>rails generate venus:carrierwave</code></p>
+
+<p>安裝並且設定 carrierwave，其中包含 rmagick 進行縮圖，以及 fog 將檔案上傳至S3。過程中會安裝 aws-sdk，所以也會順便詢問 SES 的設定 :p。最後會產生一個 <code>venus_uploader.rb</code> 做為範例。</p>
+
+<p><code>rails generate venus:jqueryui</code></p>
+
+<p>安裝 jquery ui 的 gem。其中會詢問是否要安裝 datepicker，包含產生 trigger 用的 js 範例 code。gem 的 參考連結 => <a href="https://github.com/joliss/jquery-ui-rails" target="_blank">https://github.com/joliss/jquery-ui-rails</a>。 (若有要安裝 datepicker 的話，也會詢問語系)</p>
+
+<p><code>rails generate venus:chosen</code></p>
+
+<p>安裝 <a href="https://github.com/tsechingho/chosen-rails" target="_blank">chosen-rails</a> 並且提供 trigger chosen 的範例 js code。</p>
+
+<p><code>rails generate venus:bootstrap</code></p>
+
+<p>安裝 <code>twitter bootstrap</code> ，包含 gem 設定、 assets require，最後產生範例 layout 檔於 <code>app/views/layouts/</code> 下。內建提供 <a href="http://wrapbootstrap.com/preview/WB0F35928" target="_blank">unicorn admin</a> 的版型套用，蓋後台超爽 XD</p>
+
+<h1>TODOs</h1>
+
+<p>對於此 gem 未來將會逐漸加入我自己寫的 best practice :p 也望各位大大能不吝指教或回報 bug :D</p>
+
+<ul>
+<li>sidekiq : 強大的 background job gem</li>
+<li>unicorn : 配合 capistrano 讓佈署時可以 zero down time</li>
+<li><a href="https://github.com/airblade/paper_trail" target="_blank">paper_trail</a> : 對 model 進行版本控制的 gem</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[自動化產生 ER 圖的 rubygem]]></title>
@@ -329,16 +418,42 @@
     <link href="http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest/"/>
     <updated>2012-08-19T21:46:00+08:00</updated>
     <id>http://rubyist.marsz.tw/blog/2012-08-19/sublimetext-shortcuts-and-configurations-for-sass-erb-rubytest</id>
-    <content type="html"><![CDATA[<p><a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。</p>
+    <content type="html"><![CDATA[<p>最後更新: 2013/3/16 <br/>
+<a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD<br/>
+以下是我的設定範例。</p>
 
 <!-- more -->
 
 
-<h3>實用快速鍵</h3>
+<h1>實用快速鍵</h1>
 
 <p>參考: <a href="https://gist.github.com/1207002" target="_blank">https://gist.github.com/1207002</a></p>
 
-<h3>安裝好後設定 link</h3>
+<h1>自定快速鍵</h1>
+
+<p>以下視個人喜好而定:</p>
+
+<p>上方選單 -> Sublime Text 2 -> Preferences -> Key Bindings Default</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  // 找 swap_line_up 出來改, 可以換置上下行
+</span><span class='line'>  { "keys": ["alt+up"], "command": "swap_line_up" },
+</span><span class='line'>  { "keys": ["alt+down"], "command": "swap_line_down" },
+</span><span class='line'>  // 找 duplicate_line 出來改, 可以快速複製一行
+</span><span class='line'>  { "keys": ["super+alt+down"], "command": "duplicate_line" },
+</span><span class='line'>  { "keys": ["super+alt+up"], "command": "duplicate_line" },
+</span><span class='line'>  // 找 auto_complete 出來改
+</span><span class='line'>  { "keys": ["super+."], "command": "auto_complete" },</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>安裝好後設定 link</h1>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -360,7 +475,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>export EDITOR="/usr/local/bin/subl -w"</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>setting 檔</h3>
+<h1>setting 檔 </h1>
 
 <p><code>command + ,</code> 出現的檔案</p>
 
@@ -386,7 +501,7 @@
 <p>(PS: 年紀大了所以用字體 size 用 18 XD)<br/>
 (PS2: tab 設定隨個人/公司喜好)</p>
 
-<h3>安裝 package control</h3>
+<h1>安裝 package control</h1>
 
 <p>用於快速安裝其他 package 的好工具</p>
 
@@ -399,106 +514,28 @@ ctrl+` 開啟 command line 後輸入:</p>
 
 <p>重啟 sublime, <code>command+shift+p</code> 輸入 install 看到 <code>Package Control: Install Package</code> 即可透過此功能安裝其他 package</p>
 
-<h3>安裝 sass/scss 外掛</h3>
+<h1>安裝 sass/scss/haml 檔案支援</h1>
 
-<p>記得先關掉 Sublime</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-</span><span class='line'>git clone git://github.com/n00ge/sublime-text-haml-sass.git
-</span><span class='line'>mv sublime-text-haml-sass/Ruby\ Haml ./
-</span><span class='line'>mv sublime-text-haml-sass/SASS ./
-</span><span class='line'>rm -rf sublime-text-haml-sass</span></code></pre></td></tr></table></div></figure>
+<ol>
+<li>安裝 <code>package control</code></li>
+<li><code>command+shift+p</code> 輸入 <code>install</code> 選 <code>Package Control: Install Package</code></li>
+<li>鍵入 <code>sass</code> 選第一個安裝即可</li>
+<li>重複 <code>2.</code>, 鍵入 <code>haml</code> 選第一個安裝即可</li>
+</ol>
 
 
-<p>更多可參考<a href="https://github.com/n00ge/sublime-text-haml-sass" target="_blank">官方連結</a></p>
+<h1>安裝 ERB 檔案的編輯強化</h1>
 
-<h3>安裝 ERB 檔案的編輯強化</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git@github.com:eddorre/SublimeERB.git ~/.sublime_erb
-</span><span class='line'>
-</span><span class='line'>ln -fs ~/.sublime_erb/erb_block.py ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/User</span></code></pre></td></tr></table></div></figure>
+<ol>
+<li>安裝 <code>package control</code></li>
+<li><code>command+shift+p</code> 輸入 <code>install</code> 選 <code>Package Control: Install Package</code></li>
+<li>鍵入 <code>erb snippets</code> 選第一個安裝即可</li>
+</ol>
 
 
-<p>&#8220;Sublime Text 2&#8221; > Preferences > &#8220;Key Binding User&#8221;<br/>
-在 <code>[</code> 和 <code>]</code> 間貼上</p>
+<p>參考<a href="https://github.com/matthewrobertson/ERB-Sublime-Snippets" target="_blank">官方文件</a> 有快速 block template 可產生。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{ "keys": ["ctrl+shift+."], "command": "erb", "context":
-</span><span class='line'>    [
-</span><span class='line'>      { "key": "selector", "operator": "equal", "operand": "text.html.ruby, text.haml, source.yaml, source.css, source.scss, source.js, source.coffee" }
-</span><span class='line'>    ]
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在 .erb 檔案中使用 <code>Ctrl+Shift+.</code> 就可以出現 <code>&lt;%= %&gt;</code> 的內容，重複按就可以切換不同用途的 erb block</p>
-
-<p>更多可參考<a href="https://github.com/eddorre/SublimeERB" target="_blank">官方文件</a></p>
-
-<h3>安裝 RubyTest</h3>
-
-<p>透過快速鍵跑單一檔案的 <code>rspec</code> (或 rails 內建的 test)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-</span><span class='line'>git clone https://github.com/maltize/sublime-text-2-ruby-tests.git RubyTest
-</span><span class='line'>cp RubyTest/RubyTest.sublime-settings ./User</span></code></pre></td></tr></table></div></figure>
-
-
-<p>修改 <code>RubyTest.sublime-settings</code></p>
-
-<p><code>vim User/RubyTest.sublime-settings</code></p>
-
-<p>內容如下</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{
-</span><span class='line'>  "erb_exec": "bundle exec erb",
-</span><span class='line'>  "ruby_unit_exec": "bundle exec ruby",
-</span><span class='line'>  "ruby_cucumber_exec": "bundle exec cucumber -f pretty",
-</span><span class='line'>  "ruby_rspec_exec": "bundle exec rspec",
-</span><span class='line'>
-</span><span class='line'>  "ruby_unit_folder": "test",
-</span><span class='line'>  "ruby_cucumber_folder": "features",
-</span><span class='line'>  "ruby_rspec_folder": "spec",
-</span><span class='line'>
-</span><span class='line'>  "ruby_use_scratch" : false,
-</span><span class='line'>  "save_on_run": false,
-</span><span class='line'>  "ignored_directories": [".git", "vendor", "tmp"]
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>主要是在 <code>rspec</code> 的命令前加上 <code>bundle exec</code></p>
-
-<p><code>Command-Shift-R</code> 即可直接執行該檔案的 <code>rspec</code>，更多可參考 <a href="https://github.com/maltize/sublime-text-2-ruby-tests" target="_blank">官方文件</a></p>
-
-<p><a href="http://bit.ly/Nd1TjR" target="_blank">rvm issue</a> 目前尚未解決，預設會用 rvm default 的 ruby 版本，有人<a href="http://bit.ly/Nd2dz7" target="_blank"> hack 了</a>，但不是很喜歡 :p</p>
+<p>例如在 .erb 檔中，打 <code>er</code> 然後再按 <code>tab</code> 鍵就會生成 <code>&lt;% %&gt;</code>。</p>
 ]]></content>
   </entry>
   
@@ -1224,55 +1261,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 <p>小弟個人較偏好每個 request / controller 的 spec 都要 render_view<br/>
 一方面可以檢驗 view 的正確性<br/>
 若 view 中有使用 helper method, 也可以順便檢驗</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rspec 檔案上傳的測試]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload/"/>
-    <updated>2012-03-04T10:45:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-03-04/rspec-file-upload</id>
-    <content type="html"><![CDATA[<p><code>controller</code> 的測試中, 總是免不了要處理檔案上傳, rails 中的測試環境當然也提供了這樣的機制</p>
-
-<!-- more -->
-
-
-<h4>範例</h4>
-
-<p>假設要模擬 view 中 <code>&lt;input type="file" name="user[avatar]" /&gt;</code> 的檔案上傳</p>
-
-<figure class='code'><figcaption><span>spec/requests/users_controller_spec.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">querys</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:avatar</span> <span class="o">=&gt;</span> <span class="n">fixture_file_upload</span><span class="p">(</span><span class="s2">&quot;/example.jpg&quot;</span><span class="p">,</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
-</span><span class='line'><span class="n">post</span> <span class="ss">:create</span><span class="p">,</span> <span class="n">querys</span>
-</span><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">be_success</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>/example.jpg</code> 會抓 <code>spec/fixtures/example.jpg</code> 做為上傳用的範例圖檔<br/>
-<code>image/jpeg</code> 則是 <code>MIME type</code></p>
-
-<p>亦可寫在 <code>factory</code> 中</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Factory</span> <span class="ss">:video_file</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">file</span> <span class="p">{</span> <span class="n">fixture_file_upload</span> <span class="s1">&#39;/test.png&#39;</span><span class="p">,</span> <span class="s1">&#39;image/png&#39;</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">after_create</span> <span class="k">do</span> <span class="o">|</span><span class="n">video</span><span class="p">,</span> <span class="n">proxy</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">proxy</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>相關可參考<a href="http://apidock.com/rails/ActionDispatch/TestProcess/fixture_file_upload" target="_blank">Api Dock</a></p>
 ]]></content>
   </entry>
   
