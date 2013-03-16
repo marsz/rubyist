@@ -3,17 +3,39 @@ layout: post
 title: "我的 Sublime 設定"
 date: 2012-08-19 21:46
 comments: true
-categories: ["IDE", "Sublime"]
+categories: ["Sublime"]
 ---
-<a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD 以下是我的設定範例。
+最後更新: 2013/3/16   
+<a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD  
+以下是我的設定範例。
 
 <!-- more -->
 
-### 實用快速鍵
+實用快速鍵
+=========
 
 參考: <a href="https://gist.github.com/1207002" target="_blank">https://gist.github.com/1207002</a>
 
-### 安裝好後設定 link
+自定快速鍵
+=========
+
+以下視個人喜好而定:  
+
+上方選單 -> Sublime Text 2 -> Preferences -> Key Bindings Default  
+
+```
+  // 找 swap_line_up 出來改, 可以換置上下行
+  { "keys": ["alt+up"], "command": "swap_line_up" },
+  { "keys": ["alt+down"], "command": "swap_line_down" },
+  // 找 duplicate_line 出來改, 可以快速複製一行
+  { "keys": ["super+alt+down"], "command": "duplicate_line" },
+  { "keys": ["super+alt+up"], "command": "duplicate_line" },
+  // 找 auto_complete 出來改
+  { "keys": ["super+."], "command": "auto_complete" },
+```
+
+安裝好後設定 link
+================
 
 ```
 ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
@@ -34,7 +56,8 @@ export EDITOR="/usr/local/bin/subl -w"
 ```
 
 
-### setting 檔 
+setting 檔 
+==========
 
 `command + ,` 出現的檔案  
 
@@ -53,91 +76,38 @@ export EDITOR="/usr/local/bin/subl -w"
 (PS: 年紀大了所以用字體 size 用 18 XD)  
 (PS2: tab 設定隨個人/公司喜好)
 
-### 安裝 package control
+
+
+安裝 package control
+====================
 
 用於快速安裝其他 package 的好工具
 
 參考 <a href="http://wbond.net/sublime_packages/package_control/installation" target="_blank">http://wbond.net/sublime_packages/package_control/installation</a>  
-`ctrl+\`` 開啟 command line 後輸入:  
+ctrl+` 開啟 command line 後輸入:   
+
 ```
 import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print 'Please restart Sublime Text to finish installation'
 ```
+
 重啟 sublime, `command+shift+p` 輸入 install 看到 `Package Control: Install Package` 即可透過此功能安裝其他 package
 
-### 安裝 sass/scss 外掛
+安裝 sass/scss/haml 檔案支援
+==========================
 
-記得先關掉 Sublime
+1. 安裝 `package control`  
+2. `command+shift+p` 輸入 `install` 選 `Package Control: Install Package`  
+3. 鍵入 `sass` 選第一個安裝即可
+4. 重複 `2.`, 鍵入 `haml` 選第一個安裝即可
 
-```
-cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-git clone git://github.com/n00ge/sublime-text-haml-sass.git
-mv sublime-text-haml-sass/Ruby\ Haml ./
-mv sublime-text-haml-sass/SASS ./
-rm -rf sublime-text-haml-sass
-```
+安裝 ERB 檔案的編輯強化
+====================
 
-更多可參考<a href="https://github.com/n00ge/sublime-text-haml-sass" target="_blank">官方連結</a>  
+1. 安裝 `package control`  
+2. `command+shift+p` 輸入 `install` 選 `Package Control: Install Package`  
+3. 鍵入 `erb snippets` 選第一個安裝即可
 
-### 安裝 ERB 檔案的編輯強化
+參考<a href="https://github.com/matthewrobertson/ERB-Sublime-Snippets" target="_blank">官方文件</a> 有快速 block template 可產生。  
 
-```
-git clone git@github.com:eddorre/SublimeERB.git ~/.sublime_erb
-
-ln -fs ~/.sublime_erb/erb_block.py ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/User
-```
-
-"Sublime Text 2" > Preferences > "Key Binding User"  
-在 `[` 和 `]` 間貼上
-
-```
-{ "keys": ["ctrl+shift+."], "command": "erb", "context":
-    [
-      { "key": "selector", "operator": "equal", "operand": "text.html.ruby, text.haml, source.yaml, source.css, source.scss, source.js, source.coffee" }
-    ]
-}
-```
-
-在 .erb 檔案中使用 `Ctrl+Shift+.` 就可以出現 `<%= %>` 的內容，重複按就可以切換不同用途的 erb block  
-  
-更多可參考<a href="https://github.com/eddorre/SublimeERB" target="_blank">官方文件</a>
-
-### 安裝 RubyTest
-
-透過快速鍵跑單一檔案的 `rspec` (或 rails 內建的 test)
-
-```
-cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
-git clone https://github.com/maltize/sublime-text-2-ruby-tests.git RubyTest
-cp RubyTest/RubyTest.sublime-settings ./User
-```
-
-修改 `RubyTest.sublime-settings`  
-  
-`vim User/RubyTest.sublime-settings`
-  
-內容如下
-
-```
-{
-  "erb_exec": "bundle exec erb",
-  "ruby_unit_exec": "bundle exec ruby",
-  "ruby_cucumber_exec": "bundle exec cucumber -f pretty",
-  "ruby_rspec_exec": "bundle exec rspec",
-
-  "ruby_unit_folder": "test",
-  "ruby_cucumber_folder": "features",
-  "ruby_rspec_folder": "spec",
-
-  "ruby_use_scratch" : false,
-  "save_on_run": false,
-  "ignored_directories": [".git", "vendor", "tmp"]
-}
-```
-
-主要是在 `rspec` 的命令前加上 `bundle exec`  
-  
-`Command-Shift-R` 即可直接執行該檔案的 `rspec`，更多可參考 <a href="https://github.com/maltize/sublime-text-2-ruby-tests" target="_blank">官方文件</a>  
-  
-<a href="http://bit.ly/Nd1TjR" target="_blank">rvm issue</a> 目前尚未解決，預設會用 rvm default 的 ruby 版本，有人<a href="http://bit.ly/Nd2dz7" target="_blank"> hack 了</a>，但不是很喜歡 :p  
-
+例如在 .erb 檔中，打 `er` 然後再按 `tab` 鍵就會生成 `<% %>`。
 
