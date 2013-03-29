@@ -245,15 +245,21 @@
         <lastmod>2013-03-16T22:58:06+08:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://rubyist.marsz.tw/blog/2013-03-29/ie-jquery-ajax-jsonp-n-cross-domain-n-cache-control-public/
+        </loc>
+        <lastmod>2013-03-29T23:12:03+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://rubyist.marsz.tw/about/</loc>
         <lastmod>2012-01-14T17:50:34+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/blog/archives/</loc>
-        <lastmod>2013-03-16T22:58:06+08:00</lastmod>
+        <lastmod>2013-03-29T23:12:03+08:00</lastmod>
     </url>
     <url>
         <loc>http://rubyist.marsz.tw/</loc>
-        <lastmod>2013-03-16T22:58:06+08:00</lastmod>
+        <lastmod>2013-03-29T23:12:03+08:00</lastmod>
     </url>
 </urlset>

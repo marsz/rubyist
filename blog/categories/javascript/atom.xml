@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: javascript | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2013-03-29T23:13:18+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[修正 IE 無法透過 cross-domain AJAX 取得 JSON 物件]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-03-29/ie-jquery-ajax-jsonp-n-cross-domain-n-cache-control-public/"/>
+    <updated>2013-03-29T22:52:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-03-29/ie-jquery-ajax-jsonp-n-cross-domain-n-cache-control-public</id>
+    <content type="html"><![CDATA[<p>controller 中的 <code>respond_to</code> 可用來 return 指定的 format 供 JS 取用 API 資料<br/>
+但很不幸的 IE 9 以下在透過 jquery 中的 getJSON 無法取得 return 的 json 物件。</p>
+
+<!-- more -->
+
+
+<p>server 端的 action</p>
+
+<p>```ruby
+def index
+  response.headers["Access-Control-Allow-Origin"] = "*"
+  expires_in 1.day, :public => true
+  @data = SomeModel.all
+  respond_to do |f|</p>
+
+<pre><code>f.json{ render :json =&gt; @data }
+f.xml{ render :xml =&gt; @data }
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>client 端的 javascript</p>
+
+<p><code>javascript
+$.getJSON("http://apihost.com/products.json","jsonp", function(products){
+   console.log(products);
+});
+</code></p>
+
+<p>結果:  IE9 以下不 work，其他瀏覽器沒問題(生氣)</p>
+
+<p>解決此問題的方法必須例用 jquery jsonp callback 的方式達到目的即可<br/>
+因此 server 端的 response 的 content-type 必須是 javascript (見 <a href="http://d.pr/i/66d0" target="_blank">此圖</a>)</p>
+
+<p>server 端寫法</p>
+
+<p>```ruby
+def index
+  response.headers["Access-Control-Allow-Origin"] = "*"
+  expires_in 1.day, :public => true
+  @data = SomeModel.all
+  respond_to do |f|</p>
+
+<pre><code>f.json{ render :json =&gt; @data }
+f.xml{ render :xml =&gt; @data }
+f.js{ :json =&gt; @data, :callback =&gt; params[:callback] }
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>client 端的 javascript</p>
+
+<p><code>javascript
+$.getJSON("http://apihost.com/products.js?callback=?",function(data){
+   console.log(data);
+});
+</code></p>
+
+<p>搞定!!!</p>
+
+<p>server 端其他寫法的補充:</p>
+
+<p>開啟 cross-domain 的 ajax request</p>
+
+<p><code>ruby
+response.headers["Access-Control-Allow-Origin"] = "*"
+</code></p>
+
+<p>開啟 cache-control 為 public:</p>
+
+<p><code>ruby
+expires_in 1.day, :public =&gt; true
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

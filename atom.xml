@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-03-16T23:04:34+08:00</updated>
+  <updated>2013-03-29T23:13:18+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,114 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[修正 IE 無法透過 cross-domain AJAX 取得 JSON 物件]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-03-29/ie-jquery-ajax-jsonp-n-cross-domain-n-cache-control-public/"/>
+    <updated>2013-03-29T22:52:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-03-29/ie-jquery-ajax-jsonp-n-cross-domain-n-cache-control-public</id>
+    <content type="html"><![CDATA[<p>controller 中的 <code>respond_to</code> 可用來 return 指定的 format 供 JS 取用 API 資料<br/>
+但很不幸的 IE 9 以下在透過 jquery 中的 getJSON 無法取得 return 的 json 物件。</p>
+
+<!-- more -->
+
+
+<p>server 端的 action</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>  <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Access-Control-Allow-Origin&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+</span><span class='line'>  <span class="n">expires_in</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="ss">:public</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="vi">@data</span> <span class="o">=</span> <span class="no">SomeModel</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'>  <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">json</span><span class="p">{</span> <span class="n">render</span> <span class="ss">:json</span> <span class="o">=&gt;</span> <span class="vi">@data</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">xml</span><span class="p">{</span> <span class="n">render</span> <span class="ss">:xml</span> <span class="o">=&gt;</span> <span class="vi">@data</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>client 端的 javascript</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;http://apihost.com/products.json&quot;</span><span class="p">,</span><span class="s2">&quot;jsonp&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">products</span><span class="p">){</span>
+</span><span class='line'>   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">products</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果:  IE9 以下不 work，其他瀏覽器沒問題(生氣)</p>
+
+<p>解決此問題的方法必須例用 jquery jsonp callback 的方式達到目的即可<br/>
+因此 server 端的 response 的 content-type 必須是 javascript (見 <a href="http://d.pr/i/66d0" target="_blank">此圖</a>)</p>
+
+<p>server 端寫法</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>  <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Access-Control-Allow-Origin&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+</span><span class='line'>  <span class="n">expires_in</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="ss">:public</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="vi">@data</span> <span class="o">=</span> <span class="no">SomeModel</span><span class="o">.</span><span class="n">all</span>
+</span><span class='line'>  <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">json</span><span class="p">{</span> <span class="n">render</span> <span class="ss">:json</span> <span class="o">=&gt;</span> <span class="vi">@data</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">xml</span><span class="p">{</span> <span class="n">render</span> <span class="ss">:xml</span> <span class="o">=&gt;</span> <span class="vi">@data</span> <span class="p">}</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">js</span><span class="p">{</span> <span class="ss">:json</span> <span class="o">=&gt;</span> <span class="vi">@data</span><span class="p">,</span> <span class="ss">:callback</span> <span class="o">=&gt;</span> <span class="n">params</span><span class="o">[</span><span class="ss">:callback</span><span class="o">]</span> <span class="p">}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>client 端的 javascript</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;http://apihost.com/products.js?callback=?&quot;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+</span><span class='line'>   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>搞定!!!</p>
+
+<p>server 端其他寫法的補充:</p>
+
+<p>開啟 cross-domain 的 ajax request</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Access-Control-Allow-Origin&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>開啟 cache-control 為 public:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">expires_in</span> <span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="ss">:public</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我寫的 gem - venus 簡介]]></title>
@@ -1209,58 +1317,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 </span><span class='line'>  <span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rspec 設定 request 或 controller 的 spec 中 render view]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views/"/>
-    <updated>2012-03-06T11:05:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-03-06/rspec-render-views</id>
-    <content type="html"><![CDATA[<p><code>rspec rails</code> 中預設是不會 render view 的, 因此 <code>response.body</code> 的內容會是空字串</p>
-
-<!-- more -->
-
-
-<p>為了讓 response.body 能實際的把 view render 出來, 可以有個別或預設的作法</p>
-
-<p>個別</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="no">UsersController</span> <span class="k">do</span>
-</span><span class='line'>  <span class="n">render_views</span>
-</span><span class='line'>  <span class="n">it</span> <span class="s2">&quot;GET #index&quot;</span> <span class="k">do</span>
-</span><span class='line'>    <span class="n">get</span> <span class="ss">:index</span>
-</span><span class='line'>    <span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">should</span> <span class="n">match</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>預設</p>
-
-<figure class='code'><figcaption><span>spec/spec_helper.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
-</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">render_views</span>
-</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>小弟個人較偏好每個 request / controller 的 spec 都要 render_view<br/>
-一方面可以檢驗 view 的正確性<br/>
-若 view 中有使用 helper method, 也可以順便檢驗</p>
 ]]></content>
   </entry>
   
