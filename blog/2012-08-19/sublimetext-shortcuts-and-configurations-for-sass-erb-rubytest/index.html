@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>我的 Sublime 設定 - 黃金俠</title>
+  <title>我的 Sublime Text 2 設定 - 黃金俠</title>
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="最後更新: 2013/3/16 Sublime 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD
+  <meta name="description" content="最後更新: 2013/3/31
+Sublime 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD
 以下是我的設定範例。 實用快速鍵 參考: https://gist.github.com/1207002 自定快速鍵 以下視個人喜好而定: 上方選單 -> &hellip;">
   
 
@@ -83,7 +84,7 @@
   
   <header>
     
-      <h1 class="entry-title">我的 Sublime 設定</h1>
+      <h1 class="entry-title">我的 Sublime Text 2 設定</h1>
     
     
       <p class="meta">
@@ -108,7 +109,7 @@
   </header>
 
 
-<div class="entry-content"><p>最後更新: 2013/3/16 <br/>
+<div class="entry-content"><p>最後更新: 2013/3/31<br/>
 <a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD<br/>
 以下是我的設定範例。</p>
 
@@ -133,14 +134,22 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  // 找 swap_line_up 出來改, 可以換置上下行
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  // 快速顯示目前檔案所在的目錄樹下
+</span><span class='line'>  { "keys": ["ctrl+super+r"], "command": "reveal_in_side_bar" },
+</span><span class='line'>  // 找 swap_line_up 出來改, 可以換置上下行
 </span><span class='line'>  { "keys": ["alt+up"], "command": "swap_line_up" },
 </span><span class='line'>  { "keys": ["alt+down"], "command": "swap_line_down" },
 </span><span class='line'>  // 找 duplicate_line 出來改, 可以快速複製一行
 </span><span class='line'>  { "keys": ["super+alt+down"], "command": "duplicate_line" },
 </span><span class='line'>  { "keys": ["super+alt+up"], "command": "duplicate_line" },
 </span><span class='line'>  // 找 auto_complete 出來改
-</span><span class='line'>  { "keys": ["super+."], "command": "auto_complete" },</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>  { "keys": ["super+."], "command": "auto_complete" },
+</span><span class='line'>  // 刪除一整列, 記得要 search "super+d" 把其他的 key binding 砍掉, 或者可以用別的 key binding
+</span><span class='line'>  { "keys": ["super+d"], "command": "run_macro_file", "args": {"file": "Packages/Default/Delete Line.sublime-macro"} },</span></code></pre></td></tr></table></div></figure>
 
 
 <h1>安裝好後設定 link</h1>
