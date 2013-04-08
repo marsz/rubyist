@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-03-31T02:10:27+08:00</updated>
+  <updated>2013-04-09T02:06:38+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[新版的 git (1.7 以上) 在 merge 時預設不開編輯器的設定]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-04-09/git-merge-no-edit-default/"/>
+    <updated>2013-04-09T02:02:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-04-09/git-merge-no-edit-default</id>
+    <content type="html"><![CDATA[<p>打開你的 shell rc 例如 <code>~/.zshrc</code> 或 <code>~/bashrc</code><br/>
+插入以下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export GIT_MERGE_AUTOEDIT=no</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>之後 merge &#8211;no-ff 的指令就都會預設用 auto message 做 commit 啦<br/>
+如果想要強制編輯時，可以用 &#8211;edit 參數</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git merge branch_name --no-ff --edit</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[修正 IE 無法透過 cross-domain AJAX 取得 JSON 物件]]></title>
@@ -1192,139 +1220,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 <h5>刻意練習</h5>
 
 <p>矛盾的是，花在自發練習的時間長並不代表一定能有卓越表現，而這問題在於 <code>對練習定義的模糊</code>，所謂的練習並非是我們所想的&#8221;熟能生巧&#8221;這麼簡單，而是一套更為具體更有架構的 <code>刻意練習</code>，這也是本書從第五章開始所帶出的重點.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 backup gem 做自動化備份]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-03-08/backup-gem/"/>
-    <updated>2012-03-08T11:57:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-03-08/backup-gem</id>
-    <content type="html"><![CDATA[<p>source: <a href="https://github.com/meskyanichi/backup" target="_blank">https://github.com/meskyanichi/backup</a><br/>
-和 <a href="http://godrb.com/" target="_blank">God</a> 一樣是一個獨立的 gem，因此也可用於其他語言</p>
-
-<!-- more -->
-
-
-<p><code>backup</code> 的特色:</p>
-
-<ol>
-<li>可備份 <code>Redis</code>、<code>MongoDB</code>、<code>Mysql</code> 等 DB</li>
-<li>可備份檔案、目錄</li>
-<li>備份可儲存於 local disk、<code>Amazon S3</code>、<code>Dropbox</code> 或透過 <code>ftp</code>.<code>scp</code> 等協定將檔案上傳</li>
-</ol>
-
-
-<p>範例檔的備份標的:</p>
-
-<ol>
-<li><code>Mysql</code></li>
-<li>使用者上傳之頭像圖檔儲存於 <code>Rails</code> public/uploads</li>
-<li>備份檔案上傳至 <code>Amazon S3</code></li>
-</ol>
-
-
-<h4>安裝</h4>
-
-<p><code>gem install backup</code></p>
-
-<h4>範例</h4>
-
-<p>打開空檔案即可使用</p>
-
-<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Backup</span><span class="o">::</span><span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:my_app</span><span class="p">,</span> <span class="s1">&#39;db data of my app&#39;</span><span class="p">)</span> <span class="k">do</span>
-</span><span class='line'>  <span class="c1"># mysql 備份</span>
-</span><span class='line'>  <span class="n">database</span> <span class="no">MySQL</span> <span class="k">do</span> <span class="o">|</span><span class="n">db</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="s2">&quot;my_app_db&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="s2">&quot;root&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">password</span>           <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">host</span>               <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">port</span>               <span class="o">=</span> <span class="mi">3306</span>
-</span><span class='line'>    <span class="n">db</span><span class="o">.</span><span class="n">socket</span>             <span class="o">=</span> <span class="s2">&quot;/tmp/mysql.sock&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># user 頭像檔案  </span>
-</span><span class='line'>  <span class="n">archive</span> <span class="ss">:uploads</span> <span class="k">do</span> <span class="o">|</span><span class="n">archive</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">archive</span><span class="o">.</span><span class="n">add</span> <span class="s2">&quot;/path/to/my_app/public/uploads&quot;</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 上傳至 S3  </span>
-</span><span class='line'>  <span class="n">store_with</span> <span class="no">S3</span> <span class="k">do</span> <span class="o">|</span><span class="n">s3</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">access_key_id</span>      <span class="o">=</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">secret_access_key</span>  <span class="o">=</span> <span class="s2">&quot;!@#$%^&amp;*(&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">region</span>             <span class="o">=</span> <span class="s2">&quot;us-east-1&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">bucket</span>             <span class="o">=</span> <span class="s2">&quot;my_app_backup&quot;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">path</span>               <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
-</span><span class='line'>    <span class="n">s3</span><span class="o">.</span><span class="n">keep</span>               <span class="o">=</span> <span class="mi">50</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1"># 壓縮打包設定</span>
-</span><span class='line'>  <span class="n">compress_with</span> <span class="no">Gzip</span> <span class="k">do</span> <span class="o">|</span><span class="n">compression</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="kp">true</span>
-</span><span class='line'>    <span class="n">compression</span><span class="o">.</span><span class="n">fast</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>執行</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">backup</span> <span class="n">perform</span> <span class="o">-</span><span class="n">t</span> <span class="n">my_app</span> <span class="o">-</span><span class="n">c</span> <span class="n">backup_config</span><span class="o">.</span><span class="n">rb</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p>就可進行備份</p>
-
-<p>若要做 <code>Rails</code> 定期備份, 再將指令整合於 <code>whenever</code> 即可<br/>
-另外再提供儲存於 local disk 的範例</p>
-
-<figure class='code'><figcaption><span>backup_config.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">store_with</span> <span class="no">Local</span> <span class="k">do</span> <span class="o">|</span><span class="n">local</span><span class="o">|</span>
-</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/to/back/dir&quot;</span>
-</span><span class='line'>    <span class="n">local</span><span class="o">.</span><span class="n">keep</span> <span class="o">=</span> <span class="mi">50</span>
-</span><span class='line'>  <span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   
