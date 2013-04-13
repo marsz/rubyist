@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-04-09T02:06:38+08:00</updated>
+  <updated>2013-04-13T22:13:49+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Redis 在 Passenger 重起後出現 'reconnect to Redis after forking' 的錯誤訊息]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-04-13/redis-reconnect-after-fork/"/>
+    <updated>2013-04-13T22:02:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-04-13/redis-reconnect-after-fork</id>
+    <content type="html"><![CDATA[<p>自 <code>redis</code> 升級，每次透過 <code>capistrano</code> 佈署後，連線 server 都會噴出 &#8220;Tried to use a connection from a child process without reconnecting. You need to reconnect to Redis after forking.&#8221; 的錯誤訊息。</p>
+
+<!-- more -->
+
+
+<p>原因在於 <code>redis</code> 的 <a href="https://github.com/redis/redis-rb" target="_blank">client gem</a>。</p>
+
+<p>因此必須在每次 passenger restart 後，也讓 redis client 進行重啓。可參考以下，必須於 initializer 或 application.rb 中執行。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">PhusionPassenger</span><span class="p">)</span>
+</span><span class='line'>  <span class="no">PhusionPassenger</span><span class="o">.</span><span class="n">on_event</span><span class="p">(</span><span class="ss">:starting_worker_process</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">forked</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">forked</span>
+</span><span class='line'>      <span class="no">Redis</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="no">Redis</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="mi">6379</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>除了 <code>redis</code> 之外，其他透過 redis 應用的 gem 也都會有類似的問題，例如 <code>resque</code>、<code>redis-store</code>、<code>redis-object</code>、<code>sidekiq</code> 等。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[新版的 git (1.7 以上) 在 merge 時預設不開編輯器的設定]]></title>
@@ -1176,50 +1211,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 <p>這些特點有助於你設計自己的練習架構，但書中仍一再提到，不管練習是經過多縝密的設計，另一項重要的變數是<code>個人努力程度</code>，包括你如何安排自己的練習時間、花了多久的時間進行刻意練習，這些才是成為頂尖最重要的因素。</p>
 
 <p>接下來將會說明刻意練習運作的原理，深入了解卓越者為何能夠和一般人不同之處!!!當你了解之後，便會明白你和卓越人士之間的差距不再遙不可及或無從理解起。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[讀書心得: 刻意練習(1)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1/"/>
-    <updated>2012-05-14T12:28:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-05-14/reading-deliberate-practice-1</id>
-    <content type="html"><![CDATA[<p>博客來: <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601" target="_blank">http://www.books.com.tw/exep/prod/booksfile.php?item=0010456601</a><br/>
-原書名為 <code>我比別人更認真</code>, 標題下 <code>刻意練習</code> 是因為這是本書的主軸<br/>
-我大約在 2010 年中買來看完, 覺得和 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010482162" target="_blank"><code>Rework</code></a> 一樣都是值得一讀再讀的好書 :)</p>
-
-<!-- more -->
-
-
-<h3>前言</h3>
-
-<p>一~三章舉證不少卓越人士和一般人之間的差異，天賦的因素幾乎是微乎其微，影響最深遠的差異在於 <code>你花了多少時間努力</code></p>
-
-<p>第四章則是本書重點的開始，以一位著名的足球運動員為例，說明努力是如何扭轉態勢&#8230;</p>
-
-<h5>努力通常不是卓越的保證</h5>
-
-<p>因此本書大量研究了各種卓越人士的案例，嘗試從其中找出 &#8220;努力的方法&#8221;，因為不努力是絕對無法邁向頂尖的!!</p>
-
-<h5>自發練習</h5>
-
-<p>大量的統計報告指出，卓越人士和一般人接受訓練的時間是差不多的，智商.環境.生活也都沒有顯著差異。而要提昇表現水準，<code>自發練習</code> 占了最重要的因素。以書中為例，卓越的小提琴家平均獨自練習的時間遠遠多於一般的小提琴家。</p>
-
-<h5>自發練習多半集中在上午</h5>
-
-<p>為了成為頂尖，必須安排固定的時間才能做大量練習，因此多半會選擇在&#8221;精神狀況較佳&#8221;的狀態下進行自發練習。而我個人對此的解讀是 <code>剛睡醒的2 ~ 3小時內</code>，這段時間身心都處在最佳狀態，沒有任何時間比這時候做自發練習更好了。這也可以解釋為什麼成功人士都在早上六起點起床(甚至更早)，利用早晨這 1~2 小時完成當天最重要的工作，然後才準備去上班。</p>
-
-<h5>睡得比較多</h5>
-
-<p>因為投入於自發練習的時間較長較集中，因此卓越人士也比平常人更耗費心力，所以為了保持在最佳狀態下做練習，自然睡得就比較多啦</p>
-
-<h5>十年法則</h5>
-
-<p>頂尖表現者的研究發現一個基調: 不管這些人是誰，也不管他們表現如此精進的原因為何，<code>他們都是經過多年</code>才變得如此出眾，無一例外。也因此說明了許多科學家或作家偉大的成果或作品都是在二十年以上的潛心努力後才問世。這和不久前看到的 <a href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010516443" target="_blank"><code>一萬小時法則</code></a> 呼應。</p>
-
-<h5>刻意練習</h5>
-
-<p>矛盾的是，花在自發練習的時間長並不代表一定能有卓越表現，而這問題在於 <code>對練習定義的模糊</code>，所謂的練習並非是我們所想的&#8221;熟能生巧&#8221;這麼簡單，而是一套更為具體更有架構的 <code>刻意練習</code>，這也是本書從第五章開始所帶出的重點.</p>
 ]]></content>
   </entry>
   

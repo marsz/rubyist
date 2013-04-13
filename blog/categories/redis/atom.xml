@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[categories: redis | 黃金俠]]></title>
+  <link href="http://rubyist.marsz.tw/blog/categories/redis/atom.xml" rel="self"/>
+  <link href="http://rubyist.marsz.tw/"/>
+  <updated>2013-04-13T22:13:49+08:00</updated>
+  <id>http://rubyist.marsz.tw/</id>
+  <author>
+    <name><![CDATA[MarsZ]]></name>
+    <email><![CDATA[marsz330@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Redis 在 Passenger 重起後出現 'reconnect to Redis after forking' 的錯誤訊息]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-04-13/redis-reconnect-after-fork/"/>
+    <updated>2013-04-13T22:02:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-04-13/redis-reconnect-after-fork</id>
+    <content type="html"><![CDATA[<p>自 <code>redis</code> 升級，每次透過 <code>capistrano</code> 佈署後，連線 server 都會噴出 "Tried to use a connection from a child process without reconnecting. You need to reconnect to Redis after forking." 的錯誤訊息。</p>
+
+<!-- more -->
+
+
+<p>原因在於 <code>redis</code> 的 <a href="https://github.com/redis/redis-rb" target="_blank">client gem</a>。</p>
+
+<p>因此必須在每次 passenger restart 後，也讓 redis client 進行重啓。可參考以下，必須於 initializer 或 application.rb 中執行。</p>
+
+<p>```ruby
+if defined?(PhusionPassenger)
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|</p>
+
+<pre><code>if forked
+  Redis.current = Redis.new(:host =&gt; "127.0.0.1", :port =&gt; 6379)
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>除了 <code>redis</code> 之外，其他透過 redis 應用的 gem 也都會有類似的問題，例如 <code>resque</code>、<code>redis-store</code>、<code>redis-object</code>、<code>sidekiq</code> 等。</p>
+]]></content>
+  </entry>
+  
+</feed>

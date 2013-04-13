@@ -9,9 +9,7 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="打開你的 shell rc 例如 ~/.zshrc 或 ~/bashrc
-插入以下 1
-export GIT_MERGE_AUTOEDIT=no ">
+  <meta name="description" content="自 redis 升級，每次透過 capistrano 佈署後，連線 server 都會噴出 &#8220;Tried to use a connection from a child process without reconnecting. You need to reconnect to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +79,49 @@ export GIT_MERGE_AUTOEDIT=no ">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-04-13/redis-reconnect-after-fork/">Redis 在 Passenger 重起後出現 &#8216;reconnect to Redis after forking&#8217; 的錯誤訊息</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-13T22:02:00+08:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013-04-13/redis-reconnect-after-fork/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>自 <code>redis</code> 升級，每次透過 <code>capistrano</code> 佈署後，連線 server 都會噴出 &#8220;Tried to use a connection from a child process without reconnecting. You need to reconnect to Redis after forking.&#8221; 的錯誤訊息。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013-04-13/redis-reconnect-after-fork/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -486,46 +527,6 @@ export GIT_MERGE_AUTOEDIT=no ">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-08-21/rails-layout-file-naming/">layout 檔案的命名</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-21T15:16:00+08:00" pubdate data-updated="true">Aug 21<span>st</span>, 2012</time>
-        
-         | <a href="/blog/2012-08-21/rails-layout-file-naming/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今天發現 <code>layout</code> 檔 (views/layouts) 的命名是不能亂來的 ~XD<br/>
-嘗試用 dash 命名 (例如 foo-bar.html.haml) 的結果造成 haml 無法被 parsing<br/>
-所以還是乖一點用小寫英文和 underline 吧 :p</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -569,6 +570,10 @@ export GIT_MERGE_AUTOEDIT=no ">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013-04-13/redis-reconnect-after-fork/">Redis 在 Passenger 重起後出現 &#8216;reconnect to Redis after forking&#8217; 的錯誤訊息</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013-04-09/git-merge-no-edit-default/">新版的 git (1.7 以上) 在 merge 時預設不開編輯器的設定</a>
       </li>
     
@@ -584,15 +589,11 @@ export GIT_MERGE_AUTOEDIT=no ">
         <a href="/blog/2012-11-13/auto-generate-erd-graph/">自動化產生 ER 圖的 rubygem</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-11-09/rubygeems-for-aws-ec2/">Rubygems 處理 Amazon Web Service (AWS) EC2</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (1)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (27)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (1)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/passenger'>passenger (1)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/redis'>redis (1)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (27)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
 </section>
 
 
