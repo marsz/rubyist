@@ -139,7 +139,7 @@ FactoryGirl.define do factory :user do sequence(: &hellip;">
 </span><span class='line'>    <span class="n">sequence</span><span class="p">(</span><span class="ss">:email</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="s2">&quot;foo</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">@bar.com&quot;</span> <span class="p">}</span>
 </span><span class='line'>    <span class="nb">name</span> <span class="s2">&quot;barbar&quot;</span>
 </span><span class='line'>    <span class="n">password</span> <span class="s2">&quot;12341234&quot;</span>
-</span><span class='line'>    <span class="n">after_create</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">after</span><span class="p">(</span><span class="ss">:create</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
 </span><span class='line'>      <span class="c1"># callback code block here</span>
 </span><span class='line'>    <span class="k">end</span>
 </span><span class='line'>  <span class="k">end</span>
