@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "我的 Sublime 設定"
+title: "我的 Sublime Text 2 設定"
 date: 2012-08-19 21:46
 comments: true
 categories: ["Sublime"]
 ---
-最後更新: 2013/3/16   
+最後更新: 2013/3/31  
 <a href="http://www.sublimetext.com/" target="_blank">Sublime</a> 是一套強大的文字編輯器，和我用過的 Textmate 類似，但功能更為強大 XD  
 以下是我的設定範例。
 
@@ -24,6 +24,8 @@ categories: ["Sublime"]
 上方選單 -> Sublime Text 2 -> Preferences -> Key Bindings Default  
 
 ```
+  // 快速顯示目前檔案所在的目錄樹下
+  { "keys": ["ctrl+super+r"], "command": "reveal_in_side_bar" },
   // 找 swap_line_up 出來改, 可以換置上下行
   { "keys": ["alt+up"], "command": "swap_line_up" },
   { "keys": ["alt+down"], "command": "swap_line_down" },
@@ -32,6 +34,8 @@ categories: ["Sublime"]
   { "keys": ["super+alt+up"], "command": "duplicate_line" },
   // 找 auto_complete 出來改
   { "keys": ["super+."], "command": "auto_complete" },
+  // 刪除一整列, 記得要 search "super+d" 把其他的 key binding 砍掉, 或者可以用別的 key binding
+  { "keys": ["super+d"], "command": "run_macro_file", "args": {"file": "Packages/Default/Delete Line.sublime-macro"} },
 ```
 
 安裝好後設定 link

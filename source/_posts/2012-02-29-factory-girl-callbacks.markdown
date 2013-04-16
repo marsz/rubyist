@@ -16,7 +16,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "foo#{n}@bar.com" }
     name "barbar"
     password "12341234"
-    after_create do |user|
+    after(:create) do |user|
       # callback code block here
     end
   end
