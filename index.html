@@ -9,7 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="自 redis 升級，每次透過 capistrano 佈署後，連線 server 都會噴出 &#8220;Tried to use a connection from a child process without reconnecting. You need to reconnect to &hellip;">
+  <meta name="description" content="在 controller 中加入以下即可允許來自 cross domain 的 ajax request 1
+response.headers[&quot;Access-Control-Allow-Origin&quot;] = &quot;*&quot; ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-04-28/server-side-accept-cross-domain-ajax-request/">server 端允許 ajax cross domain 存取</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-28T13:07:00+08:00" pubdate data-updated="true">Apr 28<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013-04-28/server-side-accept-cross-domain-ajax-request/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在 controller 中加入以下即可允許來自 cross domain 的 ajax request</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Access-Control-Allow-Origin&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -484,49 +528,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012-09-03/about-rake-db-tasks/">rake db 的 tasks 整理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-03T15:38:00+08:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2012</time>
-        
-         | <a href="/blog/2012-09-03/about-rake-db-tasks/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>善用 rails rake 內建的 DB tasks 進行資料庫操作</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012-09-03/about-rake-db-tasks/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -570,6 +571,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013-04-28/server-side-accept-cross-domain-ajax-request/">server 端允許 ajax cross domain 存取</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013-04-13/redis-reconnect-after-fork/">Redis 在 Passenger 重起後出現 &#8216;reconnect to Redis after forking&#8217; 的錯誤訊息</a>
       </li>
     
@@ -585,15 +590,11 @@
         <a href="/blog/2013-03-13/rubygems-venus/">我寫的 gem - venus 簡介</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012-11-13/auto-generate-erd-graph/">自動化產生 ER 圖的 rubygem</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (1)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/passenger'>passenger (1)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/redis'>redis (1)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (27)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (2)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/passenger'>passenger (1)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/redis'>redis (1)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (27)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
 </section>
 
 

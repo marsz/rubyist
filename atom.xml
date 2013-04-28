@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-04-16T20:53:06+08:00</updated>
+  <updated>2013-04-28T13:25:07+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,20 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[server 端允許 ajax cross domain 存取]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-04-28/server-side-accept-cross-domain-ajax-request/"/>
+    <updated>2013-04-28T13:07:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-04-28/server-side-accept-cross-domain-ajax-request</id>
+    <content type="html"><![CDATA[<p>在 controller 中加入以下即可允許來自 cross domain 的 ajax request</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">[</span><span class="s2">&quot;Access-Control-Allow-Origin&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redis 在 Passenger 重起後出現 'reconnect to Redis after forking' 的錯誤訊息]]></title>
@@ -1165,52 +1179,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 
 
 <p><code>checkins</code> 為打卡數</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[讀書心得: 刻意練習(2)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2/"/>
-    <updated>2012-05-15T13:54:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-05-15/reading-deliberate-practice-2</id>
-    <content type="html"><![CDATA[<p>所謂的<code>刻意練習</code>有別於我們一般所認知的<code>練習</code>，而是一套以系統化方法有效的進行自我訓練，以邁向卓越之路。書中所提到的要素如下:</p>
-
-<!-- more -->
-
-
-<h4>專為提昇表現而設計  通常有指導者</h4>
-
-<p>幾乎在<code>任何領域的初期</code>中，有個教練在旁指導不僅能縮短時間，更重要的是他能從你自己看不到的角度觀察你，給予建議指正，讓你不會在初期就養成的不是很正確的觀念或習慣，減少你在未來修正時所花的成本。</p>
-
-<h4>對練習成果持續反饋</h4>
-
-<p>如果看不到自己的練習成果時: 1.你不會進步 2.你也不會再意。自然而然的就會失去練習的意願，因此指導者在此扮演了重要的角色。但多數情況下，指導者並不能全面的協助你進行反饋，你必須想辦法建立一套可以進行自我評估的機制。</p>
-
-<p>每個人的反饋評估標準都是不一樣的，因為這是針對自己的程度，為找出改善項目而設計的。厲害的人會分析自己的行為，切割出極為具體的層面，然後專注於琢磨某個項目直到改善為止，接著就再繼續琢磨下一個項目。</p>
-
-<p>舉例來說，籃球員一般會上健身房鍛鍊某部位的肌力，而優秀的籃球員會想辦法了解自己哪部位的肌力待改進，詢問教練最適當的器材選擇，然後自行開始進行鍛鍊，接著再從球場上的表現進行自我評估。</p>
-
-<h4>在&#8221;學習區&#8221;多次且反覆的進行練習</h4>
-
-<p>理論將表現層面，以三個同心圓說明: <code>舒適區</code>、<code>學習區</code>、<code>恐慌區</code>。以開車為例，在駕訓班期間可稱之為學習區，我們的<code>心智處在全神貫注的狀態</code>，感受每一次換檔、油門、煞車的經驗。上路一段時間後我們脫離了全神貫注，可以一邊開車一邊思考別的事情(當然這不是對的:p)，可稱之為舒適區，而恐慌區則是難到我們連怎麼著手都不知道。</p>
-
-<p>假如我們想要更精進開車技術，就必須將心智帶往學習區，例如在停車場建立練習環境或平常開車時讓自己的心智脫離&#8221;自動導航&#8221;狀態，隨時注意每一瞬間的細節。人必須處在學習區才能保持進步。</p>
-
-<p>因此<code>找出學習區</code>(通常不太容易)，然後隨著學習區的變化，強迫自己持續待在學習區反覆練習(這更難)，過程中肯定是苦在其中、乏味無趣，並且不斷尋找自己不擅長的事，這就是刻意練習最重要的一環!!!</p>
-
-<h4>心力交瘁</h4>
-
-<p>如同前述開車的例子，練習過程是保持全神貫注的，因此肯定無法連續長時間如此。不管在哪個領域，<code>一天 4~5 小時是刻意練習的上限</code>，而過程中又會<code>分成幾個不超過 60~90 分鐘的時段</code>，沒有人能夠持續練習一整天的，因為專注力會減退。我想這也算是一個好消息吧 :p</p>
-
-<p>而卓越者絕對不允許自己在專精領域中受到自動化綁架，除了平時刻意練習要避免自動化之外，一旦發現自己因為練習到心力交瘁而進入自動化狀態時，就應該停止練習，直到恢復專注力為止。</p>
-
-<hr />
-
-<p>再整理一下刻意練習的特點: <code>通常有指導者</code>、<code>持續反饋</code>、<code>待在學習區反覆練習</code>、<code>全神貫注直到心力交瘁</code></p>
-
-<p>這些特點有助於你設計自己的練習架構，但書中仍一再提到，不管練習是經過多縝密的設計，另一項重要的變數是<code>個人努力程度</code>，包括你如何安排自己的練習時間、花了多久的時間進行刻意練習，這些才是成為頂尖最重要的因素。</p>
-
-<p>接下來將會說明刻意練習運作的原理，深入了解卓越者為何能夠和一般人不同之處!!!當你了解之後，便會明白你和卓越人士之間的差距不再遙不可及或無從理解起。</p>
 ]]></content>
   </entry>
   

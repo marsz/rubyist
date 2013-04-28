@@ -4,7 +4,7 @@
   <title><![CDATA[categories: API | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/API/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-04-16T20:53:06+08:00</updated>
+  <updated>2013-04-28T13:25:07+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[server 端允許 ajax cross domain 存取]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-04-28/server-side-accept-cross-domain-ajax-request/"/>
+    <updated>2013-04-28T13:07:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-04-28/server-side-accept-cross-domain-ajax-request</id>
+    <content type="html"><![CDATA[<p>在 controller 中加入以下即可允許來自 cross domain 的 ajax request</p>
+
+<p><code>ruby
+response.headers["Access-Control-Allow-Origin"] = "*"
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[修正 IE 無法透過 cross-domain AJAX 取得 JSON 物件]]></title>
