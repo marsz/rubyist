@@ -4,7 +4,7 @@
   <title><![CDATA[categories: API | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/API/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-04-28T13:25:07+08:00</updated>
+  <updated>2013-05-04T23:09:56+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[利用 Swagger 產生互動式 API 文件]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-05-04/swagger-api-doc-rails/"/>
+    <updated>2013-05-04T20:48:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-05-04/swagger-api-doc-rails</id>
+    <content type="html"><![CDATA[<p><a href="https://developers.helloreverb.com/swagger/" target="_blank">Swagger</a> 是一套由 HTML + Javascript 撰寫的 REST API 文件的框架。 (core 是以 scala 寫的)</p>
+
+<!-- more -->
+
+
+<p>從 <a href="http://petstore.swagger.wordnik.com/" target="_blank">Demo 頁</a> 可了解到 Swagger 不僅僅提供 API 的規格資訊，也提供互動介面讓開發者可以直接輸入參數進行測試。<br/>
+<img src="http://i.imgur.com/a5vAGKz.png" /></p>
+
+<p>亦支援純 HTML 無法實作的 http method (PUT、DELETE)。</p>
+
+<p><img src="http://i.imgur.com/L3c5TTt.png" /></p>
+
+<p>Demo 頁面的 source code 在<a href="https://github.com/wordnik/swagger-ui" target="_blank"> Github </a>上。也可以參考 wordnik 的<a href="http://developer.wordnik.com/docs.html" target="_blank"> 官方正式 API 文件 </a>。</p>
+
+<p>API 文件內容完全是透過 ajax 取得 JSON data 產生的，因此必須提供 server 吐出符合 Swagger 文件中所定義的 JSON 格式，讓前端網頁能夠生成 API 文件的介面。</p>
+
+<p><img src="http://i.imgur.com/05CT5wf.png" /></p>
+
+<p>Server 所要吐的 JSON data 有三種: <code>doc</code>、<code>resource</code>、<code>api</code><br/>
+Swagger 會先向 server request <code>doc</code> 的 JSON data，其內容也會包含每個 <code>resource</code> 的 ajax url，然後 Swagger 再依照每個 <code>resource</code> 的 url 再一一進行 ajax request 取得其下包的 <code>api</code> 資料。因此 server 基本上必須提供 doc 和每個 resource 的 JSON data。</p>
+
+<p>以 RDB 角度來解釋 <code>doc</code>、<code>resource</code>、<code>api</code>之間的關係:</p>
+
+<ol>
+<li>Whole API Document has one <code>doc</code></li>
+<li><code>doc</code> has many <code>resources</code> (一對多)</li>
+<li>each <code>resource</code> has many <code>apis</code> (一對多)</li>
+</ol>
+
+
+<p><a href="https://github.com/wordnik/swagger-core/wiki/Resource-Listing" target="_blank">Doc 的資料格式說明文件</a>。</p>
+
+<p>這裡針對兩個比較重要的參數解釋: <code>basePath</code> 和 <code>apis</code>。</p>
+
+<p><code>basePath</code> 用於進行 API 互動時，進行實際 request 的 domain，同時也是第二次 ajax request 取得 resource JSON data 的 domain。這裡是筆者本身覺得設計彈性不足之處，實際提供 API data 和提供給 Swagger 的 domain 應該分開才是比較合理的。在稍後介紹的 rails generator app 中，小弟改了 Swagger 的 Javascript code 將這兩者分開 :p</p>
+
+<p><code>apis</code> 所有 <code>resource</code> 的 ajax url 都存放於此。每個 <code>resource</code> 僅需提供 <code>path</code> 和 <code>description</code> 即可， Swagger 會組合 <code>basePath</code> 和 <code>path</code> 再逐一 request <code>resource</code> 的 JSON data 回來顯示。</p>
+
+<p><a href="https://github.com/wordnik/swagger-core/wiki/API-Declaration" target="_blank">Resource 的資料格式說明文件</a>。</p>
+
+<p><code>apis</code> 提供每個 API 的詳細規格，包含 http method、path、description、return data、parameters 等等。<br/>
+<code>models</code> 則是提供在此 <code>resources</code> 下所有會 return 的 model 規格。有關 model 定義方式可參考 <a href="https://github.com/wordnik/swagger-core/wiki/Datatypes" target="_blank">這裡</a>。</p>
+
+<p>Swagger 對於 API 的 parameter 提供更詳細的規格定義方式 (<a href="https://github.com/wordnik/swagger-core/wiki/Parameters" target="_blank">說明文件</a>)。<br/>
+(註: each <code>api</code> has many <code>parameters</code>)</p>
+
+<p>鑿於定義相當繁多且完整，Swagger 本身有提供<a href="https://github.com/wordnik/swagger-codegen/tree/master/samples/server-generator" target="_blank">部分語言的 API 文件生成後台</a> (Ruby 開發者可選擇 sinatra)，讓開發者能夠花最少的時間開始使用 Swagger。</p>
+
+<p>但小弟仍覺得 Swagger 讓開發者進入狀況的門檻仍稍高，因此鑿於多數 mobile app 開發者只需要簡單到足以清楚表達的 API 文件進行溝通，小弟嘗試用 rails app 開發 Swagger json data 的管理後台生成 swagger API 文件。</p>
+
+<p>Github: <a href="https://github.com/marsz/swagger-rails" target="_blank">https://github.com/marsz/swagger-rails</a><br/>
+Demo: <a href="http://swagger.5fpro.com/" target="_blank">http://swagger.5fpro.com/</a></p>
+
+<p>特色如下:</p>
+
+<ol>
+<li>FB 登入，每個 User 都可建立多筆 doc</li>
+<li>每個 doc 下可設定 basePath、API版本、API互動測試用的 toekn 和 query attribute 等等</li>
+<li>API 測試的 domain 可獨立設定於 requestPath</li>
+<li>可設定獨立網域 (FQDN)，若沒有設定系統也會自動產生一組給你用</li>
+<li>doc 下可建立多筆 resource，並且可排顯示順序</li>
+<li>resource 下建立每條 API，並且可設定參數</li>
+</ol>
+
+
+<p>讓我們 step by step 來建立 API 文件吧。<br/>
+以下是小弟在早期自己寫的 API，用來提供台灣縣市鄉鎮的資料庫。</p>
+
+<ol>
+<li>建立 doc，base_path、request_path、fqdn 等參數如下:
+<img src="http://i.imgur.com/dM1Ori8.png" /></li>
+<li>建立 doc 後，系統會提供你 API 測試時的實際網址格式
+<img src="http://i.imgur.com/RNsHmMx.png" /></li>
+<li>建立 resource (圖略)， resource 可以用來當做是管理許多 API 的目錄 :p</li>
+<li>建立 API: 選擇 http method 和 path<br/>
+<img src="http://i.imgur.com/x9wfS0U.png" /><br/>
+若 API 參數在 path 中，可用大括號包起來，必且給予參數名稱</li>
+<li>填寫 return data type，若為某個 model 的 array 可以以圖內的格式表示<br/>
+<img src="http://i.imgur.com/5TyRs6L.png" /></li>
+<li>api path 內有參數的話，底下的 parameters 也必須增加 type 為 path 的參數 (如圖)，名稱和大括號內對應<br/>
+<img src="http://i.imgur.com/98IsmNe.png" /></li>
+<li>有關 model 的定義，可在 doc 下找到，這裡的定義與否不會影響文件的正常顯示，有定義的話文件也會顯示出來，內容也就更完整囉<br/>
+<img src="http://i.imgur.com/F1vZR2E.png" /></li>
+<li>點擊 doc information 內的連結即可看到內容(<a href="http://gaia-doc.5fpro.tw/#!/3/api_6_get_2" target="_blank">http://gaia-doc.5fpro.tw/#!/3/api_6_get_2</a>)<br/>
+<img src="http://i.imgur.com/8x0rLQX.png" /></li>
+</ol>
+
+
+<p>Swagger-rails 目前沒有 100% 的實作 Swagger 的每一項規格出來，而且仍有許多優先程度較高的 TODOs:</p>
+
+<ol>
+<li>多人協做功能</li>
+<li>Form 介面的最佳化</li>
+<li>自訂前端 CSS</li>
+<li>API 文件修改記錄</li>
+</ol>
+
+
+<p>最後附上小弟目前正式對外開放的 API 文件給各位參考:</p>
+
+<ol>
+<li><a href="http://api-doc.thewall.tw/" target="_blank">THEWALL 這牆音樂</a></li>
+<li><a href="http://gaia-doc.5fpro.com/" target="_blank">台灣縣市鄉鎮資料庫</a>, 含郵遞區號</li>
+<li><a href="http://medusa-doc.5fpro.com/" target="_blank">爬蟲系統</a> (暫不開放申請)</li>
+</ol>
+
+
+<p>Swagger 參考資料:</p>
+
+<ol>
+<li><a href="https://github.com/wordnik/swagger-core/wiki" target="_blank">Swagger Specification</a></li>
+<li><a href="https://github.com/wordnik/swagger-core/wiki/Downloads" target="_blank">Swagger Downloads</a></li>
+<li><a href="https://developers.helloreverb.com/swagger/" target="_blank">Official Site</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[server 端允許 ajax cross domain 存取]]></title>
