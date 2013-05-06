@@ -4,7 +4,7 @@
   <title><![CDATA[categories: API | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/API/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-05-05T01:39:51+08:00</updated>
+  <updated>2013-05-06T14:28:39+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -103,7 +103,7 @@ Demo: <a href="http://swagger.5fpro.com/" target="_blank">http://swagger.5fpro.c
 
 <ol>
 <li><a href="http://api-doc.thewall.tw/" target="_blank">THEWALL 這牆音樂</a></li>
-<li><a href="http://gaia-doc.5fpro.com/" target="_blank">台灣縣市鄉鎮資料庫</a>, 含郵遞區號</li>
+<li><a href="http://gaia-doc.5fpro.tw/" target="_blank">台灣縣市鄉鎮資料庫</a>, 含郵遞區號</li>
 <li><a href="http://medusa-doc.5fpro.com/" target="_blank">爬蟲系統</a> (暫不開放申請)</li>
 </ol>
 
