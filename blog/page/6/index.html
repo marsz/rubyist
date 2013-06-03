@@ -9,7 +9,8 @@
   <meta name="author" content="MarsZ">
 
   
-  <meta name="description" content="capistrano 是一套強大的佈署工具, 今天提供小弟的設定檔內容給大家參考 ">
+  <meta name="description" content="個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法 commit 如下 1
+A -&gt; B -&gt; C -&gt; D -&gt; E 想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback) ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/">透過rebase -i, reset, revert還原某個commit的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-17T18:56:00+08:00" pubdate data-updated="true">Jan 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>個人比較推薦用 reset 或 rebase -i, 底下將會同時介紹 revert 和 reset 的方法</p>
+
+<p>commit 如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>A -&gt; B -&gt; C -&gt; D -&gt; E</span></code></pre></td></tr></table></div></figure>
+
+
+<p>想要還原到 commit C 之後的狀態 (也就是把 D 和 E rollback)</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012-01-17/git-reset-and-revert-to-rollback-commit/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -490,55 +542,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">在 Capistrano 中 deploy 時能夠自動執行 rake assets:precompile</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-25T15:14:00+08:00" pubdate data-updated="true">Dec 25<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>當我們在專案目錄中執行 &#8220;capify .&#8221; 時, 會產生 Capfile 檔
-在該檔案加上</p>
-
-<figure class='code'><figcaption><span>Capfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="s1">&#39;deploy/assets&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011-12-25/assets-precompile-in-capistrano-deploy/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -584,6 +587,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013-06-03/unicorn-rails-and-capistrano/">安裝與設定 unicorn 實現佈署時 zero down time</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013-05-04/swagger-api-doc-rails/">利用 Swagger 產生互動式 API 文件</a>
       </li>
     
@@ -599,15 +606,11 @@
         <a href="/blog/2013-04-09/git-merge-no-edit-default/">新版的 git (1.7 以上) 在 merge 時預設不開編輯器的設定</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013-03-29/ie-jquery-ajax-jsonp-n-cross-domain-n-cache-control-public/">修正 IE 無法透過 cross-domain AJAX 取得 JSON 物件</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>分類文章</h1>
-    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (3)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (3)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/passenger'>passenger (1)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/redis'>redis (1)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (27)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (3)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (1)</a></li><li><a href='/blog/categories/Background-job'>Background-job (5)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (4)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/passenger'>passenger (1)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/redis'>redis (1)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (28)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
 </section>
 
 

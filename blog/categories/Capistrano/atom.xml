@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Capistrano | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/Capistrano/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-05-06T15:36:59+08:00</updated>
+  <updated>2013-06-03T12:27:26+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,118 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安裝與設定 unicorn 實現佈署時 zero down time]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-06-03/unicorn-rails-and-capistrano/"/>
+    <updated>2013-06-03T11:27:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-06-03/unicorn-rails-and-capistrano</id>
+    <content type="html"><![CDATA[<p>本文章的 code 可參考公開的 pull request<br/>
+<a href="https://github.com/5fpro/cupid/pull/11/files" target="_blank">https://github.com/5fpro/cupid/pull/11/files</a><br/>
+這是基礎到不行的設定方式，考量到 server 效能在設定上的 best practice 將會在日後持續 update 本文。</p>
+
+<!-- more -->
+
+
+<h3>安裝 gem</h3>
+
+<p>```ruby Gemfile
+group :development do
+  gem 'capistrano-unicorn', :require => false
+end</p>
+
+<p>gem 'unicorn'
+```</p>
+
+<h3>佈署設定</h3>
+
+<p>這裡的 <code>production.rb</code> 是針對 <code>rails_env=production</code>，而非 capistrano 中 multistage 的 production</p>
+
+<p>```ruby config/unicorn/production.rb
+worker_processes 1
+preload_app true</p>
+
+<p>listen '/tmp/unicorn.cupid.sock' # sock 檔名可依照 app 需求設定</p>
+
+<p>stderr_path 'log/unicorn.error.log'
+stdout_path 'log/unicorn.log'</p>
+
+<p>pid "tmp/pids/unicorn.pid"</p>
+
+<p>rails_env = ENV['RAILS_ENV'] || 'production'</p>
+
+<h1>before/after fork 可自行擴充</h1>
+
+<p>before_fork do |server, worker|
+end</p>
+
+<p>after_fork do |server, worker|
+end
+```</p>
+
+<p>(也可以把上述檔案放在 <code>config/unicorn.rb</code>)</p>
+
+<h3>server 上的 nginx.conf</h3>
+
+<p>```ruby nginx.conf
+upstream my_app {  # upstream 名稱可自定
+  server unix:/tmp/unicorn.cupid.sock; # 這裡要和 config/unicorn/production.rb 中 listen 的設定對應
+}</p>
+
+<p>server {
+  listen 80;
+  server_name example.com;</p>
+
+<p>  # passenger_enabled on; # 原本要設定 passenger 的記得要拿掉
+  # .......</p>
+
+<p>  location / {</p>
+
+<pre><code>proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header Host $http_host;
+proxy_pass http://my_app; # upstream 名稱
+</code></pre>
+
+<p>  }</p>
+
+<p>  # .......
+}
+```</p>
+
+<h3>把 unicorn 重啟的 hook 掛到 deploy.rb 中</h3>
+
+<p><code>ruby config/deploy.rb
+require 'capistrano-unicorn'
+after 'deploy:restart', 'unicorn:restart'
+</code></p>
+
+<p>done!</p>
+
+<h3>如何在本機測試 unicorn</h3>
+
+<p><code>bundle exec unicorn</code></p>
+
+<p>Go to http://localhost:8080</p>
+
+<h3>參考資料</h3>
+
+<ul>
+<li>更多 unicorn 可以在 cap 指令中的應用: <a href="https://github.com/sosedoff/capistrano-unicorn/blob/master/lib/capistrano-unicorn/capistrano_integration.rb" target="_blank">https://github.com/sosedoff/capistrano-unicorn/blob/master/lib/capistrano-unicorn/capistrano_integration.rb</a></li>
+<li>unicorn 設定檔說明: <a href="https://raw.github.com/defunkt/unicorn/master/examples/unicorn.conf.rb" target="_blank">https://raw.github.com/defunkt/unicorn/master/examples/unicorn.conf.rb</a></li>
+<li>Github Blog 上說明他們自己的 unicorn 如何設定: <a href="https://github.com/blog/517-unicorn" target="_blank">https://github.com/blog/517-unicorn</a></li>
+<li>其他 unicorn 設定相關教學:
+
+<ul>
+<li><a href="http://tech.gadii.net/blog/2013/03/07/rails-deploy-ji-chu-jiao-xue/" target="_blank">http://tech.gadii.net/blog/2013/03/07/rails-deploy-ji-chu-jiao-xue/</a></li>
+<li><a href="https://devcenter.heroku.com/articles/rails-unicorn" target="_blank">https://devcenter.heroku.com/articles/rails-unicorn</a></li>
+<li><a href="http://ruby-china.org/topics/471" target="_blank">http://ruby-china.org/topics/471</a></li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用 resque 實作背景作業 ( 佈署篇)]]></title>

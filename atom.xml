@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-05-06T15:36:59+08:00</updated>
+  <updated>2013-06-03T12:27:26+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安裝與設定 unicorn 實現佈署時 zero down time]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-06-03/unicorn-rails-and-capistrano/"/>
+    <updated>2013-06-03T11:27:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-06-03/unicorn-rails-and-capistrano</id>
+    <content type="html"><![CDATA[<p>本文章的 code 可參考公開的 pull request<br/>
+<a href="https://github.com/5fpro/cupid/pull/11/files" target="_blank">https://github.com/5fpro/cupid/pull/11/files</a><br/>
+這是基礎到不行的設定方式，考量到 server 效能在設定上的 best practice 將會在日後持續 update 本文。</p>
+
+<!-- more -->
+
+
+<h3>安裝 gem</h3>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">group</span> <span class="ss">:development</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">gem</span> <span class="s1">&#39;capistrano-unicorn&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="kp">false</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;unicorn&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>佈署設定</h3>
+
+<p>這裡的 <code>production.rb</code> 是針對 <code>rails_env=production</code>，而非 capistrano 中 multistage 的 production</p>
+
+<figure class='code'><figcaption><span>config/unicorn/production.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">worker_processes</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">preload_app</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">listen</span> <span class="s1">&#39;/tmp/unicorn.cupid.sock&#39;</span> <span class="c1"># sock 檔名可依照 app 需求設定</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">stderr_path</span> <span class="s1">&#39;log/unicorn.error.log&#39;</span>
+</span><span class='line'><span class="n">stdout_path</span> <span class="s1">&#39;log/unicorn.log&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">pid</span> <span class="s2">&quot;tmp/pids/unicorn.pid&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">rails_env</span> <span class="o">=</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;RAILS_ENV&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;production&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># before/after fork 可自行擴充</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">before_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">after_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(也可以把上述檔案放在 <code>config/unicorn.rb</code>)</p>
+
+<h3>server 上的 nginx.conf</h3>
+
+<figure class='code'><figcaption><span>nginx.conf</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">upstream</span> <span class="n">my_app</span> <span class="p">{</span>  <span class="c1"># upstream 名稱可自定</span>
+</span><span class='line'>  <span class="n">server</span> <span class="n">unix</span><span class="ss">:/</span><span class="n">tmp</span><span class="o">/</span><span class="n">unicorn</span><span class="o">.</span><span class="n">cupid</span><span class="o">.</span><span class="n">sock</span><span class="p">;</span> <span class="c1"># 這裡要和 config/unicorn/production.rb 中 listen 的設定對應</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">listen</span> <span class="mi">80</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">server_name</span> <span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># passenger_enabled on; # 原本要設定 passenger 的記得要拿掉</span>
+</span><span class='line'>  <span class="c1"># .......</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">proxy_set_header</span> <span class="n">X</span><span class="o">-</span><span class="no">Real</span><span class="o">-</span><span class="no">IP</span> <span class="vg">$remote_addr</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">proxy_set_header</span> <span class="n">X</span><span class="o">-</span><span class="no">Forwarded</span><span class="o">-</span><span class="no">For</span> <span class="vg">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">proxy_set_header</span> <span class="no">Host</span> <span class="vg">$http_host</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">proxy_pass</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">my_app</span><span class="p">;</span> <span class="c1"># upstream 名稱</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># .......</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>把 unicorn 重啟的 hook 掛到 deploy.rb 中</h3>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;capistrano-unicorn&#39;</span>
+</span><span class='line'><span class="n">after</span> <span class="s1">&#39;deploy:restart&#39;</span><span class="p">,</span> <span class="s1">&#39;unicorn:restart&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>done!</p>
+
+<h3>如何在本機測試 unicorn</h3>
+
+<p><code>bundle exec unicorn</code></p>
+
+<p>Go to http://localhost:8080</p>
+
+<h3>參考資料</h3>
+
+<ul>
+<li>更多 unicorn 可以在 cap 指令中的應用: <a href="https://github.com/sosedoff/capistrano-unicorn/blob/master/lib/capistrano-unicorn/capistrano_integration.rb" target="_blank">https://github.com/sosedoff/capistrano-unicorn/blob/master/lib/capistrano-unicorn/capistrano_integration.rb</a></li>
+<li>unicorn 設定檔說明: <a href="https://raw.github.com/defunkt/unicorn/master/examples/unicorn.conf.rb" target="_blank">https://raw.github.com/defunkt/unicorn/master/examples/unicorn.conf.rb</a></li>
+<li>Github Blog 上說明他們自己的 unicorn 如何設定: <a href="https://github.com/blog/517-unicorn" target="_blank">https://github.com/blog/517-unicorn</a></li>
+<li>其他 unicorn 設定相關教學:
+
+<ul>
+<li><a href="http://tech.gadii.net/blog/2013/03/07/rails-deploy-ji-chu-jiao-xue/" target="_blank">http://tech.gadii.net/blog/2013/03/07/rails-deploy-ji-chu-jiao-xue/</a></li>
+<li><a href="https://devcenter.heroku.com/articles/rails-unicorn" target="_blank">https://devcenter.heroku.com/articles/rails-unicorn</a></li>
+<li><a href="http://ruby-china.org/topics/471" target="_blank">http://ruby-china.org/topics/471</a></li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[利用 Swagger 產生互動式 API 文件]]></title>
@@ -1113,64 +1268,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 <hr />
 
 <p>以上是有關刻意練習在個人表現上的應用，接下來會針對刻意練習觀念應用於組織整體的進行方法。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[讀書心得: 刻意練習(3)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-08-04/reading-deliberate-practice-3/"/>
-    <updated>2012-08-04T10:57:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-08-04/reading-deliberate-practice-3</id>
-    <content type="html"><![CDATA[<p>這篇主要說明有關刻意練習的運作原理，於各種專業領域皆適用</p>
-
-<!-- more -->
-
-
-<h3>感知更多</h3>
-
-<p>卓越者對於環境和自身狀態能有更細膩的感受，這讓他們不論在練習或實戰中能獲得更多的進步，而這是需要刻意培養的，培養對事物能有更敏捷更優越的理解力。</p>
-
-<p>駕駛新手與高手的危及測驗便是一例：在同樣的環境限制下，駕駛高手的反應時間並沒有比新手特別快，但是他們在一瞬間對當下環境的理解範圍較廣，因此在不同程度的感知下，駕駛高手能做出比新手更好的處理。</p>
-
-<p>高度的感知能力通常具備以下特性: <code>了解關鍵指標</code>、<code>看得更遠</code>、<code>能由小見大</code>、<code>辨識能力更細膩</code></p>
-
-<h5>關鍵指標</h5>
-
-<p>卓越者比一般人更能知道哪些指標是能影響成效最多，並且能有效的提升。這些指標通常細微但很有效。例如零售商主管知道可從停車場上的油漬判斷顧客車子的保養狀況、財務分析師可從股東信中出現&#8221;我&#8221;的次數來預測營運績效(本位主義對績效是壞消息)。</p>
-
-<p>在某些組織或企業中，這些指標通常是不外傳的獨門秘訣。但大多數的情況下，只要勤做功課，都會知道該領域的關鍵指標，而卓越者與一般人的差異仍是在練習上。指標的發展與運用都需要透過廣泛的練習，例如打網球，你已經知道了所有的秘訣(關鍵指標)，若你不曾投入數百小時的練習，學習並且讓身體習慣的去關注這些指標，也是無法派上用場的。</p>
-
-<h5>看得更遠</h5>
-
-<p>簡而言之，就是看見自己的未來，卓越者會知道前方有什麼在等著他們，使他們能夠為未來做好準備。而這樣的能力是來自於提高眼光、拓展視野。擁有獨到眼光並非胡亂猜測或天生具備，而是來自於你對該領域理解的&#8221;深度&#8221;，而深度是需要長時間投入才能培養出來的。</p>
-
-<h5>從小看大</h5>
-
-<p>在各個領域中，見微知著的能力都是成功的關鍵，能夠以低成本快速做出妥善決策，不論到哪都是一項優勢，因為我們掌握的資訊永遠都不夠充分。例如警官學習如何在千鈞一髮之際判斷是否開槍、面試官如何在短時間內判斷面試者的個性、能力等。</p>
-
-<h5>更細膩的辨識能力</h5>
-
-<p>彩妝師的色彩辨識能力、音樂家對音調的辨識能力等，這些能力無非都是經過長期練習與訓練的結果，而這些能力通常也無法轉移至其他領域。刻意練習的成果就是在於幫助我們取得某個領域下出類拔萃所需的能力。</p>
-
-<h3>理解更多</h3>
-
-<p>關鍵在於你所具備的知識深度。各領域的頂尖高手所具備的知識較有組織，也因此能夠以完全不同或更為有效的方法處理問題，而形成差異性。累積、開發知識是刻意練習最重要的成效之一，想要不斷超越自己在某個領域的能力，就要累積更多知識，而長期耕耘能發展出&#8217;整合所有知識&#8217;、&#8217;讓知識發揮效益&#8217;的重要脈絡。</p>
-
-<h3>記憶更多</h3>
-
-<p>因為必須理解更多，因此卓越者的記憶力也必須比一般人更好。研究顯示，不分卓越與否所有人的短期記憶平均只能同時容納七件事物(意元)。但卓越者的&#8221;意元&#8221; (chunk) 比一般人的容量大的多。</p>
-
-<p>何謂意元？只要用單字和字母來想就會比較容易了。一個很長的單字，你不會一個字母一個字母的記，而是從該單字中找出熟悉的其他單字，例如 expensive ，我們通常會以 ex-pen-sive 的方式記起來，這樣就只占了 3 個意元而不是硬記下 9 個字母(意元)的順序。</p>
-
-<p>因此卓越者和一般人的記憶力差異在於他們的大腦中有更優越的&#8221;檢索架構&#8221;，而檢索架構也是來自於你對該領域所建構的知識架構，這些都必須透過刻意練習才能建立起來的。</p>
-
-<hr />
-
-<p>總結一下刻意練習的運作原理: <code>感知更多</code>、<code>理解更多</code>、<code>記憶更多</code></p>
-
-<p>卓越者在長期的刻意練習下，培養出高度的感知能力，並且建構出完整的知識架構，累積更豐富的知識以追求更卓越的表現。</p>
-
-<p>接下來我會再摘要書中將刻意練習的概念應用於生活與工作中的方式。</p>
 ]]></content>
   </entry>
   
