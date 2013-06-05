@@ -4,7 +4,7 @@
   <title><![CDATA[categories: AWS | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/AWS/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-06T02:01:04+08:00</updated>
+  <updated>2013-06-06T02:02:10+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -60,7 +60,7 @@
 <p></CORSConfiguration>
 ```</p>
 
-<h1>參考資料</h1>
+<h3>參考資料</h3>
 
 <p><a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html" target="_blank">http://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html</a></p>
 ]]></content>
