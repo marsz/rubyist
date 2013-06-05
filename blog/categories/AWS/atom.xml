@@ -4,7 +4,7 @@
   <title><![CDATA[categories: AWS | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/AWS/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-06T01:47:56+08:00</updated>
+  <updated>2013-06-06T02:01:04+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[讓 S3 允許 cross-domain 存取]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-06-06/aws-s3-allow-cross-origin-access/"/>
+    <updated>2013-06-06T01:48:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-06-06/aws-s3-allow-cross-origin-access</id>
+    <content type="html"><![CDATA[<p>檔案放上 <code>S3</code> 後，可能會需要透過 <code>cross-domain</code> 存取 (例如 web font)<br/>
+這時可以透過 <code>S3</code> bucket 的 <code>CORS</code> 設定達成</p>
+
+<!-- more -->
+
+
+<p><img src="http://i.imgur.com/7vjeF3g.png" alt="S3 bucket CORS" /></p>
+
+<p>開啟後如同以下內容設定即可開放 <code>GET</code> 的跨網域存取</p>
+
+<p>```xml
+&lt;?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"></p>
+
+<pre><code>&lt;CORSRule&gt;
+    &lt;AllowedOrigin&gt;*&lt;/AllowedOrigin&gt;
+    &lt;AllowedMethod&gt;GET&lt;/AllowedMethod&gt;
+    &lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;
+&lt;/CORSRule&gt;
+</code></pre>
+
+<p></CORSConfiguration>
+```</p>
+
+<p>如果要開放其他 HTTP method...</p>
+
+<p>```xml
+&lt;?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"></p>
+
+<pre><code>&lt;CORSRule&gt;
+    &lt;AllowedOrigin&gt;*&lt;/AllowedOrigin&gt;
+    &lt;AllowedMethod&gt;GET&lt;/AllowedMethod&gt;
+    &lt;AllowedMethod&gt;POST&lt;/AllowedMethod&gt;
+    &lt;AllowedMethod&gt;PUT&lt;/AllowedMethod&gt;
+    &lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;
+&lt;/CORSRule&gt;
+</code></pre>
+
+<p></CORSConfiguration>
+```</p>
+
+<h1>參考資料</h1>
+
+<p><a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html" target="_blank">http://docs.aws.amazon.com/AmazonS3/latest/dev/cors.html</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubygems 處理 Amazon Web Service (AWS) EC2]]></title>
