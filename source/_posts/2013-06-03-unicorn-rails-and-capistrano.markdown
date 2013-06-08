@@ -22,6 +22,13 @@ end
 gem 'unicorn'
 ```
 
+本文所採用的 gem 版本  
+
+```ruby Gemfile.lock
+capistrano-unicorn (0.1.9)
+unicorn (4.6.2)
+```
+
 ### 佈署設定
 
 這裡的 `production.rb` 是針對 `rails_env=production`，而非 capistrano 中 multistage 的 production
