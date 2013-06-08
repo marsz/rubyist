@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/Rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-06T02:02:10+08:00</updated>
+  <updated>2013-06-08T15:52:11+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,167 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[透過 sidekiq 實作背景工作 (background job)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/"/>
+    <updated>2013-06-08T15:08:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-06-08/sidekiq</id>
+    <content type="html"><![CDATA[<p><code>sidekiq</code> 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度或減低主機負荷<br/>
+和 <code>resque</code> 一樣，<code>sidekiq</code> 是以 redis 做為 <code>Message Queue</code> 來運作...</p>
+
+<!-- more -->
+
+
+<h3>安裝</h3>
+
+<p>本教學所使用的版本是 2.12.1</p>
+
+<p><code>ruby Gemfile
+gem "sidekiq", "~&gt; 2.12.1"
+</code></p>
+
+<p>設定 redis<br/>
+關於 redis 安裝可參考 <a href="http://pm.5fpro.com/projects/public-wiki/wiki/Redis" target="_blank">http://pm.5fpro.com/projects/public-wiki/wiki/Redis</a></p>
+
+<p>```ruby
+Sidekiq.configure_server do |config|
+  config.redis = { :url => "redis://127.0.0.1:6379/0" }
+end</p>
+
+<p>Sidekiq.configure_client do |config|
+  config.redis = { :url => "redis://127.0.0.1:6379/0" }
+end
+```</p>
+
+<h3>使用 (定義 worker)</h3>
+
+<p>定義 worker</p>
+
+<p>```ruby foo_worker.rb
+class FooWorker
+  include Sidekiq::Worker
+  sidekiq_options :queue => :barbar_queue, :retry => false, :backtrace => true</p>
+
+<p>  def perform(name, count)
+  end
+end
+```</p>
+
+<p>啟動 worker (-c 代表  concurrency worker 數)</p>
+
+<p><code>ruby
+bundle exec sidekiq -c 1
+</code></p>
+
+<p>把工作丟到 queue 裡</p>
+
+<p><code>ruby
+FooWorker.perform_async("haha", 11)
+</code></p>
+
+<p>這時若有啟動 worker 就會從 redis 把工作抓下來執行</p>
+
+<h3>使用 (delay methods)</h3>
+
+<p>直接丟到 queue 裡</p>
+
+<p><code>ruby
+Bar.delay.some_method("haha", 2)
+</code></p>
+
+<p>也可以以 instance 丟</p>
+
+<p><code>ruby
+user = User.find(2)
+user.delay.increase_credit(200)
+</code></p>
+
+<p>延遲至某短時間後再讓 worker 執行</p>
+
+<p><code>ruby
+user.delay_for(1.day).increase_credit(200)
+</code></p>
+
+<p>延遲至某個時間點再給 worker 執行</p>
+
+<p><code>ruby
+user.delay_until(3.hour.from_now).increase_credit(200)
+</code></p>
+
+<h3>設定 Web console</h3>
+
+<p><code>ruby Gemfile
+gem 'slim'
+gem 'sinatra', '&gt;= 1.3.0'
+</code></p>
+
+<p><code>ruby config/routes.rb
+require 'sidekiq/web'
+...
+  mount Sidekiq::Web =&gt; '/sidekiq'
+</code></p>
+
+<p>web console 想要綁 devise 登入 (假設 scoep 為 member 且 <code>.is_admin</code> 必須為 true )<br/>
+(更多可參考 <a href="https://github.com/mperham/sidekiq/wiki/Monitoring" target="_blank">https://github.com/mperham/sidekiq/wiki/Monitoring</a>)</p>
+
+<p>```ruby config/routes.rb
+  sidekiq_constraints = lambda{ |request|</p>
+
+<pre><code>request.env['warden'].authenticate!({ :scope =&gt; :member }) &amp;&amp; 
+request.env['warden'].user(:member).is_admin
+</code></pre>
+
+<p>  }
+  constraints sidekiq_constraints do</p>
+
+<pre><code>mount Sidekiq::Web =&gt; '/sidekiq'
+</code></pre>
+
+<p>  end
+```</p>
+
+<h3>佈署</h3>
+
+<p>```ruby config/deploy.rb
+set :sidekiq_cmd, "bundle exec sidekiq"
+set :sidekiqctl_cmd, "bundle exec sidekiqctl"</p>
+
+<p>require 'sidekiq/capistrano'
+```</p>
+
+<h2>```yaml config/sidekiq.yml</h2>
+
+<p>:verbose: false
+:concurrency: 1
+staging:
+  :concurrency: 1
+production:
+  :concurrency: 10
+  :queues:</p>
+
+<pre><code>- [default, 1]
+- [mailer, 9]
+</code></pre>
+
+<p>```</p>
+
+<h3>venus</h3>
+
+<p>上述設定也可透過 gem <code>venus</code> 完成</p>
+
+<p><code>ruby
+rails g venus:sidekiq
+</code></p>
+
+<h3>參考教學</h3>
+
+<p><a href="http://railscasts.com/episodes/366-sidekiq" target="_blank">RailsCast</a><br/>
+<a href="https://github.com/mperham/sidekiq/wiki" target="_blank">Official Document</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[安裝與設定 unicorn 實現佈署時 zero down time]]></title>
@@ -401,36 +562,6 @@ puts result["snapshotId"] # 新的 snapshot id
 <li>更多可參考 API: <a href="https://github.com/grempe/amazon-ec2/tree/master/lib/AWS/EC2" target="_blank">https://github.com/grempe/amazon-ec2/tree/master/lib/AWS/EC2</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[rake db 的 tasks 整理]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-09-03/about-rake-db-tasks/"/>
-    <updated>2012-09-03T15:38:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-09-03/about-rake-db-tasks</id>
-    <content type="html"><![CDATA[<p>善用 rails rake 內建的 DB tasks 進行資料庫操作</p>
-
-<!-- more -->
-
-
-<p><code>rake db:migrate</code> - 執行 db/migrate 中還沒跑過的 migrations<br/>
-<code>rake db:migrate VERSION=12341234</code> - 針對設定的 migrations 版本執行<br/>
-<code>rake db:migrate:redo</code> - 重跑目前最新的 migration<br/>
-<code>rake db:migrate:redo STEP=3</code> - 重跑目前最新的三個 migration<br/>
-<code>rake db:rollback</code> - 還原跑過最新的 migration<br/>
-<code>rake db:rollback STEP=3</code> - 還原跑過最新三個的 migration<br/>
-<code>rake db:create</code> - 建立 database<br/>
-<code>rake db:drop</code> - 刪除整個 database<br/>
-<code>rake db:schema:dump</code> - 從目前 database 中實際的 schema 建立 db/schema.rb<br/>
-<code>rake db:schema:load</code> - 從 db/schema.rb 中把 schema 建立到 databse 中<br/>
-<code>rake db:structure:dump</code> - 從目前 database 中實際的 schema 輸出到 db/structure.sql<br/>
-<code>rake db:reset</code> - 合體的 task ( db:drop => db:create => db:schema:load)</p>
-
-<p>另外安裝了 <a href="https://github.com/ludicast/yaml_db" target="_blank"><code>yaml_db</code></a> 後，可以透過以下兩個指令把資料庫的資料做 export/import (不包含 schema)</p>
-
-<p><code>rake db:data:dump</code> - 把資料輸出到 db/data.yml<br/>
-<code>rake db:data:load</code> - 把資料從 db/data.yml 輸入到 database 中</p>
 ]]></content>
   </entry>
   

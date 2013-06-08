@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Background-job | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/Background-job/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-06T02:02:10+08:00</updated>
+  <updated>2013-06-08T15:52:11+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,167 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[透過 sidekiq 實作背景工作 (background job)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/"/>
+    <updated>2013-06-08T15:08:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-06-08/sidekiq</id>
+    <content type="html"><![CDATA[<p><code>sidekiq</code> 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度或減低主機負荷<br/>
+和 <code>resque</code> 一樣，<code>sidekiq</code> 是以 redis 做為 <code>Message Queue</code> 來運作...</p>
+
+<!-- more -->
+
+
+<h3>安裝</h3>
+
+<p>本教學所使用的版本是 2.12.1</p>
+
+<p><code>ruby Gemfile
+gem "sidekiq", "~&gt; 2.12.1"
+</code></p>
+
+<p>設定 redis<br/>
+關於 redis 安裝可參考 <a href="http://pm.5fpro.com/projects/public-wiki/wiki/Redis" target="_blank">http://pm.5fpro.com/projects/public-wiki/wiki/Redis</a></p>
+
+<p>```ruby
+Sidekiq.configure_server do |config|
+  config.redis = { :url => "redis://127.0.0.1:6379/0" }
+end</p>
+
+<p>Sidekiq.configure_client do |config|
+  config.redis = { :url => "redis://127.0.0.1:6379/0" }
+end
+```</p>
+
+<h3>使用 (定義 worker)</h3>
+
+<p>定義 worker</p>
+
+<p>```ruby foo_worker.rb
+class FooWorker
+  include Sidekiq::Worker
+  sidekiq_options :queue => :barbar_queue, :retry => false, :backtrace => true</p>
+
+<p>  def perform(name, count)
+  end
+end
+```</p>
+
+<p>啟動 worker (-c 代表  concurrency worker 數)</p>
+
+<p><code>ruby
+bundle exec sidekiq -c 1
+</code></p>
+
+<p>把工作丟到 queue 裡</p>
+
+<p><code>ruby
+FooWorker.perform_async("haha", 11)
+</code></p>
+
+<p>這時若有啟動 worker 就會從 redis 把工作抓下來執行</p>
+
+<h3>使用 (delay methods)</h3>
+
+<p>直接丟到 queue 裡</p>
+
+<p><code>ruby
+Bar.delay.some_method("haha", 2)
+</code></p>
+
+<p>也可以以 instance 丟</p>
+
+<p><code>ruby
+user = User.find(2)
+user.delay.increase_credit(200)
+</code></p>
+
+<p>延遲至某短時間後再讓 worker 執行</p>
+
+<p><code>ruby
+user.delay_for(1.day).increase_credit(200)
+</code></p>
+
+<p>延遲至某個時間點再給 worker 執行</p>
+
+<p><code>ruby
+user.delay_until(3.hour.from_now).increase_credit(200)
+</code></p>
+
+<h3>設定 Web console</h3>
+
+<p><code>ruby Gemfile
+gem 'slim'
+gem 'sinatra', '&gt;= 1.3.0'
+</code></p>
+
+<p><code>ruby config/routes.rb
+require 'sidekiq/web'
+...
+  mount Sidekiq::Web =&gt; '/sidekiq'
+</code></p>
+
+<p>web console 想要綁 devise 登入 (假設 scoep 為 member 且 <code>.is_admin</code> 必須為 true )<br/>
+(更多可參考 <a href="https://github.com/mperham/sidekiq/wiki/Monitoring" target="_blank">https://github.com/mperham/sidekiq/wiki/Monitoring</a>)</p>
+
+<p>```ruby config/routes.rb
+  sidekiq_constraints = lambda{ |request|</p>
+
+<pre><code>request.env['warden'].authenticate!({ :scope =&gt; :member }) &amp;&amp; 
+request.env['warden'].user(:member).is_admin
+</code></pre>
+
+<p>  }
+  constraints sidekiq_constraints do</p>
+
+<pre><code>mount Sidekiq::Web =&gt; '/sidekiq'
+</code></pre>
+
+<p>  end
+```</p>
+
+<h3>佈署</h3>
+
+<p>```ruby config/deploy.rb
+set :sidekiq_cmd, "bundle exec sidekiq"
+set :sidekiqctl_cmd, "bundle exec sidekiqctl"</p>
+
+<p>require 'sidekiq/capistrano'
+```</p>
+
+<h2>```yaml config/sidekiq.yml</h2>
+
+<p>:verbose: false
+:concurrency: 1
+staging:
+  :concurrency: 1
+production:
+  :concurrency: 10
+  :queues:</p>
+
+<pre><code>- [default, 1]
+- [mailer, 9]
+</code></pre>
+
+<p>```</p>
+
+<h3>venus</h3>
+
+<p>上述設定也可透過 gem <code>venus</code> 完成</p>
+
+<p><code>ruby
+rails g venus:sidekiq
+</code></p>
+
+<h3>參考教學</h3>
+
+<p><a href="http://railscasts.com/episodes/366-sidekiq" target="_blank">RailsCast</a><br/>
+<a href="https://github.com/mperham/sidekiq/wiki" target="_blank">Official Document</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用 resque 實作背景作業 ( 佈署篇)]]></title>
@@ -381,173 +542,6 @@ end
 redis 無法儲存像 model 這樣複雜的變數類型</p>
 
 <p>下一篇將介紹如何寫測試(Rspec)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用 resque 實作背景作業 (前置設定篇)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config/"/>
-    <updated>2012-02-13T14:51:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-02-13/resque-redis-and-worker-config</id>
-    <content type="html"><![CDATA[<p>resque 是一套可以用來實作 background job 的 gem<br/>
-舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
-以加速前端服務的反應速度<br/>
-resque 是以 redis 做為 message queue server 的方式來進行...</p>
-
-<!-- more -->
-
-
-<h4>參考連結</h4>
-
-<p>RailsCast - 影片: <a href="http://railscasts.com/episodes/271-resque" target="_blank">Resque</a><br/>
-RailsCast - 文字: <a href="http://railscasts.com/episodes/271-resque?view=asciicast" target="_blank">Resque</a><br/>
-官方文件: <a href="https://github.com/defunkt/resque" target="_blank">Github</a></p>
-
-<h4>安裝 Gem</h4>
-
-<p>```</p>
-
-<h1>Gemfile</h1>
-
-<p>gem "resque"
-```</p>
-
-<p><code>
-bundle install
-</code></p>
-
-<h4>安裝 redis</h4>
-
-<p>MacOS</p>
-
-<p><code>
-sudo brew install redis
-</code></p>
-
-<p>Debian / Ubuntu</p>
-
-<p><code>
-sudo apt-get install redis-server
-</code></p>
-
-<h4>啟動/停止 redis server</h4>
-
-<p>MacOS</p>
-
-<p>```</p>
-
-<h1>啟動</h1>
-
-<p>/usr/local/bin/redis-server /usr/local/etc/redis.conf</p>
-
-<h1>停止 ps + kill :p</h1>
-
-<p>sudo kill -SIGHUP $(ps aux|grep 'redis-server'|grep -v 'grep'|awk '{print $2}')
-```</p>
-
-<p>Debian / Ubuntu</p>
-
-<p>```</p>
-
-<h1>啟動</h1>
-
-<p>sudo service redis-server start</p>
-
-<h1>停止</h1>
-
-<p>sudo service redis-server stop
-```</p>
-
-<h4>Resque 中的 redis 設定</h4>
-
-<p>由於 resque 必須將 job 丟上 redis (mq server)<br/>
-因此必須設定連線的位址</p>
-
-<p>手動建立兩個檔案<br/>
-config/redis.yml => redis 的連線設定檔<br/>
-config/initializers/resque.rb => 初始化 resque</p>
-
-<p><code>yml config/redis.yml
-development:
-  :redis: "localhost:6379"
-</code></p>
-
-<p><code>ruby config/initializers/resque.rb
-config = YAML.load_file("#{Rails.root}/config/resque.yml")[Rails.env]
-Resque.redis = config[:redis]
-</code></p>
-
-<h6>RedisToGo</h6>
-
-<p>若是使用雲端的Redis服務-<a href="https://redistogo.com/" target="_blank">RedisToGo</a><br/>
-可以直接在 yml 中貼上 instance 的 uri, 如</p>
-
-<p><code>yml config/redis.yml
-development:
-  :redis: "redis://marsz:xxxxxx@stingfish.redistogo.com:9999"
-</code></p>
-
-<h6>redis-rb</h6>
-
-<p>若 redis 有同時兼作 cache 或 db 用, 而且是透過 gem "redis" 進行連線的話<br/>
-則可以直接將變數指定</p>
-
-<p><code>yml config/redis.yml
-development:
-  :db: 0
-  :host: "localhost"
-  :port: 6379
-</code></p>
-
-<p><code>ruby config/initializers/resque.rb
-config = YAML.load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
-Resque.redis = Redis.new( :host =&gt; config[:host], :port =&gt; config[:port], :db =&gt; config[:db] )
-</code></p>
-
-<p>一般小弟比較偏好最後一個方法, 因為 redis 太方便了, 只做 background job 有點可惜 XD</p>
-
-<h4>Resque server</h4>
-
-<p>想要有直觀的介面可以看目前 message queue (redis) 上的 job 執行狀況<br/>
-resque 也有提供 :)</p>
-
-<p>```ruby config/initializers/resque.rb</p>
-
-<h1>在任何 initial 的檔案中加都可</h1>
-
-<p>require "resque/server"
-```</p>
-
-<p><code>ruby config/routes.rb
-mount Resque::Server.new, :at =&gt; "/admin/resque"  
-</code></p>
-
-<p>啟動 rails server, 連線 <a href="http://localhost:3000/admin/resque" target="_blank">http://localhost:3000/admin/resque</a> 就可以看到啦</p>
-
-<h4>啟動 worker</h4>
-
-<p>丟上 message queue 的工作, 必須透過 worker 逐個要下來執行<br/>
-啟動worker...</p>
-
-<p><code>ruby
-QUEUE=* bundle exec rake resque:work
-</code></p>
-
-<p>上述指令啟動後就會掛著, 而 server 上的啟動可以透過 BACKGROUND=yes 讓 worker 變成背景執行, 之後會再介紹完整參數說明</p>
-
-<p>worker 在 message queue 中有許多 issue, 例如:<br/>
-1. 佈署時如何自動的重啟<br/>
-2. server 上的 worker 掛了要怎麼自動重啟<br/>
-3. worker 能否 multi-thread 執行或針對特定 queue 等等<br/>
-將在後續會有相關 solution 的分享</p>
-
-<hr />
-
-<p>以上是有關 resque 的環境設定</p>
-
-<p>redis => resuqe config => worker</p>
-
-<p>下一篇將會介紹在 rails 中的基本使用方式</p>
 ]]></content>
   </entry>
   

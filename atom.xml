@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-06T02:02:10+08:00</updated>
+  <updated>2013-06-08T15:52:11+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -12,6 +12,211 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[透過 sidekiq 實作背景工作 (background job)]]></title>
+    <link href="http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/"/>
+    <updated>2013-06-08T15:08:00+08:00</updated>
+    <id>http://rubyist.marsz.tw/blog/2013-06-08/sidekiq</id>
+    <content type="html"><![CDATA[<p><code>sidekiq</code> 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度或減低主機負荷<br/>
+和 <code>resque</code> 一樣，<code>sidekiq</code> 是以 redis 做為 <code>Message Queue</code> 來運作&#8230;</p>
+
+<!-- more -->
+
+
+<h3>安裝</h3>
+
+<p>本教學所使用的版本是 2.12.1</p>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s2">&quot;sidekiq&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 2.12.1&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 redis<br/>
+關於 redis 安裝可參考 <a href="http://pm.5fpro.com/projects/public-wiki/wiki/Redis" target="_blank">http://pm.5fpro.com/projects/public-wiki/wiki/Redis</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Sidekiq</span><span class="o">.</span><span class="n">configure_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://127.0.0.1:6379/0&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Sidekiq</span><span class="o">.</span><span class="n">configure_client</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://127.0.0.1:6379/0&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用 (定義 worker)</h3>
+
+<p>定義 worker</p>
+
+<figure class='code'><figcaption><span>foo_worker.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">FooWorker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
+</span><span class='line'>  <span class="n">sidekiq_options</span> <span class="ss">:queue</span> <span class="o">=&gt;</span> <span class="ss">:barbar_queue</span><span class="p">,</span> <span class="ss">:retry</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span> <span class="ss">:backtrace</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>啟動 worker (-c 代表  concurrency worker 數)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">sidekiq</span> <span class="o">-</span><span class="n">c</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>把工作丟到 queue 裡</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FooWorker</span><span class="o">.</span><span class="n">perform_async</span><span class="p">(</span><span class="s2">&quot;haha&quot;</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這時若有啟動 worker 就會從 redis 把工作抓下來執行</p>
+
+<h3>使用 (delay methods)</h3>
+
+<p>直接丟到 queue 裡</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Bar</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">some_method</span><span class="p">(</span><span class="s2">&quot;haha&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>也可以以 instance 丟</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">increase_credit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>延遲至某短時間後再讓 worker 執行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">delay_for</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span><span class="o">.</span><span class="n">increase_credit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>延遲至某個時間點再給 worker 執行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">delay_until</span><span class="p">(</span><span class="mi">3</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">from_now</span><span class="p">)</span><span class="o">.</span><span class="n">increase_credit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>設定 Web console</h3>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;slim&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sinatra&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;= 1.3.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;sidekiq/web&#39;</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">mount</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Web</span> <span class="o">=&gt;</span> <span class="s1">&#39;/sidekiq&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>web console 想要綁 devise 登入 (假設 scoep 為 member 且 <code>.is_admin</code> 必須為 true )<br/>
+(更多可參考 <a href="https://github.com/mperham/sidekiq/wiki/Monitoring" target="_blank">https://github.com/mperham/sidekiq/wiki/Monitoring</a>)</p>
+
+<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">sidekiq_constraints</span> <span class="o">=</span> <span class="nb">lambda</span><span class="p">{</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;warden&#39;</span><span class="o">].</span><span class="n">authenticate!</span><span class="p">({</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:member</span> <span class="p">})</span> <span class="o">&amp;&amp;</span>
+</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;warden&#39;</span><span class="o">].</span><span class="n">user</span><span class="p">(</span><span class="ss">:member</span><span class="p">)</span><span class="o">.</span><span class="n">is_admin</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">constraints</span> <span class="n">sidekiq_constraints</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">mount</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Web</span> <span class="o">=&gt;</span> <span class="s1">&#39;/sidekiq&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>佈署</h3>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:sidekiq_cmd</span><span class="p">,</span> <span class="s2">&quot;bundle exec sidekiq&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:sidekiqctl_cmd</span><span class="p">,</span> <span class="s2">&quot;bundle exec sidekiqctl&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;sidekiq/capistrano&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/sidekiq.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="l-Scalar-Plain">:verbose</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">false</span>
+</span><span class='line'><span class="l-Scalar-Plain">:concurrency</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+</span><span class='line'><span class="l-Scalar-Plain">staging</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:concurrency</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+</span><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:concurrency</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">10</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:queues</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="p-Indicator">[</span><span class="nv">default</span><span class="p-Indicator">,</span> <span class="nv">1</span><span class="p-Indicator">]</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="p-Indicator">[</span><span class="nv">mailer</span><span class="p-Indicator">,</span> <span class="nv">9</span><span class="p-Indicator">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>venus</h3>
+
+<p>上述設定也可透過 gem <code>venus</code> 完成</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">venus</span><span class="ss">:sidekiq</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>參考教學</h3>
+
+<p><a href="http://railscasts.com/episodes/366-sidekiq" target="_blank">RailsCast</a><br/>
+<a href="https://github.com/mperham/sidekiq/wiki" target="_blank">Official Document</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[讓 S3 允許 cross-domain 存取]]></title>
@@ -1190,86 +1395,6 @@ ctrl+` 開啟 command line 後輸入:</p>
 <p>有了一定程度的專注力後，又發現了另一個指標: 英文資料理解速度。程式開發遇到問題經常要上孤狗，而資料多半是英文，因此能夠花越少的時間孤狗，相對就能夠花越多時間在開發上，效率自然會提昇。</p>
 
 <p>如此循環進行，發現不斷找到新的評估指標，然後持續提昇。目前小弟正在磨練的另一項技能是養成寫 blog 的習慣，將自己曾經解決的問題以及累積的知識得以文件保存，除此之外，身為工程師仍有許多能力必須提昇，例如和別人溝通時是否能以最精簡的方式傳達，專案執行前的目標設定是否足夠嚴謹、達成率是否足夠等。刻意練習概念所帶給我的，是變得更了解這些技能學習過程的運作原理，進而更能掌握自己各方面能力的提升。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[讀書心得: 刻意練習(5)]]></title>
-    <link href="http://rubyist.marsz.tw/blog/2012-08-06/reading-deliberate-practice-5/"/>
-    <updated>2012-08-06T13:42:00+08:00</updated>
-    <id>http://rubyist.marsz.tw/blog/2012-08-06/reading-deliberate-practice-5</id>
-    <content type="html"><![CDATA[<p>刻意練習的觀念除了用於個人之外，也可應用於組織。但多數企業的文化是與刻意練習的原則衝突，這本書提出了組織進行刻意練習的 9 項守則以及 5 項應避免不利於刻意練習的潛在問題。</p>
-
-<!-- more -->
-
-
-<h4>守則 1: 個人必須突破和成長</h4>
-
-<p>組織必須以讓每個人突破現有能力和培養目前現階段最重要的技巧為目標。人才的培養有三分之二是來自工作的安排，剩下的三分之一才是來自指導。這是組織必須面對的掙扎與考驗，畢竟多數組織都傾向避免讓員工去做他不熟悉的工作內容。</p>
-
-<p>研究顯示：&#8221;人在危機中所學的是平常的 10 倍以上&#8221;，因此針對經理人的栽培，直接讓他們擔任最具挑戰的工作是大部分成功組織的培養人才的核心技巧。</p>
-
-<h4>守則 2: 在工作中找方法培養人才</h4>
-
-<p>延續守則 1 的觀念，組織都希望每個人除了能有新的學習突破之外，同時對於現有的能力也能夠提昇。而組織必須不斷的想法在工作中找到機會和方法來達到此目標，例如職務輪調、角色改變等。</p>
-
-<h4>守則 3: 鼓勵參與社群</h4>
-
-<p>讓組織中的每個人都會機會擔任主導者，不論是工作或其他面向，例如某此活動的規劃人等。畢竟在多數組織中，大部分的人是少有機會擔任領導者的，透過此方式可強化每個人刻意練習的動機。</p>
-
-<h4>守則 4: 了解反饋與指導的關鍵性</h4>
-
-<p>研究發現: 人們在真正了解事件發生的經過後，便會渴望做的更好。行動後檢討是最具高度效益的流程，但多數組織首要問題都是必須先克服文化層面的問題，次要的問題便是如何有效進行反饋。</p>
-
-<p>一流的組織除了經常反饋之外，同時也都在最開始便具備完整的訓練與指導計畫，同時也會有指導者在訓練過程中給予建議，指出被訓練者應關注在哪些特定技能上。</p>
-
-<h4>守則 5: 早期發現有潛力的表現者</h4>
-
-<p>任何組織都需要&#8221;對的人&#8221;，而能越早發現&#8221;對的人&#8221;組織便具有越高的優勢。無論是領導者本身或透過組織在訓練和工作上的流程設計，都有能有助於找出潛力工作者。</p>
-
-<h4>守則 6: 啟發式培育</h4>
-
-<p>透過使命感的激勵，效果最好。卓越的組織都會把領導者如何啟發工作者視為關鍵指標之一。因為命令和控制的領導模式百分之九十九式無效的，畢竟刻意練習的過程一點也不輕鬆，缺乏強烈動機是不可能熬過去的。</p>
-
-<h4>守則 7: 投注大量時間、金錢和人力在培育上</h4>
-
-<p>如同前述，刻意練習是必須投入時間與心力的，而且必須能夠&#8221;上行下效&#8221;，當公司內部&#8221;長&#8221;字輩的都將其心力放在培育底下人上時，其他主管也會跟著致力於培養人才。</p>
-
-<h4>守則 8: 讓培育成為企業文化的一部分</h4>
-
-<p>有許多刻意練習的法則，都必須成為企業文化的一部分，例如誠實的反饋、以追求個人成長為目標等，若這些無法成為文化的一部分，推行起來也相當困難。</p>
-
-<h4>守則 9: 培育整個團隊</h4>
-
-<p>把刻意練習的原則套用在團隊上是沒問題的，團隊同樣都要設定目標、有心智模型、反覆長時間練習以及持續反饋。因此以個人為基礎的培育是絕對不夠的，組織在設計工作安排以達成培育目的的過程中，也必須包含對團隊的培養，從個人到 3-5 人至整個團隊</p>
-
-<hr />
-
-<h4>最善於創造團隊績效的組織，也會避免以下不利於刻意練習的情況出現</h4>
-
-<h5>錯誤的團隊成員</h5>
-
-<p>人際契合度與文化是成功團隊的關鍵。團隊要的不是最佳球員，而是對的球員。</p>
-
-<h5>低信任度</h5>
-
-<p>信任是人與人之間互動的基礎，而信任必須經過長時間才能培養起來的。</p>
-
-<h5>相互衝突的計畫</h5>
-
-<p>由於組織和個人一樣必須擁有心智模型，相當於每個人所擁有的共同架構，當其中有人格格不入時，便會產生問題。最常見的是組織目標與個人規劃的不一致，但個人盤算在所難免，因此領導者本身的挑戰在於如何不讓個人盤算對組織產生殺傷力。</p>
-
-<h5>未化解的衝突</h5>
-
-<p>團隊成員之間難免會有摩擦衝突，然後這些衝突是過去遺留的產物，也會影響到未來。團隊領導這必須讓這些衝突浮上檯面，並且化解它，能夠做到這點，團隊就更能處理其他更常見的威脅。</p>
-
-<h5>不願正視的議題</h5>
-
-<p>在刻意練習中，卓越者能夠以更嚴格更誠實的方式自我評估，同樣的團隊也必須如此。若養成了得過且過的習慣，團隊自然也難以在每次的練習機會中紮實獲得成長。</p>
-
-<hr />
-
-<p>下一篇 (也是最後一篇)，將會針對刻意練習如何打造創意以及小弟本身的部分經驗分享。</p>
 ]]></content>
   </entry>
   

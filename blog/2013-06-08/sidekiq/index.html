@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>透過 sidekiq 實作背景工作 (background job) - 黃金俠</title>
+  <meta name="author" content="MarsZ">
+
+  
+  <meta name="description" content="sidekiq 是一套可以用來實作 background job 的 gem
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行
+以加速前端服務的反應速度或減低主機負荷
+和 resque 一樣，sidekiq 是以 redis 做為 Message Queue &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://rubyist.marsz.tw/blog/2013-06-08/sidekiq">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="黃金俠" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27972021-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">黃金俠</a></h1>
+  
+    <h2>Ruby on Rails / Rubygems / Javascript / Git</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:rubyist.marsz.tw" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首頁</a></li>
+  <li><a href="/blog/archives">所有文章</a></li>
+  <!--
+  <li><a href="/pages/about">關於我</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">透過 sidekiq 實作背景工作 (background job)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-08T15:08:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><code>sidekiq</code> 是一套可以用來實作 background job 的 gem<br/>
+舉凡長時間的執行如 email, 點數計算等等非即時性的工作, 都可以採用非同步執行<br/>
+以加速前端服務的反應速度或減低主機負荷<br/>
+和 <code>resque</code> 一樣，<code>sidekiq</code> 是以 redis 做為 <code>Message Queue</code> 來運作&#8230;</p>
+
+<!-- more -->
+
+
+<h3>安裝</h3>
+
+<p>本教學所使用的版本是 2.12.1</p>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s2">&quot;sidekiq&quot;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 2.12.1&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>設定 redis<br/>
+關於 redis 安裝可參考 <a href="http://pm.5fpro.com/projects/public-wiki/wiki/Redis" target="_blank">http://pm.5fpro.com/projects/public-wiki/wiki/Redis</a></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Sidekiq</span><span class="o">.</span><span class="n">configure_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://127.0.0.1:6379/0&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Sidekiq</span><span class="o">.</span><span class="n">configure_client</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:url</span> <span class="o">=&gt;</span> <span class="s2">&quot;redis://127.0.0.1:6379/0&quot;</span> <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用 (定義 worker)</h3>
+
+<p>定義 worker</p>
+
+<figure class='code'><figcaption><span>foo_worker.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">FooWorker</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
+</span><span class='line'>  <span class="n">sidekiq_options</span> <span class="ss">:queue</span> <span class="o">=&gt;</span> <span class="ss">:barbar_queue</span><span class="p">,</span> <span class="ss">:retry</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span> <span class="ss">:backtrace</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>啟動 worker (-c 代表  concurrency worker 數)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">bundle</span> <span class="nb">exec</span> <span class="n">sidekiq</span> <span class="o">-</span><span class="n">c</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>把工作丟到 queue 裡</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">FooWorker</span><span class="o">.</span><span class="n">perform_async</span><span class="p">(</span><span class="s2">&quot;haha&quot;</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這時若有啟動 worker 就會從 redis 把工作抓下來執行</p>
+
+<h3>使用 (delay methods)</h3>
+
+<p>直接丟到 queue 裡</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Bar</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">some_method</span><span class="p">(</span><span class="s2">&quot;haha&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>也可以以 instance 丟</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">increase_credit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>延遲至某短時間後再讓 worker 執行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">delay_for</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">day</span><span class="p">)</span><span class="o">.</span><span class="n">increase_credit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>延遲至某個時間點再給 worker 執行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span><span class="o">.</span><span class="n">delay_until</span><span class="p">(</span><span class="mi">3</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">from_now</span><span class="p">)</span><span class="o">.</span><span class="n">increase_credit</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>設定 Web console</h3>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;slim&#39;</span>
+</span><span class='line'><span class="n">gem</span> <span class="s1">&#39;sinatra&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;= 1.3.0&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;sidekiq/web&#39;</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>  <span class="n">mount</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Web</span> <span class="o">=&gt;</span> <span class="s1">&#39;/sidekiq&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>web console 想要綁 devise 登入 (假設 scoep 為 member 且 <code>.is_admin</code> 必須為 true )<br/>
+(更多可參考 <a href="https://github.com/mperham/sidekiq/wiki/Monitoring" target="_blank">https://github.com/mperham/sidekiq/wiki/Monitoring</a>)</p>
+
+<figure class='code'><figcaption><span>config/routes.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">sidekiq_constraints</span> <span class="o">=</span> <span class="nb">lambda</span><span class="p">{</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;warden&#39;</span><span class="o">].</span><span class="n">authenticate!</span><span class="p">({</span> <span class="ss">:scope</span> <span class="o">=&gt;</span> <span class="ss">:member</span> <span class="p">})</span> <span class="o">&amp;&amp;</span>
+</span><span class='line'>    <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s1">&#39;warden&#39;</span><span class="o">].</span><span class="n">user</span><span class="p">(</span><span class="ss">:member</span><span class="p">)</span><span class="o">.</span><span class="n">is_admin</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="n">constraints</span> <span class="n">sidekiq_constraints</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">mount</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Web</span> <span class="o">=&gt;</span> <span class="s1">&#39;/sidekiq&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>佈署</h3>
+
+<figure class='code'><figcaption><span>config/deploy.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">set</span> <span class="ss">:sidekiq_cmd</span><span class="p">,</span> <span class="s2">&quot;bundle exec sidekiq&quot;</span>
+</span><span class='line'><span class="n">set</span> <span class="ss">:sidekiqctl_cmd</span><span class="p">,</span> <span class="s2">&quot;bundle exec sidekiqctl&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;sidekiq/capistrano&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>config/sidekiq.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="l-Scalar-Plain">:verbose</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">false</span>
+</span><span class='line'><span class="l-Scalar-Plain">:concurrency</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+</span><span class='line'><span class="l-Scalar-Plain">staging</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:concurrency</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+</span><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:concurrency</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">10</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">:queues</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="p-Indicator">[</span><span class="nv">default</span><span class="p-Indicator">,</span> <span class="nv">1</span><span class="p-Indicator">]</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="p-Indicator">[</span><span class="nv">mailer</span><span class="p-Indicator">,</span> <span class="nv">9</span><span class="p-Indicator">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>venus</h3>
+
+<p>上述設定也可透過 gem <code>venus</code> 完成</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">rails</span> <span class="n">g</span> <span class="n">venus</span><span class="ss">:sidekiq</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>參考教學</h3>
+
+<p><a href="http://railscasts.com/episodes/366-sidekiq" target="_blank">RailsCast</a><br/>
+<a href="https://github.com/mperham/sidekiq/wiki" target="_blank">Official Document</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">MarsZ</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-08T15:08:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/Background-job/'>Background-job</a>, <a class='category' href='/blog/categories/Rubygems/'>Rubygems</a>, <a class='category' href='/blog/categories/sidekiq/'>sidekiq</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/" data-via="marsz330" data-counturl="http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-06-06/aws-s3-allow-cross-origin-access/" title="Previous Post: 讓 S3 允許 cross-domain 存取">&laquo; 讓 S3 允許 cross-domain 存取</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>黃金俠</h1>
+<p>
+  <!-- avatar start -->
+    <img src="http://www.gravatar.com/avatar/0b2f434918eb4a08439d180a13829631.png" alt="marsz" align="left" style="margin-right: 15px" />
+  <!-- avatar end -->
+  2008 年投身於網路圈，致力於創造能帶來幸福感的網路服務，專注網站開發與資料分析技術
+</p>
+
+  <div style="clear:both"></div>
+  <!-- facebook -->
+  <a href="http://zh-tw.facebook.com/marsz330" target="_blank" title="MarsZ Chen"><img src="/images/i_facebook.png" style="border: 0px;height: 30px" /></a>
+  <!-- /facebook -->
+  <!-- twitter -->
+  <a href="https://twitter.com/marsz330" target="_blank"><img src="/images/i_twitter.png" style="border: 0px;height: 30px"></a>
+  <!-- /twitter -->
+  <!-- github -->
+  <a href="https://github.com/marsz" target="_blank"><img src="/images/i_github.png" style="border: 0px;height: 30px"></a>
+  <!-- /github -->
+  <a href="http://www.linkedin.com/profile/view?id=97000937" target="_blank"><img src="/images/i_linkedin.png" style="border: 0px;height: 30px"></a>
+  
+  <p></p>
+  <!-- gamil start -->
+    <img src="/images/gmail.png" alt="gmail" />
+  <!-- gamil end -->
+
+<p style="display:none;"><a href="http://feeds.feedburner.com/marsz/ZKPk"><img src="http://feeds.feedburner.com/~fc/marsz/ZKPk?bg=CCCCCC&amp;fg=000000&amp;anim=1&amp;label=listeners" height="26" width="88" style="border:0" alt="" /></a></p>
+</section>
+<section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013-06-08/sidekiq/">透過 sidekiq 實作背景工作 (background job)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-06-06/aws-s3-allow-cross-origin-access/">讓 S3 允許 cross-domain 存取</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-06-03/unicorn-rails-and-capistrano/">安裝與設定 unicorn 實現佈署時 zero down time</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-05-04/swagger-api-doc-rails/">利用 Swagger 產生互動式 API 文件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-04-28/server-side-accept-cross-domain-ajax-request/">server 端允許 ajax cross domain 存取</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分類文章</h1>
+    <ul id="category-list"><li><a href='/blog/categories/ActiveRecord'>ActiveRecord (4)</a></li><li><a href='/blog/categories/Amazon-S3'>Amazon-S3 (1)</a></li><li><a href='/blog/categories/API'>API (3)</a></li><li><a href='/blog/categories/Assets'>Assets (2)</a></li><li><a href='/blog/categories/Assets-precompile'>Assets-precompile (1)</a></li><li><a href='/blog/categories/AWS'>AWS (2)</a></li><li><a href='/blog/categories/Background-job'>Background-job (6)</a></li><li><a href='/blog/categories/Backup'>Backup (2)</a></li><li><a href='/blog/categories/Bigtuna'>Bigtuna (5)</a></li><li><a href='/blog/categories/Capistrano'>Capistrano (4)</a></li><li><a href='/blog/categories/Carrierwave'>Carrierwave (2)</a></li><li><a href='/blog/categories/Continuous%20Integration'>Continuous Integration (5)</a></li><li><a href='/blog/categories/Controller'>Controller (1)</a></li><li><a href='/blog/categories/Counter'>Counter (1)</a></li><li><a href='/blog/categories/CSS'>CSS (1)</a></li><li><a href='/blog/categories/Database'>Database (1)</a></li><li><a href='/blog/categories/Date'>Date (1)</a></li><li><a href='/blog/categories/Delayed%20Job'>Delayed Job (1)</a></li><li><a href='/blog/categories/deliberate-practice'>deliberate-practice (6)</a></li><li><a href='/blog/categories/Deploy'>Deploy (3)</a></li><li><a href='/blog/categories/Devise'>Devise (3)</a></li><li><a href='/blog/categories/EC2'>EC2 (1)</a></li><li><a href='/blog/categories/Encoding'>Encoding (1)</a></li><li><a href='/blog/categories/ERD'>ERD (1)</a></li><li><a href='/blog/categories/Facebook'>Facebook (3)</a></li><li><a href='/blog/categories/Factory-girl'>Factory-girl (4)</a></li><li><a href='/blog/categories/File-upload'>File-upload (1)</a></li><li><a href='/blog/categories/Fog'>Fog (1)</a></li><li><a href='/blog/categories/Git'>Git (3)</a></li><li><a href='/blog/categories/Git-rebase'>Git-rebase (1)</a></li><li><a href='/blog/categories/God'>God (1)</a></li><li><a href='/blog/categories/HTML'>HTML (1)</a></li><li><a href='/blog/categories/IE'>IE (1)</a></li><li><a href='/blog/categories/ImageMagick'>ImageMagick (1)</a></li><li><a href='/blog/categories/iPhone'>iPhone (1)</a></li><li><a href='/blog/categories/javascript'>javascript (1)</a></li><li><a href='/blog/categories/jQuery'>jQuery (1)</a></li><li><a href='/blog/categories/JSON'>JSON (1)</a></li><li><a href='/blog/categories/Mailer'>Mailer (1)</a></li><li><a href='/blog/categories/Message-queue'>Message-queue (5)</a></li><li><a href='/blog/categories/Model'>Model (1)</a></li><li><a href='/blog/categories/Omniauth'>Omniauth (3)</a></li><li><a href='/blog/categories/passenger'>passenger (1)</a></li><li><a href='/blog/categories/Rails%20Bug'>Rails Bug (1)</a></li><li><a href='/blog/categories/Rake'>Rake (1)</a></li><li><a href='/blog/categories/Reading'>Reading (6)</a></li><li><a href='/blog/categories/redis'>redis (1)</a></li><li><a href='/blog/categories/Regular%20Expression'>Regular Expression (1)</a></li><li><a href='/blog/categories/Resque'>Resque (5)</a></li><li><a href='/blog/categories/Rmagick'>Rmagick (1)</a></li><li><a href='/blog/categories/Rspec'>Rspec (11)</a></li><li><a href='/blog/categories/Rspec-controllers'>Rspec-controllers (1)</a></li><li><a href='/blog/categories/Rspec-requests'>Rspec-requests (1)</a></li><li><a href='/blog/categories/Rubygems'>Rubygems (29)</a></li><li><a href='/blog/categories/Safari'>Safari (1)</a></li><li><a href='/blog/categories/Session'>Session (1)</a></li><li><a href='/blog/categories/sidekiq'>sidekiq (1)</a></li><li><a href='/blog/categories/SQL'>SQL (2)</a></li><li><a href='/blog/categories/stupid%20IE'>stupid IE (1)</a></li><li><a href='/blog/categories/Sublime'>Sublime (1)</a></li><li><a href='/blog/categories/Testing'>Testing (4)</a></li><li><a href='/blog/categories/Url-helper'>Url-helper (1)</a></li><li><a href='/blog/categories/Validations'>Validations (1)</a></li><li><a href='/blog/categories/Views-partial'>Views-partial (1)</a></li><li><a href='/blog/categories/XML'>XML (1)</a></li><li><a href='/blog/categories/YAML'>YAML (1)</a></li></ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("marsz330", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/marsz330" class="twitter-follow-button" data-show-count="false">Follow @marsz330</a>
+  
+</section>
+
+
+
+
+<section>
+  <h2>Links</h2>
+  <ul id="links">
+    <li class="link">
+      <a href="http://ihower.tw/rails3/" target="_blank">ihower Rails 實戰聖經</a>
+    </li>
+    <li class="link">
+      <a href="http://ihower.tw/blog/" target="_blank">ihower的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://wildjcrt.pixnet.net/blog" target="_blank">小蟹的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://blog.xdite.net/" target="_blank">XDite的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://blog.hellolucky.info/" target="_blank">HelloLucky的 blog</a>
+    </li>
+    <li class="link">
+      <a href="http://gogojimmy.net/" target="_blank">Jimmy 的 blog</a>
+    </li>
+    <!--
+    <li class="link">
+      <a href="" target="_blank"></a>
+    </li>
+    -->
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - MarsZ -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'rubyist-marsz';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/';
+        var disqus_url = 'http://rubyist.marsz.tw/blog/2013-06-08/sidekiq/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
