@@ -4,7 +4,7 @@
   <title><![CDATA[黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-08T15:52:11+08:00</updated>
+  <updated>2013-06-11T10:10:46+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -388,6 +388,12 @@
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">upstream</span> <span class="n">my_app</span> <span class="p">{</span>  <span class="c1"># upstream 名稱可自定</span>
 </span><span class='line'>  <span class="n">server</span> <span class="n">unix</span><span class="ss">:/</span><span class="n">tmp</span><span class="o">/</span><span class="n">unicorn</span><span class="o">.</span><span class="n">cupid</span><span class="o">.</span><span class="n">sock</span><span class="p">;</span> <span class="c1"># 這裡要和 config/unicorn/production.rb 中 listen 的設定對應</span>
 </span><span class='line'><span class="p">}</span>
@@ -404,6 +410,12 @@
 </span><span class='line'>    <span class="n">proxy_set_header</span> <span class="n">X</span><span class="o">-</span><span class="no">Forwarded</span><span class="o">-</span><span class="no">For</span> <span class="vg">$proxy_add_x_forwarded_for</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">proxy_set_header</span> <span class="no">Host</span> <span class="vg">$http_host</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">proxy_pass</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">my_app</span><span class="p">;</span> <span class="c1"># upstream 名稱</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">location</span> <span class="o">~</span> <span class="o">^/</span><span class="p">(</span><span class="n">assets</span><span class="p">)</span><span class="o">/</span>  <span class="p">{</span>  <span class="c1"># 這裡是 precompile 後的 assets file 路徑</span>
+</span><span class='line'>    <span class="n">gzip_static</span> <span class="n">on</span><span class="p">;</span> <span class="c1"># to serve pre-gzipped version</span>
+</span><span class='line'>    <span class="n">expires</span> <span class="n">max</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">add_header</span>  <span class="no">Cache</span><span class="o">-</span><span class="no">Control</span> <span class="kp">public</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="c1"># .......</span>

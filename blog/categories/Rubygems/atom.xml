@@ -4,7 +4,7 @@
   <title><![CDATA[categories: Rubygems | 黃金俠]]></title>
   <link href="http://rubyist.marsz.tw/blog/categories/Rubygems/atom.xml" rel="self"/>
   <link href="http://rubyist.marsz.tw/"/>
-  <updated>2013-06-08T15:52:11+08:00</updated>
+  <updated>2013-06-11T10:10:46+08:00</updated>
   <id>http://rubyist.marsz.tw/</id>
   <author>
     <name><![CDATA[MarsZ]]></name>
@@ -251,6 +251,15 @@ upstream my_app {  # upstream 名稱可自定
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header Host $http_host;
 proxy_pass http://my_app; # upstream 名稱
+</code></pre>
+
+<p>  }</p>
+
+<p>  location ~ ^/(assets)/  {  # 這裡是 precompile 後的 assets file 路徑</p>
+
+<pre><code>gzip_static on; # to serve pre-gzipped version
+expires max;
+add_header  Cache-Control public;
 </code></pre>
 
 <p>  }</p>
